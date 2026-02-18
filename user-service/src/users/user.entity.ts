@@ -1,3 +1,11 @@
+/**
+ * USER ENTITY - Model korisnika u bazi podataka
+ *
+ * Ova klasa definise kako tabela 'users' izgleda u PostgreSQL bazi.
+ * TypeORM automatski kreira tabelu na osnovu ovih dekoratora (@Column, itd.)
+ *
+ * Tabela 'users' cuva podatke o svim clanovima coworking prostora.
+ */
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -6,26 +14,26 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('users')
+@Entity('users') // Ime tabele u bazi ce biti 'users'
 export class User {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn('uuid') // Automatski generise jedinstveni UUID kao primarni kljuc
   id: string;
 
-  @Column()
+  @Column() // Obicna kolona - ime korisnika
   name: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true }) // Email mora biti jedinstven - dva korisnika ne mogu imati isti
   email: string;
 
-  @Column()
+  @Column() // Lozinka se cuva kao HASH (bcrypt) - nikad plaintext!
   password: string;
 
-  @Column({ default: 'member' })
+  @Column({ default: 'member' }) // Uloga korisnika, podrazumevano 'member'
   role: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn() // Automatski se popunjava kada se korisnik kreira
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn() // Automatski se azurira kada se korisnik menja
   updatedAt: Date;
 }
