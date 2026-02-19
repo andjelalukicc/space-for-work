@@ -1,0 +1,188 @@
+# Docker Compose konfiguracija za Coworking Booking System
+# Ovaj fajl definise sve servise potrebne za pokretanje aplikacije
+
+version: '3.8'
+
+services:
+  # ============================================
+  # Baza podataka - PostgreSQL 16 Alpine
+  # Koristi se kao glavno skladiste podataka
+  # za sve mikro-servise u sistemu
+  # ============================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: coworking-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: coworking
+      POSTGRES_PASSWORD: coworking123
+      POSTGRES_DB: coworking
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U coworking"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - coworking-network
+
+  # ============================================
+  # Red poruka - RabbitMQ sa upravljackim panelom
+  # Omogucava asinhronu komunikaciju izmedju
+  # servisa za rezervacije i servisa za obavestenja
+  # ============================================
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: coworking-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - coworking-network
+
+  # ============================================
+  # Servis za korisnike - registracija, prijava
+  # i upravljanje korisnickim nalozima
+  # ============================================
+  user-service:
+    build: ./user-service
+    container_name: coworking-user-service
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: coworking
+      DB_PASSWORD: coworking123
+      DB_NAME: coworking
+      JWT_SECRET: coworking-jwt-secret-2026
+      PORT: 3001
+    networks:
+      - coworking-network
+
+  # ============================================
+  # Servis za prostorije - upravljanje sobama
+  # i radnim prostorima u coworking prostoru
+  # ============================================
+  room-service:
+    build: ./room-service
+    container_name: coworking-room-service
+    ports:
+      - "3002:3002"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: coworking
+      DB_PASSWORD: coworking123
+      DB_NAME: coworking
+      PORT: 3002
+    networks:
+      - coworking-network
+
+  # ============================================
+  # Servis za rezervacije - kreiranje, izmena
+  # i otkazivanje rezervacija prostorija
+  # Koristi RabbitMQ za slanje obavestenja
+  # ============================================
+  booking-service:
+    build: ./booking-service
+    container_name: coworking-booking-service
+    ports:
+      - "3003:3003"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: coworking
+      DB_PASSWORD: coworking123
+      DB_NAME: coworking
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      PORT: 3003
+    networks:
+      - coworking-network
+
+  # ============================================
+  # Servis za obavestenja - prima poruke iz reda
+  # i salje obavestenja korisnicima o statusu
+  # njihovih rezervacija
+  # ============================================
+  notification-service:
+    build: ./notification-service
+    container_name: coworking-notification-service
+    ports:
+      - "3004:3004"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: coworking
+      DB_PASSWORD: coworking123
+      DB_NAME: coworking
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      PORT: 3004
+    networks:
+      - coworking-network
+
+  # ============================================
+  # API kapija - jedina ulazna tacka za sve
+  # klijentske zahteve, prosledjuje ih ka
+  # odgovarajucim mikro-servisima
+  # ============================================
+  api-gateway:
+    build: ./api-gateway
+    container_name: coworking-api-gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - user-service
+      - room-service
+      - booking-service
+      - notification-service
+    environment:
+      USER_SERVICE_URL: http://user-service:3001
+      ROOM_SERVICE_URL: http://room-service:3002
+      BOOKING_SERVICE_URL: http://booking-service:3003
+      NOTIFICATION_SERVICE_URL: http://notification-service:3004
+      JWT_SECRET: coworking-jwt-secret-2026
+      PORT: 3000
+    networks:
+      - coworking-network
+
+# ============================================
+# Mreze - definicija Docker mreze koja
+# omogucava komunikaciju izmedju svih servisa
+# ============================================
+networks:
+  coworking-network:
+    driver: bridge
+
+# ============================================
+# Volumeni - trajno skladiste podataka
+# za PostgreSQL bazu podataka
+# ============================================
+volumes:
+  postgres_data:
