@@ -1,0 +1,113 @@
+# ============================================
+# CI PIPELINE - Kontinuirana Integracija
+# ============================================
+# Ovaj workflow se automatski pokrece na svaki push i pull request.
+# Zadaci:
+#   1. Instalira zavisnosti za svaki mikroservis
+#   2. Kompajlira TypeScript kod (build)
+#   3. Pokrece sve unit testove
+#   4. Pravi Docker slike za svaki servis
+#
+# Ako bilo koji korak padne, ceo pipeline pada i PR se ne moze merge-ovati.
+# Ovo garantuje da samo ispravan kod ulazi u main granu.
+
+name: CI Pipeline
+
+# Kada se pokrece pipeline:
+# - Na svaki push u bilo koju granu
+# - Na svaki pull request ka main grani
+on:
+  push:
+    branches: ['*']
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ============================================
+  # JOB 1: Build i testiranje svih servisa
+  # ============================================
+  build-and-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    strategy:
+      # matrix strategija - pokrece isti posao za svaki servis paralelno
+      # Ovo znaci da se 5 instanci ovog job-a pokrece istovremeno,
+      # svaka za razlicit servis. Ako jedan padne, ostali nastavljaju.
+      matrix:
+        service:
+          - api-gateway
+          - user-service
+          - room-service
+          - booking-service
+          - notification-service
+
+    steps:
+      # Korak 1: Preuzimanje koda iz repozitorijuma
+      - name: Checkout koda
+        uses: actions/checkout@v4
+
+      # Korak 2: Instalacija Node.js 22
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Korak 3: Keshiranje node_modules foldera
+      # Ovo ubrzava pipeline jer ne mora svaki put da preuzima sve pakete.
+      # Kljuc za kesh je hash od package.json fajla - ako se promeni, kesh se obnavlja.
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: ${{ matrix.service }}/node_modules
+          key: ${{ runner.os }}-${{ matrix.service }}-${{ hashFiles(format('{0}/package.json', matrix.service)) }}
+
+      # Korak 4: Instalacija npm zavisnosti
+      - name: Instalacija zavisnosti
+        working-directory: ${{ matrix.service }}
+        run: npm install
+
+      # Korak 5: Kompajliranje TypeScript-a u JavaScript
+      # Ovo je isti korak koji Dockerfile radi u "builder" fazi.
+      - name: Build
+        working-directory: ${{ matrix.service }}
+        run: npm run build
+
+      # Korak 6: Pokretanje unit testova
+      # --passWithNoTests znaci da nece pasti ako servis nema testove
+      - name: Pokretanje testova
+        working-directory: ${{ matrix.service }}
+        run: npx jest --passWithNoTests
+
+  # ============================================
+  # JOB 2: Pravljenje Docker slika
+  # ============================================
+  docker-build:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    # Ovaj job se pokrece tek NAKON sto build-and-test zavrsi uspesno.
+    # Nema smisla praviti Docker slike ako testovi padaju.
+    needs: build-and-test
+
+    strategy:
+      matrix:
+        service:
+          - api-gateway
+          - user-service
+          - room-service
+          - booking-service
+          - notification-service
+
+    steps:
+      - name: Checkout koda
+        uses: actions/checkout@v4
+
+      # Pravljenje Docker slike za servis.
+      # -t flag daje ime slici (tag), -f specificira putanju do Dockerfile-a.
+      # Slika se ne pushuje nikuda - samo se proverava da li se uspesno pravi.
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t coworking-${{ matrix.service }}:${{ github.sha }} \
+            -f ${{ matrix.service }}/Dockerfile \
+            ${{ matrix.service }}
