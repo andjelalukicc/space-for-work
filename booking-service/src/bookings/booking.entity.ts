@@ -15,10 +15,10 @@
 
 // Uvoz TypeORM dekoratora koji se koriste za definisanje strukture tabele
 import {
-  Entity,                  // Dekorator koji oznacava klasu kao entitet (tabelu u bazi)
-  PrimaryGeneratedColumn,  // Dekorator za primarni kljuc koji se automatski generise
-  Column,                  // Dekorator za obicnu kolonu u tabeli
-  CreateDateColumn,        // Dekorator za kolonu koja automatski cuva datum kreiranja zapisa
+  Entity, // Dekorator koji oznacava klasu kao entitet (tabelu u bazi)
+  PrimaryGeneratedColumn, // Dekorator za primarni kljuc koji se automatski generise
+  Column, // Dekorator za obicnu kolonu u tabeli
+  CreateDateColumn, // Dekorator za kolonu koja automatski cuva datum kreiranja zapisa
 } from 'typeorm';
 
 /**

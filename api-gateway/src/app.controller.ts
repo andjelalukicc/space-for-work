@@ -25,14 +25,7 @@
 //        / Booking servisu (:3003) / Notification servisu (:3004)
 // ============================================================================
 
-import {
-  Controller,
-  All,
-  Get,
-  Req,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, All, Get, Req, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import axios from 'axios';
@@ -52,8 +45,14 @@ export class AppController {
     this.serviceUrls = {
       users: configService.get('USER_SERVICE_URL', 'http://localhost:3001'),
       rooms: configService.get('ROOM_SERVICE_URL', 'http://localhost:3002'),
-      bookings: configService.get('BOOKING_SERVICE_URL', 'http://localhost:3003'),
-      notifications: configService.get('NOTIFICATION_SERVICE_URL', 'http://localhost:3004'),
+      bookings: configService.get(
+        'BOOKING_SERVICE_URL',
+        'http://localhost:3003',
+      ),
+      notifications: configService.get(
+        'NOTIFICATION_SERVICE_URL',
+        'http://localhost:3004',
+      ),
     };
   }
 
@@ -136,7 +135,13 @@ export class AppController {
   @UseGuards(JwtAuthGuard)
   @All('api/notifications')
   async proxyNotifications(@Req() req, @Res() res) {
-    return this.proxyRequest(req, res, 'notifications', '/notifications', req.user?.id);
+    return this.proxyRequest(
+      req,
+      res,
+      'notifications',
+      '/notifications',
+      req.user?.id,
+    );
   }
 
   // Prosledjuje zahteve za pojedinacnu notifikaciju (npr. /api/notifications/123/read).

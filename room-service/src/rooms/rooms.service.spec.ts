@@ -43,7 +43,12 @@ describe('RoomsService', () => {
   describe('findAll', () => {
     it('treba da vrati sve aktivne prostorije', async () => {
       const rooms = [
-        { id: '1', name: 'Meeting Room Small', type: 'meeting_room', isActive: true },
+        {
+          id: '1',
+          name: 'Meeting Room Small',
+          type: 'meeting_room',
+          isActive: true,
+        },
         { id: '2', name: 'Phone Booth 1', type: 'phone_booth', isActive: true },
       ];
       mockRepository.find.mockResolvedValue(rooms);
@@ -132,12 +137,14 @@ describe('RoomsService', () => {
   describe('availability stream (SSE)', () => {
     it('treba da emituje dogadjaj kroz stream', (done) => {
       // Pretplacujemo se na stream
-      const subscription = service.getAvailabilityStream().subscribe((event) => {
-        expect(event.roomId).toBe('room-uuid');
-        expect(event.event).toBe('booking_created');
-        subscription.unsubscribe();
-        done();
-      });
+      const subscription = service
+        .getAvailabilityStream()
+        .subscribe((event) => {
+          expect(event.roomId).toBe('room-uuid');
+          expect(event.event).toBe('booking_created');
+          subscription.unsubscribe();
+          done();
+        });
 
       // Emitujemo dogadjaj
       service.emitAvailabilityChange('room-uuid', 'booking_created');

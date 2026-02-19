@@ -18,16 +18,16 @@
  */
 
 import {
-  Injectable,          // Dekorator koji oznacava klasu kao servis koji moze da se injektuje
-  ConflictException,   // HTTP 409 - koristi se kada postoji konflikt (npr. preklapanje rezervacija)
+  Injectable, // Dekorator koji oznacava klasu kao servis koji moze da se injektuje
+  ConflictException, // HTTP 409 - koristi se kada postoji konflikt (npr. preklapanje rezervacija)
   BadRequestException, // HTTP 400 - koristi se za nevalidne podatke (npr. prekratka rezervacija)
-  NotFoundException,   // HTTP 404 - koristi se kada rezervacija nije pronadjena
-  Inject,              // Dekorator za rucno injektovanje zavisnosti po tokenu/imenu
+  NotFoundException, // HTTP 404 - koristi se kada rezervacija nije pronadjena
+  Inject, // Dekorator za rucno injektovanje zavisnosti po tokenu/imenu
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';  // Dekorator za injektovanje TypeORM repozitorijuma
-import { Repository } from 'typeorm';                // TypeORM klasa za rad sa bazom podataka
+import { InjectRepository } from '@nestjs/typeorm'; // Dekorator za injektovanje TypeORM repozitorijuma
+import { Repository } from 'typeorm'; // TypeORM klasa za rad sa bazom podataka
 import { ClientProxy } from '@nestjs/microservices'; // Interfejs za komunikaciju sa drugim mikroservisima
-import { Booking } from './booking.entity';           // Entitet rezervacije (model tabele)
+import { Booking } from './booking.entity'; // Entitet rezervacije (model tabele)
 import { CreateBookingDto } from './dto/create-booking.dto'; // DTO za validaciju ulaznih podataka
 
 /**
@@ -155,9 +155,7 @@ export class BookingsService {
       where: { userId, date, status: 'active' },
     });
     if (userBookingsToday >= 3) {
-      throw new ConflictException(
-        'Maximum 3 active bookings per day reached',
-      );
+      throw new ConflictException('Maximum 3 active bookings per day reached');
     }
 
     // ---------------------------------------------------------------
@@ -199,10 +197,10 @@ export class BookingsService {
      */
     const overlapping = await this.bookingsRepository
       .createQueryBuilder('booking')
-      .where('booking.roomId = :roomId', { roomId })          // Ista soba
-      .andWhere('booking.date = :date', { date })              // Isti datum
+      .where('booking.roomId = :roomId', { roomId }) // Ista soba
+      .andWhere('booking.date = :date', { date }) // Isti datum
       .andWhere('booking.status = :status', { status: 'active' }) // Samo aktivne rezervacije
-      .andWhere('booking.startTime < :endTime', { endTime })   // Pocetak postojece je PRE kraja nove
+      .andWhere('booking.startTime < :endTime', { endTime }) // Pocetak postojece je PRE kraja nove
       .andWhere('booking.endTime > :startTime', { startTime }) // Kraj postojece je POSLE pocetka nove
       .getCount(); // Brojimo koliko takvih preklapajucih rezervacija postoji
 
@@ -229,10 +227,10 @@ export class BookingsService {
      */
     const userOverlapping = await this.bookingsRepository
       .createQueryBuilder('booking')
-      .where('booking.userId = :userId', { userId })           // Isti korisnik
-      .andWhere('booking.date = :date', { date })              // Isti datum
+      .where('booking.userId = :userId', { userId }) // Isti korisnik
+      .andWhere('booking.date = :date', { date }) // Isti datum
       .andWhere('booking.status = :status', { status: 'active' }) // Samo aktivne
-      .andWhere('booking.startTime < :endTime', { endTime })   // Preklapanje - pocetak < kraj nove
+      .andWhere('booking.startTime < :endTime', { endTime }) // Preklapanje - pocetak < kraj nove
       .andWhere('booking.endTime > :startTime', { startTime }) // Preklapanje - kraj > pocetak nove
       .getCount();
 

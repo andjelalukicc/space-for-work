@@ -29,18 +29,18 @@
  */
 
 import {
-  Controller,          // Dekorator koji oznacava klasu kao kontroler
-  Post,                // Dekorator za POST HTTP metodu (kreiranje resursa)
-  Get,                 // Dekorator za GET HTTP metodu (citanje resursa)
-  Delete,              // Dekorator za DELETE HTTP metodu (brisanje/otkazivanje resursa)
-  Body,                // Dekorator za citanje tela (body) HTTP zahteva
-  Param,               // Dekorator za citanje URL parametara (npr. :id)
-  Query,               // Dekorator za citanje query parametara (npr. ?date=2026-01-01)
-  Headers,             // Dekorator za citanje HTTP header-a (npr. x-user-id)
-  ValidationPipe,      // Pipe koji automatski validira ulazne podatke prema DTO pravilima
+  Controller, // Dekorator koji oznacava klasu kao kontroler
+  Post, // Dekorator za POST HTTP metodu (kreiranje resursa)
+  Get, // Dekorator za GET HTTP metodu (citanje resursa)
+  Delete, // Dekorator za DELETE HTTP metodu (brisanje/otkazivanje resursa)
+  Body, // Dekorator za citanje tela (body) HTTP zahteva
+  Param, // Dekorator za citanje URL parametara (npr. :id)
+  Query, // Dekorator za citanje query parametara (npr. ?date=2026-01-01)
+  Headers, // Dekorator za citanje HTTP header-a (npr. x-user-id)
+  ValidationPipe, // Pipe koji automatski validira ulazne podatke prema DTO pravilima
   UnauthorizedException, // HTTP 401 - koristi se kada korisnik nije autentifikovan
 } from '@nestjs/common';
-import { BookingsService } from './bookings.service';        // Servis sa poslovnom logikom
+import { BookingsService } from './bookings.service'; // Servis sa poslovnom logikom
 import { CreateBookingDto } from './dto/create-booking.dto'; // DTO za validaciju ulaznih podataka
 
 /**
@@ -134,10 +134,7 @@ export class BookingsController {
    * @Headers('x-user-id') - ID korisnika koji pokusava da otkaze (iz API Gateway-a)
    */
   @Delete(':id')
-  async cancel(
-    @Param('id') id: string,
-    @Headers('x-user-id') userId: string,
-  ) {
+  async cancel(@Param('id') id: string, @Headers('x-user-id') userId: string) {
     if (!userId) {
       throw new UnauthorizedException('User ID is required');
     }

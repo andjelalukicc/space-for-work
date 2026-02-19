@@ -15,12 +15,12 @@
  */
 
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';                          // Za registraciju entiteta u bazi
-import { ClientsModule, Transport } from '@nestjs/microservices';         // Za komunikaciju sa drugim mikroservisima
-import { ConfigModule, ConfigService } from '@nestjs/config';             // Za citanje env varijabli (npr. RABBITMQ_URL)
-import { Booking } from './booking.entity';                               // Entitet rezervacije
-import { BookingsService } from './bookings.service';                     // Servis sa poslovnom logikom
-import { BookingsController } from './bookings.controller';               // REST API kontroler
+import { TypeOrmModule } from '@nestjs/typeorm'; // Za registraciju entiteta u bazi
+import { ClientsModule, Transport } from '@nestjs/microservices'; // Za komunikaciju sa drugim mikroservisima
+import { ConfigModule, ConfigService } from '@nestjs/config'; // Za citanje env varijabli (npr. RABBITMQ_URL)
+import { Booking } from './booking.entity'; // Entitet rezervacije
+import { BookingsService } from './bookings.service'; // Servis sa poslovnom logikom
+import { BookingsController } from './bookings.controller'; // REST API kontroler
 
 /**
  * @Module dekorator konfiguracije:
@@ -69,25 +69,25 @@ import { BookingsController } from './bookings.controller';               // RES
     ClientsModule.registerAsync([
       {
         name: 'NOTIFICATIONS_SERVICE',
-        imports: [ConfigModule],  // Uvozimo ConfigModule da bi ConfigService bio dostupan u factory-ju
+        imports: [ConfigModule], // Uvozimo ConfigModule da bi ConfigService bio dostupan u factory-ju
         useFactory: (configService: ConfigService) => ({
           transport: Transport.RMQ,
           options: {
             urls: [
               configService.get<string>(
                 'RABBITMQ_URL',
-                'amqp://guest:guest@localhost:5672',  // Podrazumevana vrednost za lokalni razvoj
+                'amqp://guest:guest@localhost:5672', // Podrazumevana vrednost za lokalni razvoj
               ),
             ],
             queue: 'notifications_queue',
             queueOptions: { durable: true },
           },
         }),
-        inject: [ConfigService],  // Govori NestJS-u da ubaci ConfigService u useFactory funkciju
+        inject: [ConfigService], // Govori NestJS-u da ubaci ConfigService u useFactory funkciju
       },
     ]),
   ],
-  controllers: [BookingsController],  // Registracija kontrolera - NestJS ce automatski mapirati rute
-  providers: [BookingsService],       // Registracija servisa - NestJS ce ga ucitati za Dependency Injection
+  controllers: [BookingsController], // Registracija kontrolera - NestJS ce automatski mapirati rute
+  providers: [BookingsService], // Registracija servisa - NestJS ce ga ucitati za Dependency Injection
 })
 export class BookingsModule {}

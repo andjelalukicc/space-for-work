@@ -14,7 +14,7 @@
  * - GET /rooms/:id          - Vraca jednu prostoriju po ID-u
  */
 
-import { Controller, Get, Param, Query, Sse } from '@nestjs/common';
+import { Controller, Get, Param, Sse } from '@nestjs/common';
 import { RoomsService } from './rooms.service';
 // Observable i map iz RxJS biblioteke - potrebni za implementaciju SSE (Server-Sent Events)
 // Observable predstavlja tok podataka koji se emituje tokom vremena
@@ -81,9 +81,12 @@ export class RoomsController {
     return this.roomsService.getAvailabilityStream().pipe(
       // map operator transformise svaki emitovani podatak iz Subject-a
       // u MessageEvent format koji je kompatibilan sa SSE protokolom
-      map((data) => ({
-        data: JSON.stringify(data),
-      }) as MessageEvent),
+      map(
+        (data) =>
+          ({
+            data: JSON.stringify(data),
+          }) as MessageEvent,
+      ),
     );
   }
 

@@ -57,7 +57,7 @@ export class UsersService {
     const saved = await this.usersRepository.save(user);
 
     // Ukloni lozinku iz odgovora - NIKAD ne saljemo hash nazad klijentu
-    const { password, ...result } = saved;
+    const { password: _password, ...result } = saved;
     return result;
   }
 
@@ -88,7 +88,7 @@ export class UsersService {
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
-    const { password, ...result } = user;
+    const { password: _password, ...result } = user;
     return result;
   }
 

@@ -142,9 +142,9 @@ describe('BookingsService', () => {
     it('treba da baci gresku ako korisnik vec ima 3 rezervacije taj dan', async () => {
       mockRepository.count.mockResolvedValue(3); // Vec ima 3
 
-      await expect(
-        service.create('user-uuid', validBooking),
-      ).rejects.toThrow(ConflictException);
+      await expect(service.create('user-uuid', validBooking)).rejects.toThrow(
+        ConflictException,
+      );
     });
 
     it('treba da baci gresku ako se soba preklapa sa postojecom rezervacijom', async () => {
@@ -152,9 +152,9 @@ describe('BookingsService', () => {
       // Prvi poziv getCount (room overlap) vraca 1 - ima preklapanje
       mockQueryBuilder.getCount.mockResolvedValueOnce(1);
 
-      await expect(
-        service.create('user-uuid', validBooking),
-      ).rejects.toThrow(ConflictException);
+      await expect(service.create('user-uuid', validBooking)).rejects.toThrow(
+        ConflictException,
+      );
     });
 
     it('treba da baci gresku ako korisnik ima preklapajucu rezervaciju', async () => {
@@ -164,9 +164,9 @@ describe('BookingsService', () => {
         .mockResolvedValueOnce(0)
         .mockResolvedValueOnce(1);
 
-      await expect(
-        service.create('user-uuid', validBooking),
-      ).rejects.toThrow(ConflictException);
+      await expect(service.create('user-uuid', validBooking)).rejects.toThrow(
+        ConflictException,
+      );
     });
 
     it('treba da dozvoli rezervaciju od 2 sata', async () => {
@@ -210,7 +210,10 @@ describe('BookingsService', () => {
         status: 'active',
       };
       mockRepository.findOne.mockResolvedValue({ ...booking });
-      mockRepository.save.mockResolvedValue({ ...booking, status: 'cancelled' });
+      mockRepository.save.mockResolvedValue({
+        ...booking,
+        status: 'cancelled',
+      });
 
       const result = await service.cancel('booking-uuid', 'user-uuid');
 
@@ -228,9 +231,9 @@ describe('BookingsService', () => {
         status: 'active',
       });
 
-      await expect(
-        service.cancel('booking-uuid', 'user-uuid'),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.cancel('booking-uuid', 'user-uuid')).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('treba da baci gresku ako je rezervacija vec otkazana', async () => {
@@ -240,17 +243,17 @@ describe('BookingsService', () => {
         status: 'cancelled', // Vec otkazana
       });
 
-      await expect(
-        service.cancel('booking-uuid', 'user-uuid'),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.cancel('booking-uuid', 'user-uuid')).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('treba da baci NotFoundException ako rezervacija ne postoji', async () => {
       mockRepository.findOne.mockResolvedValue(null);
 
-      await expect(
-        service.cancel('nepostoji', 'user-uuid'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.cancel('nepostoji', 'user-uuid')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -259,8 +262,18 @@ describe('BookingsService', () => {
   describe('findByUser', () => {
     it('treba da vrati rezervacije korisnika', async () => {
       const bookings = [
-        { id: '1', userId: 'user-uuid', date: '2026-03-01', startTime: '09:00' },
-        { id: '2', userId: 'user-uuid', date: '2026-03-01', startTime: '14:00' },
+        {
+          id: '1',
+          userId: 'user-uuid',
+          date: '2026-03-01',
+          startTime: '09:00',
+        },
+        {
+          id: '2',
+          userId: 'user-uuid',
+          date: '2026-03-01',
+          startTime: '14:00',
+        },
       ];
       mockRepository.find.mockResolvedValue(bookings);
 

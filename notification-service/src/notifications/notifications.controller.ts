@@ -38,9 +38,7 @@ import { NotificationsService } from './notifications.service';
 export class NotificationsController {
   // Dependency Injection - NestJS automatski ubacuje NotificationsService
   // instancu u kontroler kroz konstruktor.
-  constructor(
-    private readonly notificationsService: NotificationsService,
-  ) {}
+  constructor(private readonly notificationsService: NotificationsService) {}
 
   // @EventPattern('booking_created') - ovaj dekorator registruje metodu
   // kao LISTENER za RabbitMQ event sa pattern-om 'booking_created'.

@@ -50,7 +50,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       // JWT token je potpisan ovim kljucem kada je kreiran u User servisu.
       // Ovde se koristi ISTI kljuc da se verifikuje da token nije falsifikovan.
       // Cita se iz JWT_SECRET env varijable ili koristi podrazumevanu vrednost.
-      secretOrKey: configService.get<string>('JWT_SECRET', 'coworking-secret-key'),
+      secretOrKey: configService.get<string>(
+        'JWT_SECRET',
+        'coworking-secret-key',
+      ),
     });
   }
 

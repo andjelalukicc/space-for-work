@@ -67,7 +67,14 @@ jobs:
         working-directory: ${{ matrix.service }}
         run: npm install
 
-      # Korak 5: Kompajliranje TypeScript-a u JavaScript
+      # Korak 5: Staticka analiza koda (ESLint)
+      # Proverava stil koda, potencijalne greske i code smells.
+      # Ako ESLint pronadje gresku, pipeline ce pasti.
+      - name: Lint (ESLint)
+        working-directory: ${{ matrix.service }}
+        run: npx eslint src/
+
+      # Korak 6: Kompajliranje TypeScript-a u JavaScript
       # Ovo je isti korak koji Dockerfile radi u "builder" fazi.
       - name: Build
         working-directory: ${{ matrix.service }}

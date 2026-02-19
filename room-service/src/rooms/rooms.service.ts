@@ -31,7 +31,10 @@ export class RoomsService implements OnModuleInit {
   // Kada se dostupnost prostorije promeni (npr. neko rezervise ili otkaze rezervaciju),
   // emitujemo dogadjaj kroz ovaj Subject, a svi pretplaceni klijenti dobijaju obavestenje
   // Ovo je kljucni deo reaktivne komunikacije u sistemu
-  private availabilitySubject = new Subject<{ roomId: string; event: string }>();
+  private availabilitySubject = new Subject<{
+    roomId: string;
+    event: string;
+  }>();
 
   // Konstruktor sa dependency injection - TypeORM repozitorijum za Room entitet
   // @InjectRepository(Room) - NestJS dekorator koji injektuje TypeORM repozitorijum
@@ -83,12 +86,42 @@ export class RoomsService implements OnModuleInit {
         capacity: 20,
         amenities: ['Smart TV', 'Whiteboard'],
       },
-      { name: 'Phone Booth 1', type: 'phone_booth', capacity: 1, amenities: [] },
-      { name: 'Phone Booth 2', type: 'phone_booth', capacity: 1, amenities: [] },
-      { name: 'Phone Booth 3', type: 'phone_booth', capacity: 1, amenities: [] },
-      { name: 'Phone Booth 4', type: 'phone_booth', capacity: 1, amenities: [] },
-      { name: 'Phone Booth 5', type: 'phone_booth', capacity: 1, amenities: [] },
-      { name: 'Phone Booth 6', type: 'phone_booth', capacity: 1, amenities: [] },
+      {
+        name: 'Phone Booth 1',
+        type: 'phone_booth',
+        capacity: 1,
+        amenities: [],
+      },
+      {
+        name: 'Phone Booth 2',
+        type: 'phone_booth',
+        capacity: 1,
+        amenities: [],
+      },
+      {
+        name: 'Phone Booth 3',
+        type: 'phone_booth',
+        capacity: 1,
+        amenities: [],
+      },
+      {
+        name: 'Phone Booth 4',
+        type: 'phone_booth',
+        capacity: 1,
+        amenities: [],
+      },
+      {
+        name: 'Phone Booth 5',
+        type: 'phone_booth',
+        capacity: 1,
+        amenities: [],
+      },
+      {
+        name: 'Phone Booth 6',
+        type: 'phone_booth',
+        capacity: 1,
+        amenities: [],
+      },
     ];
 
     // Iteriramo kroz niz i svaku prostoriju cuvamo u bazu
