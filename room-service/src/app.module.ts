@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RoomsModule } from './rooms/rooms.module';
 import { Room } from './rooms/room.entity';
+import { MetricsController } from './metrics.controller';
 
 @Module({
   imports: [
@@ -23,5 +24,6 @@ import { Room } from './rooms/room.entity';
     }),
     RoomsModule,
   ],
+  controllers: [MetricsController],
 })
 export class AppModule {}

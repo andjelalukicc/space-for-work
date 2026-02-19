@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NotificationsModule } from './notifications/notifications.module';
 import { Notification } from './notifications/notification.entity';
+import { MetricsController } from './metrics.controller';
 
 @Module({
   imports: [
@@ -23,5 +24,6 @@ import { Notification } from './notifications/notification.entity';
     }),
     NotificationsModule,
   ],
+  controllers: [MetricsController],
 })
 export class AppModule {}

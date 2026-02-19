@@ -16,6 +16,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { AppController } from './app.controller';
 import { JwtStrategy } from './auth/jwt.strategy';
+import { MetricsController } from './metrics.controller';
 
 @Module({
   imports: [
@@ -39,7 +40,7 @@ import { JwtStrategy } from './auth/jwt.strategy';
     }),
   ],
   // AppController - jedini kontroler u gateway-u, sadrzi sve proxy rute.
-  controllers: [AppController],
+  controllers: [AppController, MetricsController],
   // JwtStrategy - provider koji definise kako se JWT token dekodira i validira.
   // Passport automatski koristi ovu strategiju kada se primeni JwtAuthGuard.
   providers: [JwtStrategy],

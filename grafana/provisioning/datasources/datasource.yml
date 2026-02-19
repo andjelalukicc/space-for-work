@@ -1,0 +1,16 @@
+# Конфигурација извора података за Grafana
+# Prometheus је подразумевани извор метрика за све дашборде
+
+apiVersion: 1
+
+datasources:
+  # Prometheus - примарни извор података за метрике сервиса
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true # Подразумевани извор података
+    editable: true # Дозвољено уређивање кроз кориснички интерфејс
+    jsonData:
+      timeInterval: "15s" # Интервал прикупљања (усклађен са Prometheus конфигурацијом)
+      httpMethod: POST
