@@ -10,8 +10,9 @@
 // Zato su importovani samo moduli za konfiguraciju, autentifikaciju i JWT.
 // ============================================================================
 
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { LoggingMiddleware } from './logging.middleware';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { AppController } from './app.controller';
@@ -45,4 +46,11 @@ import { MetricsController } from './metrics.controller';
   // Passport automatski koristi ovu strategiju kada se primeni JwtAuthGuard.
   providers: [JwtStrategy],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  // configure() metoda registruje middleware za sve rute ('*').
+  // LoggingMiddleware ce se izvrsavati za svaki HTTP zahtev
+  // pre nego sto zahtev stigne do kontrolera.
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggingMiddleware).forRoutes('*');
+  }
+}
