@@ -16,6 +16,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { User } from './users/user.entity';
 import { MetricsController } from './metrics.controller';
+import { HealthController } from './health.controller';
 
 @Module({
   imports: [
@@ -40,6 +41,6 @@ import { MetricsController } from './metrics.controller';
 
     UsersModule, // Nas modul za korisnike
   ],
-  controllers: [MetricsController], // Prometheus metrics endpoint
+  controllers: [MetricsController, HealthController], // Prometheus metrics + health check
 })
 export class AppModule {}

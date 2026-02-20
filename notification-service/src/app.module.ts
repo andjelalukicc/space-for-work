@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { NotificationsModule } from './notifications/notifications.module';
 import { Notification } from './notifications/notification.entity';
 import { MetricsController } from './metrics.controller';
+import { HealthController } from './health.controller';
 
 @Module({
   imports: [
@@ -24,6 +25,6 @@ import { MetricsController } from './metrics.controller';
     }),
     NotificationsModule,
   ],
-  controllers: [MetricsController],
+  controllers: [MetricsController, HealthController],
 })
 export class AppModule {}
