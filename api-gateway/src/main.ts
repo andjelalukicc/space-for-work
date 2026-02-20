@@ -1,9 +1,27 @@
 import { NestFactory } from '@nestjs/core';
+import { Logger } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+  // Kreiramo aplikaciju sa ugradjenim NestJS logger-om.
+  // Logger ispisuje poruke u konzolu sa vremenskim pecatom i nivoom (LOG, ERROR, WARN).
   const app = await NestFactory.create(AppModule);
+  const logger = new Logger('APIGateway');
+
+  // ============================================
+  // CORS - Cross-Origin Resource Sharing
+  // ============================================
+  // CORS dozvoljava frontend aplikaciji sa drugog domena/porta da pristupa nasem API-ju.
+  // Bez CORS-a, browser blokira zahteve sa http://localhost:4200 ka http://localhost:3000.
+  // origin: true - dozvoljava zahteve sa bilo kog domena (za development).
+  // credentials: true - dozvoljava slanje kolacica i Authorization header-a.
+  app.enableCors({
+    origin: true,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  });
+  logger.log('CORS omogucen za sve domene');
 
   // Konfiguracija Swagger dokumentacije pomocu DocumentBuilder-a.
   // DocumentBuilder koristi builder obrazac za postepeno definisanje opcija.
@@ -26,6 +44,9 @@ async function bootstrap() {
   // Korisnik moze pristupiti dokumentaciji na http://localhost:3000/api-docs
   SwaggerModule.setup('api-docs', app, document);
 
-  await app.listen(process.env.PORT ?? 3000);
+  const port = process.env.PORT ?? 3000;
+  await app.listen(port);
+  logger.log(`API Gateway pokrenut na portu ${port}`);
+  logger.log(`Swagger UI dostupan na http://localhost:${port}/api-docs`);
 }
 bootstrap();
