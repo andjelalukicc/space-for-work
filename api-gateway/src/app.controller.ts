@@ -27,6 +27,17 @@
 
 import { Controller, All, Get, Req, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+// Swagger dekoratori za automatsko generisanje API dokumentacije.
+// @ApiTags - grupisanje endpointa po kategorijama u Swagger UI-ju.
+// @ApiOperation - opis sta odredjena ruta radi.
+// @ApiResponse - opis mogucih HTTP odgovora (status kodova).
+// @ApiBearerAuth - oznacava da ruta zahteva JWT Bearer token.
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import axios from 'axios';
 
@@ -58,6 +69,12 @@ export class AppController {
 
   // GET /health - health check endpoint za proveru da li je gateway aktivan.
   // Vraca status i listu servisa. Koristi se za monitoring i load balancere.
+  // @ApiTags grupisanje - ovaj endpoint pripada kategoriji 'Health' u dokumentaciji.
+  @ApiTags('Health')
+  // @ApiOperation opisuje namenu endpointa u Swagger UI-ju.
+  @ApiOperation({ summary: 'Provera zdravlja API Gateway-a' })
+  // @ApiResponse definise moguce odgovore sa status kodom i opisom.
+  @ApiResponse({ status: 200, description: 'Gateway je aktivan i zdrav' })
   @Get('health')
   health() {
     return {
@@ -74,12 +91,24 @@ export class AppController {
 
   // @All('api/users/register') - hvata SVE HTTP metode (GET, POST, PUT, itd.)
   // na putanji /api/users/register i prosledjuje ih User servisu.
+  // @ApiTags('Users') - grupisanje u kategoriju 'Users' u Swagger dokumentaciji.
+  @ApiTags('Users')
+  @ApiOperation({ summary: 'Registracija novog korisnika' })
+  @ApiResponse({ status: 201, description: 'Korisnik uspesno registrovan' })
+  @ApiResponse({ status: 400, description: 'Nevalidni podaci za registraciju' })
   @All('api/users/register')
   async proxyRegister(@Req() req, @Res() res) {
     return this.proxyRequest(req, res, 'users', '/users/register');
   }
 
   // Prosledjuje login zahteve ka User servisu.
+  @ApiTags('Users')
+  @ApiOperation({ summary: 'Prijava korisnika (login)' })
+  @ApiResponse({ status: 200, description: 'Uspesna prijava, vraca JWT token' })
+  @ApiResponse({
+    status: 401,
+    description: 'Neispravni kredencijali (email ili lozinka)',
+  })
   @All('api/users/login')
   async proxyLogin(@Req() req, @Res() res) {
     return this.proxyRequest(req, res, 'users', '/users/login');
@@ -87,6 +116,9 @@ export class AppController {
 
   // Prosledjuje zahteve za listu soba ka Room servisu.
   // Javna ruta - gosti mogu da pregledaju dostupne sobe bez logovanja.
+  @ApiTags('Rooms')
+  @ApiOperation({ summary: 'Pregled svih dostupnih soba' })
+  @ApiResponse({ status: 200, description: 'Lista soba uspesno vracena' })
   @All('api/rooms')
   async proxyRooms(@Req() req, @Res() res) {
     return this.proxyRequest(req, res, 'rooms', '/rooms');
@@ -95,6 +127,13 @@ export class AppController {
   // Prosledjuje zahteve za pojedinacnu sobu ka Room servisu.
   // Wildcard *path hvata sve sto dolazi posle /api/rooms/ (npr. /api/rooms/123).
   // Zatim se /api/rooms zamenjuje sa /rooms da odgovara ruti Room servisa.
+  @ApiTags('Rooms')
+  @ApiOperation({ summary: 'Operacije nad pojedinacnom sobom (po ID-ju)' })
+  @ApiResponse({ status: 200, description: 'Podaci o sobi uspesno vraceni' })
+  @ApiResponse({
+    status: 404,
+    description: 'Soba sa datim ID-jem nije pronadjena',
+  })
   @All('api/rooms/*path')
   async proxyRoomsById(@Req() req, @Res() res) {
     const path = req.url.replace('/api/rooms', '/rooms');
@@ -108,6 +147,15 @@ export class AppController {
 
   // Prosledjuje zahteve za korisnikov profil ka User servisu.
   // Zahteva JWT token jer samo ulogovani korisnik moze da vidi svoj profil.
+  // @ApiBearerAuth() oznacava da je JWT Bearer token potreban za ovu rutu.
+  @ApiTags('Users')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Pregled profila ulogovanog korisnika' })
+  @ApiResponse({ status: 200, description: 'Podaci o profilu uspesno vraceni' })
+  @ApiResponse({
+    status: 401,
+    description: 'Neautorizovan pristup - neispravan ili nedostajuci token',
+  })
   @UseGuards(JwtAuthGuard)
   @All('api/users/profile')
   async proxyProfile(@Req() req, @Res() res) {
@@ -117,6 +165,15 @@ export class AppController {
   // Prosledjuje zahteve za rezervacije ka Booking servisu.
   // req.user?.id - ID korisnika izvucen iz JWT tokena,
   // prosledjuje se kao x-user-id header da Booking servis zna ko pravi zahtev.
+  @ApiTags('Bookings')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Kreiranje ili pregled rezervacija' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista rezervacija uspesno vracena',
+  })
+  @ApiResponse({ status: 201, description: 'Rezervacija uspesno kreirana' })
+  @ApiResponse({ status: 401, description: 'Neautorizovan pristup' })
   @UseGuards(JwtAuthGuard)
   @All('api/bookings')
   async proxyBookings(@Req() req, @Res() res) {
@@ -124,6 +181,17 @@ export class AppController {
   }
 
   // Prosledjuje zahteve za pojedinacnu rezervaciju (npr. /api/bookings/123/cancel).
+  @ApiTags('Bookings')
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Operacije nad pojedinacnom rezervacijom (pregled, otkazivanje)',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Operacija nad rezervacijom uspesno izvrsena',
+  })
+  @ApiResponse({ status: 404, description: 'Rezervacija nije pronadjena' })
+  @ApiResponse({ status: 401, description: 'Neautorizovan pristup' })
   @UseGuards(JwtAuthGuard)
   @All('api/bookings/*path')
   async proxyBookingsById(@Req() req, @Res() res) {
@@ -132,6 +200,14 @@ export class AppController {
   }
 
   // Prosledjuje zahteve za notifikacije ka Notification servisu.
+  @ApiTags('Notifications')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Pregled notifikacija korisnika' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista notifikacija uspesno vracena',
+  })
+  @ApiResponse({ status: 401, description: 'Neautorizovan pristup' })
   @UseGuards(JwtAuthGuard)
   @All('api/notifications')
   async proxyNotifications(@Req() req, @Res() res) {
@@ -145,6 +221,18 @@ export class AppController {
   }
 
   // Prosledjuje zahteve za pojedinacnu notifikaciju (npr. /api/notifications/123/read).
+  @ApiTags('Notifications')
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary:
+      'Operacije nad pojedinacnom notifikacijom (oznacavanje kao procitano)',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Operacija nad notifikacijom uspesno izvrsena',
+  })
+  @ApiResponse({ status: 404, description: 'Notifikacija nije pronadjena' })
+  @ApiResponse({ status: 401, description: 'Neautorizovan pristup' })
   @UseGuards(JwtAuthGuard)
   @All('api/notifications/*path')
   async proxyNotificationsById(@Req() req, @Res() res) {
