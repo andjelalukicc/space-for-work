@@ -1,7 +1,8 @@
 import { NestFactory } from '@nestjs/core';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './http-exception.filter';
 
 async function bootstrap() {
   // Kreiramo aplikaciju sa ugradjenim NestJS logger-om.
@@ -22,6 +23,24 @@ async function bootstrap() {
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   });
   logger.log('CORS omogucen za sve domene');
+
+  // ============================================
+  // Globalni ValidationPipe
+  // ============================================
+  // ValidationPipe automatski validira SVE dolazece zahteve koristeci class-validator.
+  // whitelist: true - uklanja polja koja nisu definisana u DTO (sprecava injection)
+  // forbidNonWhitelisted: true - baca gresku ako zahtev sadrzi nepoznato polje
+  // transform: true - automatski konvertuje tipove (string "3001" -> number 3001)
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
+
+  // Globalni exception filter za konzistentan format gresaka
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   // Konfiguracija Swagger dokumentacije pomocu DocumentBuilder-a.
   // DocumentBuilder koristi builder obrazac za postepeno definisanje opcija.
