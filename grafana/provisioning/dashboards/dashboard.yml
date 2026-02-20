@@ -1,0 +1,17 @@
+# Конфигурација провајдера дашборда за Grafana
+# Дефинише одакле Grafana учитава дашборд JSON фајлове
+
+apiVersion: 1
+
+providers:
+  # Провајдер за дашборде Coworking система
+  - name: "Coworking Booking System"
+    orgId: 1
+    folder: "" # Основни фолдер
+    type: file
+    disableDeletion: false # Дозвољено брисање дашборда
+    editable: true # Дозвољено уређивање кроз кориснички интерфејс
+    updateIntervalSeconds: 30 # Провера нових дашборда сваких 30 секунди
+    options:
+      path: /var/lib/grafana/dashboards # Путања до JSON фајлова дашборда
+      foldersFromFilesStructure: false

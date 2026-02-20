@@ -1,0 +1,55 @@
+# Prometheus конфигурација за Coworking Booking System
+# Овај фајл дефинише глобална подешавања и циљеве за прикупљање метрика
+
+# Глобална подешавања
+global:
+  scrape_interval: 15s # Интервал прикупљања метрика: сваких 15 секунди
+  evaluation_interval: 15s # Интервал евалуације правила: сваких 15 секунди
+  scrape_timeout: 10s # Максимално време чекања при прикупљању метрика
+
+# Конфигурација за прикупљање метрика (scrape)
+scrape_configs:
+  # API Gateway - главна улазна тачка система
+  - job_name: "api-gateway"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["api-gateway:3000"]
+        labels:
+          service: "api-gateway"
+          environment: "production"
+
+  # Сервис за кориснике - аутентификација и управљање корисницима
+  - job_name: "user-service"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["user-service:3001"]
+        labels:
+          service: "user-service"
+          environment: "production"
+
+  # Сервис за просторије - управљање просторијама за рад
+  - job_name: "room-service"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["room-service:3002"]
+        labels:
+          service: "room-service"
+          environment: "production"
+
+  # Сервис за резервације - управљање резервацијама простора
+  - job_name: "booking-service"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["booking-service:3003"]
+        labels:
+          service: "booking-service"
+          environment: "production"
+
+  # Сервис за обавештења - слање нотификација корисницима
+  - job_name: "notification-service"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["notification-service:3004"]
+        labels:
+          service: "notification-service"
+          environment: "production"
