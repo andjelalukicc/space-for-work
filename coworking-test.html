@@ -303,6 +303,25 @@
       border-color: var(--orange);
       box-shadow: 0 0 0 3px rgba(255,154,66,0.12);
     }
+    .btn-show-all-hours {
+      display: block;
+      width: 100%;
+      margin-top: 8px;
+      padding: 10px;
+      background: #fff;
+      border: 1.5px dashed var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--gray);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .btn-show-all-hours:hover {
+      border-color: var(--orange);
+      color: var(--orange);
+    }
     .calendar-loading {
       text-align: center;
       padding: 48px;
@@ -981,17 +1000,23 @@ function renderCalendar(bookings, date, currentUid) {
     }
   });
 
-  let rowsHtml = '';
+  const VISIBLE_START = 8;   // prikazuj od 08:00
+  const VISIBLE_END   = 15;  // do 14:30, ostatak sakrij
+
+  let visibleHtml = '';
+  let hiddenHtml  = '';
   for (let h = 0; h < 24; h++) {
     const t0  = slotTime(h, 0);
     const t30 = slotTime(h, 30);
-    rowsHtml += `
+    const row = `
       <div class="calendar-row">
         <div class="calendar-time">${pad(h)}:00</div>
         ${buildSlotCell(t0,  addMins(t0,  30), slotMap, currentUid, date)}
         ${buildSlotCell(t30, addMins(t30, 30), slotMap, currentUid, date)}
       </div>
     `;
+    if (h >= VISIBLE_START && h < VISIBLE_END) visibleHtml += row;
+    else hiddenHtml += row;
   }
 
   document.getElementById('calendar-container').innerHTML = `
@@ -1001,8 +1026,13 @@ function renderCalendar(bookings, date, currentUid) {
         <div class="calendar-col-header-cell">XX:00</div>
         <div class="calendar-col-header-cell">XX:30</div>
       </div>
-      ${rowsHtml}
+      ${visibleHtml}
+      <div id="cal-extra-rows" style="display:none">${hiddenHtml}</div>
     </div>
+    <button class="btn-show-all-hours" id="btn-show-all-hours"
+            onclick="document.getElementById('cal-extra-rows').style.display='';this.style.display='none'">
+      ↓ Vidi sve sate
+    </button>
   `;
 }
 
