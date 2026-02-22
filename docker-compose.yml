@@ -1,8 +1,6 @@
 # Docker Compose konfiguracija za Coworking Booking System
 # Ovaj fajl definise sve servise potrebne za pokretanje aplikacije
 
-version: '3.8'
-
 services:
   # ============================================
   # Baza podataka - PostgreSQL 16 Alpine
