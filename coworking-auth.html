@@ -407,9 +407,9 @@
       onerror="this.style.display='none'"
     />
 
-    <div class="left-tagline">Rezervišite salu za vaš sledeći sastanak.</div>
+    <div class="left-tagline">Rezervišite salu za vaš sledeći sastanak</div>
     <div class="left-sub">
-      Kao član Space For Work zajednice, jednostavno pogledajte slobodne termine i zakažite salu za interni sastanak — sve na jednom mestu.
+      jednostavno pogledajte slobodne termine i zakažite salu za interni sastanak
     </div>
 
     <!-- Building illustration (inline SVG) -->
@@ -450,20 +450,6 @@
       </svg>
     </div>
 
-    <div class="left-features">
-      <div class="left-feature">
-        <div class="left-feature-icon">&#x1F4C5;</div>
-        Brzo zakazivanje termina
-      </div>
-      <div class="left-feature">
-        <div class="left-feature-icon">&#x1F512;</div>
-        Sigurna i privatna prijava
-      </div>
-      <div class="left-feature">
-        <div class="left-feature-icon">&#x1F514;</div>
-        Obaveštenja u realnom vremenu
-      </div>
-    </div>
   </div>
 </div>
 
@@ -703,7 +689,7 @@ async function submitLogin(e) {
   btn.innerHTML = '<span class="spinner"></span> Prijavljujem…';
 
   try {
-    const res  = await fetch(`${API}/api/auth/login`, {
+    const res  = await fetch(`${API}/api/users/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password: pwd }),
@@ -776,7 +762,7 @@ async function submitRegister(e) {
   btn.innerHTML = '<span class="spinner"></span> Registrujem…';
 
   try {
-    const res  = await fetch(`${API}/api/auth/register`, {
+    const res  = await fetch(`${API}/api/users/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password: pwd }),
