@@ -772,11 +772,35 @@ async function submitRegister(e) {
     try { data = await res.json(); } catch {}
 
     if (res.ok || res.status === 201) {
-      // switch to login, pre-fill email, show success info banner
-      switchTab('login');
-      document.getElementById('login-email').value = email;
-      showBanner('login-banner', 'info',
-        '&#x1F389; Nalog je kreiran! Prijavite se sa vašim podacima.');
+      // auto-login after registration
+      btn.innerHTML = '<span class="spinner"></span> Prijavljujem…';
+      try {
+        const loginRes = await fetch(`${API}/api/users/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password: pwd }),
+        });
+        let ld = {};
+        try { ld = await loginRes.json(); } catch {}
+        if (loginRes.ok) {
+          const token = ld.token || ld.access_token || ld.accessToken || '';
+          const user  = ld.user || { id: ld.id || ld.userId || '', name: ld.name || ld.username || '', email: ld.email || email, role: ld.role || 'user' };
+          saveAuth(token, user);
+          document.getElementById('register-form').style.display = 'none';
+          const s = document.getElementById('login-success');
+          s.querySelector('.success-title').textContent = 'Dobrodošli!';
+          s.querySelector('.success-text').textContent = 'Nalog je kreiran i automatski ste prijavljeni. Možete zatvoriti ovu stranicu.';
+          s.classList.add('show');
+        } else {
+          switchTab('login');
+          document.getElementById('login-email').value = email;
+          showBanner('login-banner', 'info', '&#x1F389; Nalog je kreiran! Prijavite se sa vašim podacima.');
+        }
+      } catch {
+        switchTab('login');
+        document.getElementById('login-email').value = email;
+        showBanner('login-banner', 'info', '&#x1F389; Nalog je kreiran! Prijavite se sa vašim podacima.');
+      }
     } else {
       const msg = data.message || data.error || 'Registracija nije uspela.';
       showBanner('register-banner', 'error', `&#x274C; ${escHtml(msg)}`);
