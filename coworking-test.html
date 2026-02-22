@@ -704,194 +704,149 @@
   <h1>Rezervišite vaš <span>radni prostor</span></h1>
   <p>Meeting room-ovi i phone booth-ovi dostupni 24/7 — jednostavno i brzo</p>
   <div class="steps-bar">
-    <div class="step-pill"><div class="num">1</div> Registracija</div>
-    <div class="step-pill"><div class="num">2</div> Prijava</div>
-    <div class="step-pill"><div class="num">3</div> Prostorije</div>
-    <div class="step-pill"><div class="num">4</div> Rezervacija</div>
-    <div class="step-pill"><div class="num">5</div> Pregled</div>
-    <div class="step-pill"><div class="num">6</div> Notifikacije</div>
+    <div class="step-pill"><div class="num">1</div> Prostorije</div>
+    <div class="step-pill"><div class="num">2</div> Raspored dana</div>
+    <div class="step-pill"><div class="num">3</div> Rezervacija</div>
+    <div class="step-pill"><div class="num">4</div> Moje rezervacije</div>
+    <div class="step-pill"><div class="num">5</div> Prijava / Reg.</div>
   </div>
 </div>
 
 <main>
 
-  <!-- AUTENTIKACIJA -->
-  <div class="section-label">Korak 1 & 2</div>
-  <div class="section-title">Nalog i prijava</div>
-
-  <div class="grid-2">
-
-    <!-- Registracija -->
-    <div class="card">
-      <div class="card-header">
-        <div class="step-icon">1</div>
-        <div class="card-header-text">
-          <h3>Registracija</h3>
-          <p>Kreirajte novi nalog</p>
-        </div>
-      </div>
-      <label>Ime i prezime</label>
-      <input id="reg-name" type="text" placeholder="npr. Andjela Lukic" value="Testni Korisnik">
-      <label>Email adresa</label>
-      <input id="reg-email" type="email" placeholder="email@example.com" value="marko@test.com">
-      <label>Lozinka</label>
-      <input id="reg-pass" type="password" placeholder="Minimum 6 karaktera" value="lozinka123">
-      <button class="btn btn-primary" onclick="register()">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-        Registruj se
-      </button>
-      <div id="reg-result" class="resp"></div>
-    </div>
-
-    <!-- Login -->
-    <div class="card">
-      <div class="card-header">
-        <div class="step-icon">2</div>
-        <div class="card-header-text">
-          <h3>Prijava</h3>
-          <p>Dobijte JWT token za rezervacije</p>
-        </div>
-      </div>
-      <label>Email adresa</label>
-      <input id="login-email" type="email" placeholder="email@example.com" value="marko@test.com">
-      <label>Lozinka</label>
-      <input id="login-pass" type="password" placeholder="Vaša lozinka" value="lozinka123">
-      <button class="btn btn-primary" onclick="login()">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-        Prijavi se
-      </button>
-      <div id="login-result" class="resp"></div>
-    </div>
-
-  </div>
-
-  <div class="divider-line"></div>
-
-  <!-- PROSTORIJE -->
-  <div class="section-label">Korak 3 & 4</div>
-  <div class="section-title">Prostorije i rezervacija</div>
-
-  <div class="grid-2">
-
-    <!-- Prostorije -->
-    <div class="card">
-      <div class="card-header">
-        <div class="step-icon">3</div>
-        <div class="card-header-text">
-          <h3>Dostupne prostorije</h3>
-          <p>Meeting room-ovi i phone booth-ovi</p>
-        </div>
-      </div>
-      <button class="btn btn-outline" onclick="getRooms()">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-        Učitaj prostorije
-      </button>
-      <div id="rooms-result" class="resp"></div>
-      <div id="rooms-list">
-        <label style="margin-top:12px">Izaberi prostoriju</label>
-        <select id="room-select"></select>
-      </div>
-    </div>
-
-    <!-- Rezervacija -->
-    <div class="card">
-      <div class="card-header">
-        <div class="step-icon">4</div>
-        <div class="card-header-text">
-          <h3>Nova rezervacija</h3>
-          <p>Minimalno 30 min, korak 30 min</p>
-        </div>
-      </div>
-      <div class="form-row">
-        <div>
-          <label>Datum</label>
-          <input id="book-date" type="date">
-        </div>
-        <div>
-          <label>Pocetak</label>
-          <input id="book-start" type="text" placeholder="10:00" value="10:00">
-        </div>
-        <div>
-          <label>Kraj</label>
-          <input id="book-end" type="text" placeholder="11:30" value="11:30">
-        </div>
-      </div>
-      <button class="btn btn-primary" onclick="createBooking()">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/></svg>
-        Rezerviši prostoriju
-      </button>
-      <div id="book-result" class="resp"></div>
-    </div>
-
-  </div>
-
-  <div class="divider-line"></div>
-
-  <!-- KALENDAR -->
-  <div class="section-label">Raspored</div>
-  <div class="section-title">Pregled termina po sobi i danu</div>
+  <!-- 1. PROSTORIJE -->
+  <div class="section-label">Korak 1</div>
+  <div class="section-title">Izaberite prostoriju</div>
 
   <div class="card" style="margin-bottom:20px">
     <div class="card-header">
-      <div class="step-icon" style="background:#e8f4f8;color:#1f5d84">📅</div>
+      <div class="step-icon">1</div>
+      <div class="card-header-text">
+        <h3>Dostupne prostorije</h3>
+        <p>Kliknite na prostoriju da je izaberete</p>
+      </div>
+      <button class="btn btn-outline" onclick="getRooms()" style="width:auto;padding:8px 16px;margin-left:auto">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        Učitaj
+      </button>
+    </div>
+    <div id="rooms-result" class="resp"></div>
+    <div id="rooms-list" style="display:none">
+      <select id="room-select" style="display:none"></select>
+      <select id="cal-room-select" style="display:none"></select>
+    </div>
+  </div>
+
+  <div class="divider-line"></div>
+
+  <!-- 2. RASPORED DANA -->
+  <div class="section-label">Korak 2</div>
+  <div class="section-title">Raspored za odabrani dan</div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header">
+      <div class="step-icon" style="background:#e8f4f8;color:#1f5d84">2</div>
       <div class="card-header-text">
         <h3>Dnevni raspored prostorije</h3>
-        <p>Zeleno = slobodno (klikni da rezervišeš) · Narandžasto = zauzeto · Prikazano ko je zauzeo termin</p>
+        <p>Klikni na slobodan termin da zakažeš — bez prijave možeš gledati</p>
       </div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-      <div>
-        <label>Prostorija</label>
-        <select id="cal-room-select">
-          <option value="">— prvo učitaj prostorije (Korak 3) —</option>
-        </select>
-      </div>
-      <div>
+    <div style="display:flex;align-items:flex-end;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+      <div style="flex:1;min-width:160px">
         <label>Datum</label>
         <input id="cal-date" type="date">
       </div>
+      <button class="btn btn-outline" onclick="loadCalendar()" style="width:auto;padding:11px 20px;flex-shrink:0">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Prikaži raspored
+      </button>
     </div>
-    <button class="btn btn-outline" onclick="loadCalendar()" style="margin-bottom:16px">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      Prikaži raspored
-    </button>
+    <div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gray)">
+        <div style="width:14px;height:14px;border-radius:4px;background:#e8f5e9;border:1.5px solid #66bb6a"></div> Slobodno — klikni da zakažeš
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gray)">
+        <div style="width:14px;height:14px;border-radius:4px;background:var(--orange-light);border:1.5px solid var(--orange)"></div> Zauzeto (drugi korisnik)
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gray)">
+        <div style="width:14px;height:14px;border-radius:4px;background:#e3f0fa;border:1.5px solid var(--blue)"></div> Moja rezervacija
+      </div>
+    </div>
     <div id="cal-loading" style="display:none;text-align:center;padding:20px;color:#aaa;font-size:13px">Učitava se...</div>
     <div id="cal-container" style="display:none">
-      <!-- legenda -->
-      <div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap">
-        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gray)">
-          <div style="width:14px;height:14px;border-radius:4px;background:#e8f5e9;border:1.5px solid #66bb6a"></div> Slobodno (klikni da rezervišeš)
-        </div>
-        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gray)">
-          <div style="width:14px;height:14px;border-radius:4px;background:var(--orange-light);border:1.5px solid var(--orange)"></div> Zauzeto
-        </div>
-        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gray)">
-          <div style="width:14px;height:14px;border-radius:4px;background:#e3f0fa;border:1.5px solid var(--blue)"></div> Moja rezervacija
-        </div>
-      </div>
       <div id="cal-grid" style="overflow-x:auto"></div>
     </div>
   </div>
 
   <div class="divider-line"></div>
 
-  <!-- PREGLED I NOTIFIKACIJE -->
-  <div class="section-label">Korak 5 & 6</div>
-  <div class="section-title">Rezervacije i obaveštenja</div>
+  <!-- 3. REZERVACIJA -->
+  <div class="section-label">Korak 3</div>
+  <div class="section-title">Zakaži termin</div>
+
+  <div class="card" style="margin-bottom:20px" id="booking-card">
+    <div class="card-header">
+      <div class="step-icon">3</div>
+      <div class="card-header-text">
+        <h3>Nova rezervacija</h3>
+        <p>Minimalno 30 min · korak 30 min · max 3 dnevno</p>
+      </div>
+    </div>
+    <div id="login-prompt" style="display:none;margin-bottom:16px">
+      <div class="resp-banner ok" style="background:#fff8e1;border-color:#ffe082">
+        <div class="ri" style="background:var(--orange);font-size:18px">🔐</div>
+        <div>
+          <div class="rb-title" style="color:#856404">Potrebna prijava za rezervaciju</div>
+          <div class="rb-sub">
+            <a href="#auth-section" onclick="highlightAuth()" style="color:var(--orange);font-weight:700;text-decoration:none">
+              → Prijavite se ili se registrujte ↓
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div>
+        <label>Datum</label>
+        <input id="book-date" type="date">
+      </div>
+      <div>
+        <label>Početak</label>
+        <input id="book-start" type="text" placeholder="10:00" value="10:00">
+      </div>
+      <div>
+        <label>Kraj</label>
+        <input id="book-end" type="text" placeholder="11:30" value="11:30">
+      </div>
+    </div>
+    <div id="rooms-list-booking" style="margin-bottom:14px;display:none">
+      <label>Prostorija</label>
+      <select id="room-select-booking"></select>
+    </div>
+    <button class="btn btn-primary" onclick="createBooking()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/></svg>
+      Rezerviši prostoriju
+    </button>
+    <div id="book-result" class="resp"></div>
+  </div>
+
+  <div class="divider-line"></div>
+
+  <!-- 4. MOJE REZERVACIJE & NOTIFIKACIJE -->
+  <div class="section-label">Korak 4</div>
+  <div class="section-title">Moje rezervacije i obaveštenja</div>
 
   <div class="grid-2">
-
-    <!-- Moje rezervacije -->
     <div class="card">
       <div class="card-header">
-        <div class="step-icon">5</div>
+        <div class="step-icon">4a</div>
         <div class="card-header-text">
           <h3>Moje rezervacije</h3>
           <p>Pregled i otkazivanje</p>
         </div>
       </div>
       <button class="btn btn-outline" onclick="getBookings()">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         Prikaži moje rezervacije
       </button>
       <div id="bookings-result" class="resp"></div>
@@ -902,17 +857,16 @@
         </div>
         <select id="booking-select"></select>
         <button class="btn btn-danger" onclick="cancelBooking()">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-          Otkaži odabranu rezervaciju
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+          Otkaži odabranu
         </button>
         <div id="cancel-result" class="resp"></div>
       </div>
     </div>
 
-    <!-- Notifikacije -->
     <div class="card">
       <div class="card-header">
-        <div class="step-icon">6</div>
+        <div class="step-icon">4b</div>
         <div class="card-header-text">
           <h3>Obaveštenja</h3>
           <p>Automatski via RabbitMQ</p>
@@ -924,7 +878,56 @@
       </button>
       <div id="notif-result" class="resp"></div>
     </div>
+  </div>
 
+  <div class="divider-line"></div>
+
+  <!-- 5. AUTH — NA DNU -->
+  <div id="auth-section">
+    <div class="section-label">Korak 5</div>
+    <div class="section-title">Prijava i registracija</div>
+
+    <div class="grid-2" style="margin-bottom:28px">
+      <div class="card" id="login-card">
+        <div class="card-header">
+          <div class="step-icon">→</div>
+          <div class="card-header-text">
+            <h3>Prijava</h3>
+            <p>Dobijte JWT token za rezervacije</p>
+          </div>
+        </div>
+        <label>Email adresa</label>
+        <input id="login-email" type="email" placeholder="email@example.com" value="marko@test.com">
+        <label>Lozinka</label>
+        <input id="login-pass" type="password" placeholder="Vaša lozinka" value="lozinka123">
+        <button class="btn btn-primary" onclick="login()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          Prijavi se
+        </button>
+        <div id="login-result" class="resp"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="step-icon" style="background:#f0f0f0;color:#999">+</div>
+          <div class="card-header-text">
+            <h3>Registracija</h3>
+            <p>Kreirajte novi nalog</p>
+          </div>
+        </div>
+        <label>Ime i prezime</label>
+        <input id="reg-name" type="text" placeholder="npr. Andjela Lukic" value="Testni Korisnik">
+        <label>Email adresa</label>
+        <input id="reg-email" type="email" placeholder="email@example.com" value="marko@test.com">
+        <label>Lozinka</label>
+        <input id="reg-pass" type="password" placeholder="Minimum 6 karaktera" value="lozinka123">
+        <button class="btn btn-primary" onclick="register()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          Registruj se
+        </button>
+        <div id="reg-result" class="resp"></div>
+      </div>
+    </div>
   </div>
 
   <!-- QUICK LINKS -->
@@ -956,14 +959,20 @@
 </main>
 
 <script>
-  const API = 'http://localhost:3000';
+  const API      = 'http://localhost:3000';
+  const BOOK_SVC = 'http://localhost:3003'; // direktno, bez auth
+  const USER_SVC = 'http://localhost:3001'; // direktno, za imena
   let token = '';
+  let selectedRoomId = null;
 
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   const tomorrowStr = tomorrow.toISOString().split('T')[0];
   document.getElementById('book-date').value = tomorrowStr;
   document.getElementById('cal-date').value  = tomorrowStr;
+
+  // Auto-učitaj prostorije na startu
+  window.addEventListener('DOMContentLoaded', () => getRooms());
 
   // --- Helpers ---
   function el(id) { return document.getElementById(id); }
@@ -1030,6 +1039,7 @@
       const data = await res.json();
       if (res.ok && data.access_token) {
         token = data.access_token;
+        el('login-prompt').style.display = 'none'; // sakrij prompt kad se uloguje
         const d = el('login-result');
         d.style.display = 'block';
         d.innerHTML = `
@@ -1087,7 +1097,11 @@
         ).join('');
         el('room-select').innerHTML = opts;
         el('cal-room-select').innerHTML = opts;
+        el('room-select-booking').innerHTML = opts;
         el('rooms-list').style.display = 'block';
+        el('rooms-list-booking').style.display = 'block';
+        // auto-selektuj prvu sobu
+        if (data.length > 0 && !selectedRoomId) selectRoom(data[0].id);
       } else {
         banner('rooms-result', '✕', 'Greška', 'Nije moguće učitati prostorije.', 'err');
       }
@@ -1096,9 +1110,13 @@
 
   // --- Create Booking ---
   async function createBooking() {
-    if (!token) { alert('Prvo se prijavi (Korak 2)!'); return; }
-    const roomId = el('room-select').value;
-    if (!roomId) { alert('Prvo učitaj prostorije (Korak 3)!'); return; }
+    if (!token) {
+      el('login-prompt').style.display = 'block';
+      highlightAuth();
+      return;
+    }
+    const roomId = selectedRoomId || el('room-select-booking').value || el('room-select').value;
+    if (!roomId) { alert('Izaberi prostoriju!'); return; }
     try {
       const res = await fetch(`${API}/api/bookings`, {
         method: 'POST',
@@ -1194,23 +1212,28 @@
 
   // --- Select Room from card ---
   function selectRoom(roomId) {
-    // Deselektuj sve kartice
-    document.querySelectorAll('.room-card').forEach(c => {
-      c.classList.remove('selected');
-    });
-    document.querySelectorAll('.room-select-badge').forEach(b => {
-      b.style.display = 'none';
-    });
-
-    // Selektuj kliknutu
+    selectedRoomId = roomId;
+    document.querySelectorAll('.room-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.room-select-badge').forEach(b => b.style.display = 'none');
     const card = el('room-card-' + roomId);
     if (card) card.classList.add('selected');
     const badge = el('badge-' + roomId);
     if (badge) badge.style.display = 'inline-block';
-
-    // Postavi vrednost u oba selecta
+    // sinhronizuj sve selecte
     el('room-select').value = roomId;
     el('cal-room-select').value = roomId;
+    if (el('room-select-booking')) el('room-select-booking').value = roomId;
+    // auto-učitaj raspored za taj dan
+    loadCalendar();
+  }
+
+  function highlightAuth() {
+    const sec = el('auth-section');
+    sec.scrollIntoView({ behavior: 'smooth' });
+    const card = el('login-card');
+    card.style.transition = 'box-shadow 0.3s';
+    card.style.boxShadow = '0 0 0 3px var(--orange)';
+    setTimeout(() => card.style.boxShadow = '', 2000);
   }
 
   // --- Calendar ---
@@ -1231,19 +1254,17 @@
   }
 
   async function loadCalendar() {
-    if (!token) { alert('Prvo se prijavi (Korak 2)!'); return; }
-    const roomId = el('cal-room-select').value;
+    const roomId = selectedRoomId || el('cal-room-select').value;
     const date   = el('cal-date').value;
-    if (!roomId || roomId === '') { alert('Izaberi prostoriju!'); return; }
-    if (!date)   { alert('Izaberi datum!'); return; }
+    if (!roomId) { alert('Izaberi prostoriju!'); return; }
+    if (!date)   { return; }
 
     el('cal-loading').style.display = 'block';
     el('cal-container').style.display = 'none';
 
     try {
-      const res = await fetch(`${API}/api/bookings/room/${roomId}?date=${date}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      // Pozivamo booking-service DIREKTNO (port 3003) - ne treba auth za čitanje
+      const res = await fetch(`${BOOK_SVC}/bookings/room/${roomId}?date=${date}`);
       const bookings = res.ok ? await res.json() : [];
 
       // Dohvati imena korisnika za svaku rezervaciju
@@ -1350,14 +1371,22 @@
   function selectSlot(start, end) {
     el('book-start').value = start;
     el('book-end').value   = end;
-    // Sinhronizuj sobu i datum iz kalendara u formu za rezervaciju
-    const calRoom = el('cal-room-select').value;
-    const calDate = el('cal-date').value;
-    if (calRoom) el('room-select').value = calRoom;
-    if (calDate) el('book-date').value   = calDate;
-    // Scroll do forme
-    document.querySelector('[onclick="createBooking()"]').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    // Flash dugme
+    el('book-date').value  = el('cal-date').value;
+    if (el('room-select-booking') && selectedRoomId) el('room-select-booking').value = selectedRoomId;
+
+    // Scroll do forme za rezervaciju
+    el('booking-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Ako nije ulogovan - prikaži prompt odmah
+    if (!token) {
+      setTimeout(() => {
+        el('login-prompt').style.display = 'block';
+        highlightAuth();
+      }, 400);
+      return;
+    }
+
+    // Ulogovan — flash dugme
     const btn = document.querySelector('[onclick="createBooking()"]');
     btn.style.background = '#2a9d8f';
     setTimeout(() => btn.style.background = '', 1200);
