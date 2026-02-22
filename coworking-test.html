@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coworking Booking System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Nunito:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --orange: #ff9a42;
+      --orange-dark: #e8872e;
+      --orange-light: #fff4eb;
+      --navy: #27231f;
+      --blue: #1f5d84;
+      --gray: #4f4f4f;
+      --gray-light: #f7f7f7;
+      --border: #e0e0e0;
+      --white: #ffffff;
+      --green: #2a9d8f;
+      --green-light: #edf7f6;
+      --red: #e63946;
+      --red-light: #fdf2f3;
+      --shadow: 0 4px 20px rgba(0,0,0,0.08);
+      --shadow-hover: 0 8px 30px rgba(0,0,0,0.14);
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #f4f5f7;
+      color: var(--gray);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .header-logo img {
+      height: 36px;
+      object-fit: contain;
+    }
+
+    .header-logo .divider {
+      width: 1px;
+      height: 28px;
+      background: var(--border);
+    }
+
+    .header-logo .app-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.2;
+    }
+
+    .header-logo .app-sub {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--orange);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .header-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--orange-light);
+      border: 1px solid #ffd9b3;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--orange-dark);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.85); }
+    }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #3a3229 50%, var(--blue) 100%);
+      padding: 56px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: rgba(255,154,66,0.1);
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; left: -40px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: rgba(31,93,132,0.2);
+    }
+
+    .hero h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 span { color: var(--orange); }
+
+    .hero p {
+      color: rgba(255,255,255,0.7);
+      font-size: 15px;
+      font-weight: 500;
+      position: relative;
+      z-index: 1;
+    }
+
+    .steps-bar {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 28px;
+      position: relative;
+      z-index: 1;
+      flex-wrap: wrap;
+    }
+
+    .step-pill {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .step-pill .num {
+      background: var(--orange);
+      color: white;
+      border-radius: 50%;
+      width: 18px; height: 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    /* MAIN */
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 36px 24px 60px;
+    }
+
+    /* SECTION TITLE */
+    .section-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--orange);
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 20px;
+    }
+
+    /* GRID */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    /* CARD */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: box-shadow 0.2s;
+    }
+
+    .card:hover { box-shadow: var(--shadow-hover); }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .step-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: var(--orange-light);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--orange);
+      flex-shrink: 0;
+    }
+
+    .card-header-text h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .card-header-text p {
+      font-size: 12px;
+      color: #9a9a9a;
+      margin-top: 1px;
+    }
+
+    /* FORM */
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'Nunito', sans-serif;
+      color: var(--navy);
+      background: var(--white);
+      margin-bottom: 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(255,154,66,0.15);
+    }
+
+    input::placeholder { color: #bbb; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* BUTTONS */
+    .btn {
+      width: 100%;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--orange);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--orange-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(255,154,66,0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--blue);
+      border: 1.5px solid var(--blue);
+    }
+
+    .btn-outline:hover {
+      background: var(--blue);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .btn-danger {
+      background: var(--red);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c1121f;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(230,57,70,0.35);
+    }
+
+    .btn-ghost {
+      background: var(--gray-light);
+      color: var(--gray);
+      border: 1.5px solid var(--border);
+    }
+
+    .btn-ghost:hover { background: var(--border); }
+
+    /* RESPONSE CARDS */
+    .resp {
+      margin-top: 14px;
+      border-radius: 10px;
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Success / Error banners */
+    .resp-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 10px;
+    }
+
+    .resp-banner.ok  { background: var(--green-light); border: 1px solid #b2dfdb; }
+    .resp-banner.err { background: var(--red-light);   border: 1px solid #f5c6cb; }
+
+    .resp-banner .ri {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; flex-shrink: 0; margin-top: 1px;
+    }
+
+    .resp-banner.ok  .ri { background: var(--green); color: white; }
+    .resp-banner.err .ri { background: var(--red);   color: white; }
+
+    .resp-banner .rb-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px; font-weight: 700;
+      color: var(--navy); margin-bottom: 2px;
+    }
+
+    .resp-banner .rb-sub {
+      font-size: 12px; color: var(--gray); line-height: 1.5;
+    }
+
+    /* Info rows inside response */
+    .info-row {
+      display: flex; align-items: center;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border);
+      gap: 10px;
+    }
+
+    .info-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .info-row:first-child { padding-top: 0; }
+
+    .info-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; color: #aaa; min-width: 90px;
+    }
+
+    .info-val {
+      font-size: 13px; color: var(--navy); font-weight: 600;
+      word-break: break-all;
+    }
+
+    .tag {
+      display: inline-block; padding: 2px 10px; border-radius: 20px;
+      font-size: 11px; font-weight: 700;
+    }
+
+    .tag.green { background: #d4edda; color: #155724; }
+    .tag.blue  { background: #d1ecf1; color: #0c5460; }
+    .tag.orange{ background: var(--orange-light); color: var(--orange-dark); }
+
+    /* Booking & Notif list items */
+    .list-item {
+      background: var(--gray-light);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+
+    .list-item:last-child { margin-bottom: 0; }
+
+    .room-card:hover {
+      border-color: var(--orange);
+      background: var(--orange-light);
+      box-shadow: 0 2px 10px rgba(255,154,66,0.18);
+    }
+
+    .room-card.selected {
+      border-color: var(--green) !important;
+      background: var(--green-light) !important;
+      box-shadow: 0 2px 10px rgba(42,157,143,0.2) !important;
+    }
+
+    .list-item-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .list-item-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px; font-weight: 700; color: var(--navy);
+    }
+
+    .list-item-sub {
+      font-size: 12px; color: var(--gray); margin-top: 3px;
+    }
+
+    .empty-state {
+      text-align: center; padding: 24px 0;
+      color: #bbb; font-size: 13px; font-weight: 600;
+    }
+
+    .empty-state svg { display: block; margin: 0 auto 8px; opacity: 0.3; }
+
+    /* ROOMS GRID */
+    #rooms-list {
+      display: none;
+      margin-top: 16px;
+    }
+
+    /* CANCEL SECTION */
+    #cancel-section {
+      display: none;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .cancel-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--red);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* QUICK LINKS */
+    .quick-links {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .quick-link {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      text-decoration: none;
+      border: 1.5px solid var(--border);
+      transition: all 0.2s;
+      box-shadow: var(--shadow);
+    }
+
+    .quick-link:hover {
+      border-color: var(--orange);
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+    }
+
+    .quick-link .icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .quick-link .name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .quick-link .desc {
+      font-size: 11px;
+      color: #aaa;
+      margin-top: 3px;
+    }
+
+    .quick-link .badge-link {
+      display: inline-block;
+      background: var(--orange-light);
+      color: var(--orange-dark);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-top: 6px;
+    }
+
+    /* DIVIDER */
+    .divider-line {
+      height: 1px;
+      background: var(--border);
+      margin: 28px 0;
+    }
+
+    /* CALENDAR GRID */
+    .cal-grid-inner {
+      display: grid;
+      min-width: 900px;
+    }
+
+    .cal-header-row {
+      display: flex;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 6px;
+      margin-bottom: 4px;
+    }
+
+    .cal-time-col { width: 56px; flex-shrink: 0; }
+
+    .cal-slot-header {
+      flex: 1;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: #bbb;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .cal-row {
+      display: flex;
+      align-items: stretch;
+      min-height: 38px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .cal-row:last-child { border-bottom: none; }
+
+    .cal-time-label {
+      width: 56px;
+      flex-shrink: 0;
+      font-size: 11px;
+      font-weight: 700;
+      color: #bbb;
+      display: flex;
+      align-items: center;
+      padding-right: 6px;
+    }
+
+    .cal-cell {
+      flex: 1;
+      margin: 2px 1px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      padding: 4px 6px;
+      text-align: center;
+      min-height: 34px;
+      position: relative;
+    }
+
+    .cal-cell.free {
+      background: #e8f5e9;
+      border: 1.5px dashed #66bb6a;
+      color: #2e7d32;
+    }
+
+    .cal-cell.free:hover {
+      background: #c8e6c9;
+      border-style: solid;
+      transform: scale(1.03);
+      box-shadow: 0 2px 8px rgba(102,187,106,0.3);
+    }
+
+    .cal-cell.busy {
+      background: var(--orange-light);
+      border: 1.5px solid var(--orange);
+      color: var(--orange-dark);
+      cursor: default;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .cal-cell.mine {
+      background: #e3f0fa;
+      border: 1.5px solid var(--blue);
+      color: var(--blue);
+      cursor: default;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .cal-cell .cell-time { font-size: 9px; opacity: 0.75; }
+    .cal-cell .cell-name { font-size: 11px; font-weight: 700; line-height: 1.2; }
+
+    /* SCROLLBAR */
+    .result::-webkit-scrollbar { width: 4px; }
+    .result::-webkit-scrollbar-track { background: transparent; }
+    .result::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    @media (max-width: 680px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .full { grid-column: 1; }
+      .form-row { grid-template-columns: 1fr; }
+      .quick-links { grid-template-columns: 1fr; }
+      header { padding: 0 20px; }
+      main { padding: 24px 16px 48px; }
+      .hero { padding: 40px 20px; }
+      .hero h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-logo">
+    <img src="https://spaceforwork.rs/wp-content/uploads/2023/05/office-blue-logo-png.png" alt="Space For Work">
+    <div class="divider"></div>
+    <div>
+      <div class="app-name">Booking System</div>
+      <div class="app-sub">Coworking rezervacije</div>
+    </div>
+  </div>
+  <div class="header-badge">
+    <div class="dot"></div>
+    Sistem aktivan
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Rezervišite vaš <span>radni prostor</span></h1>
+  <p>Meeting room-ovi i phone booth-ovi dostupni 24/7 — jednostavno i brzo</p>
+  <div class="steps-bar">
+    <div class="step-pill"><div class="num">1</div> Registracija</div>
+    <div class="step-pill"><div class="num">2</div> Prijava</div>
+    <div class="step-pill"><div class="num">3</div> Prostorije</div>
+    <div class="step-pill"><div class="num">4</div> Rezervacija</div>
+    <div class="step-pill"><div class="num">5</div> Pregled</div>
+    <div class="step-pill"><div class="num">6</div> Notifikacije</div>
+  </div>
+</div>
+
+<main>
+
+  <!-- AUTENTIKACIJA -->
+  <div class="section-label">Korak 1 & 2</div>
+  <div class="section-title">Nalog i prijava</div>
+
+  <div class="grid-2">
+
+    <!-- Registracija -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-icon">1</div>
+        <div class="card-header-text">
+          <h3>Registracija</h3>
+          <p>Kreirajte novi nalog</p>
+        </div>
+      </div>
+      <label>Ime i prezime</label>
+      <input id="reg-name" type="text" placeholder="npr. Andjela Lukic" value="Testni Korisnik">
+      <label>Email adresa</label>
+      <input id="reg-email" type="email" placeholder="email@example.com" value="marko@test.com">
+      <label>Lozinka</label>
+      <input id="reg-pass" type="password" placeholder="Minimum 6 karaktera" value="lozinka123">
+      <button class="btn btn-primary" onclick="register()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+        Registruj se
+      </button>
+      <div id="reg-result" class="resp"></div>
+    </div>
+
+    <!-- Login -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-icon">2</div>
+        <div class="card-header-text">
+          <h3>Prijava</h3>
+          <p>Dobijte JWT token za rezervacije</p>
+        </div>
+      </div>
+      <label>Email adresa</label>
+      <input id="login-email" type="email" placeholder="email@example.com" value="marko@test.com">
+      <label>Lozinka</label>
+      <input id="login-pass" type="password" placeholder="Vaša lozinka" value="lozinka123">
+      <button class="btn btn-primary" onclick="login()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        Prijavi se
+      </button>
+      <div id="login-result" class="resp"></div>
+    </div>
+
+  </div>
+
+  <div class="divider-line"></div>
+
+  <!-- PROSTORIJE -->
+  <div class="section-label">Korak 3 & 4</div>
+  <div class="section-title">Prostorije i rezervacija</div>
+
+  <div class="grid-2">
+
+    <!-- Prostorije -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-icon">3</div>
+        <div class="card-header-text">
+          <h3>Dostupne prostorije</h3>
+          <p>Meeting room-ovi i phone booth-ovi</p>
+        </div>
+      </div>
+      <button class="btn btn-outline" onclick="getRooms()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        Učitaj prostorije
+      </button>
+      <div id="rooms-result" class="resp"></div>
+      <div id="rooms-list">
+        <label style="margin-top:12px">Izaberi prostoriju</label>
+        <select id="room-select"></select>
+      </div>
+    </div>
+
+    <!-- Rezervacija -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-icon">4</div>
+        <div class="card-header-text">
+          <h3>Nova rezervacija</h3>
+          <p>Minimalno 30 min, korak 30 min</p>
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <label>Datum</label>
+          <input id="book-date" type="date">
+        </div>
+        <div>
+          <label>Pocetak</label>
+          <input id="book-start" type="text" placeholder="10:00" value="10:00">
+        </div>
+        <div>
+          <label>Kraj</label>
+          <input id="book-end" type="text" placeholder="11:30" value="11:30">
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="createBooking()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/></svg>
+        Rezerviši prostoriju
+      </button>
+      <div id="book-result" class="resp"></div>
+    </div>
+
+  </div>
+
+  <div class="divider-line"></div>
+
+  <!-- KALENDAR -->
+  <div class="section-label">Raspored</div>
+  <div class="section-title">Pregled termina po sobi i danu</div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header">
+      <div class="step-icon" style="background:#e8f4f8;color:#1f5d84">📅</div>
+      <div class="card-header-text">
+        <h3>Dnevni raspored prostorije</h3>
+        <p>Zeleno = slobodno (klikni da rezervišeš) · Narandžasto = zauzeto · Prikazano ko je zauzeo termin</p>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div>
+        <label>Prostorija</label>
+        <select id="cal-room-select">
+          <option value="">— prvo učitaj prostorije (Korak 3) —</option>
+        </select>
+      </div>
+      <div>
+        <label>Datum</label>
+        <input id="cal-date" type="date">
+      </div>
+    </div>
+    <button class="btn btn-outline" onclick="loadCalendar()" style="margin-bottom:16px">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Prikaži raspored
+    </button>
+    <div id="cal-loading" style="display:none;text-align:center;padding:20px;color:#aaa;font-size:13px">Učitava se...</div>
+    <div id="cal-container" style="display:none">
+      <!-- legenda -->
+      <div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gray)">
+          <div style="width:14px;height:14px;border-radius:4px;background:#e8f5e9;border:1.5px solid #66bb6a"></div> Slobodno (klikni da rezervišeš)
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gray)">
+          <div style="width:14px;height:14px;border-radius:4px;background:var(--orange-light);border:1.5px solid var(--orange)"></div> Zauzeto
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gray)">
+          <div style="width:14px;height:14px;border-radius:4px;background:#e3f0fa;border:1.5px solid var(--blue)"></div> Moja rezervacija
+        </div>
+      </div>
+      <div id="cal-grid" style="overflow-x:auto"></div>
+    </div>
+  </div>
+
+  <div class="divider-line"></div>
+
+  <!-- PREGLED I NOTIFIKACIJE -->
+  <div class="section-label">Korak 5 & 6</div>
+  <div class="section-title">Rezervacije i obaveštenja</div>
+
+  <div class="grid-2">
+
+    <!-- Moje rezervacije -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-icon">5</div>
+        <div class="card-header-text">
+          <h3>Moje rezervacije</h3>
+          <p>Pregled i otkazivanje</p>
+        </div>
+      </div>
+      <button class="btn btn-outline" onclick="getBookings()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Prikaži moje rezervacije
+      </button>
+      <div id="bookings-result" class="resp"></div>
+      <div id="cancel-section">
+        <div class="cancel-title">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          Otkaži rezervaciju
+        </div>
+        <select id="booking-select"></select>
+        <button class="btn btn-danger" onclick="cancelBooking()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          Otkaži odabranu rezervaciju
+        </button>
+        <div id="cancel-result" class="resp"></div>
+      </div>
+    </div>
+
+    <!-- Notifikacije -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-icon">6</div>
+        <div class="card-header-text">
+          <h3>Obaveštenja</h3>
+          <p>Automatski via RabbitMQ</p>
+        </div>
+      </div>
+      <button class="btn btn-outline" onclick="getNotifications()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        Prikaži obaveštenja
+      </button>
+      <div id="notif-result" class="resp"></div>
+    </div>
+
+  </div>
+
+  <!-- QUICK LINKS -->
+  <div class="divider-line"></div>
+  <div class="section-label">Infrastruktura</div>
+  <div class="section-title">Monitoring i upravljanje</div>
+
+  <div class="quick-links">
+    <a href="http://localhost:15672" target="_blank" class="quick-link">
+      <div class="icon">🐰</div>
+      <div class="name">RabbitMQ</div>
+      <div class="desc">Message broker — prati event-ove</div>
+      <div class="badge-link">guest / guest</div>
+    </a>
+    <a href="http://localhost:9090" target="_blank" class="quick-link">
+      <div class="icon">📊</div>
+      <div class="name">Prometheus</div>
+      <div class="desc">Metrike svih servisa</div>
+      <div class="badge-link">localhost:9090</div>
+    </a>
+    <a href="http://localhost:3100" target="_blank" class="quick-link">
+      <div class="icon">📈</div>
+      <div class="name">Grafana</div>
+      <div class="desc">Dashboard — request rate, latency</div>
+      <div class="badge-link">admin / admin</div>
+    </a>
+  </div>
+
+</main>
+
+<script>
+  const API = 'http://localhost:3000';
+  let token = '';
+
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowStr = tomorrow.toISOString().split('T')[0];
+  document.getElementById('book-date').value = tomorrowStr;
+  document.getElementById('cal-date').value  = tomorrowStr;
+
+  // --- Helpers ---
+  function el(id) { return document.getElementById(id); }
+
+  function banner(id, icon, title, subtitle, type = 'ok') {
+    const d = el(id);
+    d.style.display = 'block';
+    d.innerHTML = `
+      <div class="resp-banner ${type}">
+        <div class="ri">${icon}</div>
+        <div>
+          <div class="rb-title">${title}</div>
+          <div class="rb-sub">${subtitle}</div>
+        </div>
+      </div>`;
+  }
+
+  function infoCard(id, rows) {
+    const d = el(id);
+    d.style.display = 'block';
+    d.innerHTML = `<div style="background:var(--gray-light);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-top:0">
+      ${rows.map(([label, val]) => `
+        <div class="info-row">
+          <span class="info-label">${label}</span>
+          <span class="info-val">${val}</span>
+        </div>`).join('')}
+    </div>`;
+  }
+
+  // --- Register ---
+  async function register() {
+    try {
+      const res = await fetch(`${API}/api/users/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: el('reg-name').value,
+          email: el('reg-email').value,
+          password: el('reg-pass').value
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        banner('reg-result', '✓', 'Nalog uspešno kreiran!', `Dobrodošli, <strong>${data.user?.name}</strong>! Sada se prijavite ispod.`);
+        el('login-email').value = el('reg-email').value;
+        el('login-pass').value = el('reg-pass').value;
+      } else {
+        banner('reg-result', '✕', 'Registracija neuspešna', data.message || 'Proverite unesene podatke.', 'err');
+      }
+    } catch (e) { banner('reg-result', '✕', 'Greška', e.message, 'err'); }
+  }
+
+  // --- Login ---
+  async function login() {
+    try {
+      const res = await fetch(`${API}/api/users/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: el('login-email').value,
+          password: el('login-pass').value
+        })
+      });
+      const data = await res.json();
+      if (res.ok && data.access_token) {
+        token = data.access_token;
+        const d = el('login-result');
+        d.style.display = 'block';
+        d.innerHTML = `
+          <div class="resp-banner ok">
+            <div class="ri">✓</div>
+            <div style="flex:1;min-width:0">
+              <div class="rb-title">Prijava uspešna — <span class="tag green">${data.user?.role}</span></div>
+              <div class="rb-sub" style="margin-top:6px">
+                <div class="info-row" style="padding:4px 0;border:none">
+                  <span class="info-label">Ime</span>
+                  <span class="info-val">${data.user?.name}</span>
+                </div>
+                <div class="info-row" style="padding:4px 0;border:none">
+                  <span class="info-label">Email</span>
+                  <span class="info-val">${data.user?.email}</span>
+                </div>
+                <div class="info-row" style="padding:4px 0;border:none">
+                  <span class="info-label">Token</span>
+                  <span class="info-val" style="font-family:monospace;font-size:11px;color:#4a9a94">${token.substring(0,48)}…</span>
+                </div>
+              </div>
+            </div>
+          </div>`;
+      } else {
+        banner('login-result', '✕', 'Prijava neuspešna', data.message || 'Pogrešan email ili lozinka.', 'err');
+      }
+    } catch (e) { banner('login-result', '✕', 'Greška', e.message, 'err'); }
+  }
+
+  // --- Rooms ---
+  async function getRooms() {
+    try {
+      const res = await fetch(`${API}/api/rooms`);
+      const data = await res.json();
+      if (res.ok && Array.isArray(data)) {
+        const icons = { meeting_room: '🏢', phone_booth: '📞' };
+        const d = el('rooms-result');
+        d.style.display = 'block';
+        d.innerHTML = data.map(r => `
+          <div class="list-item room-card" id="room-card-${r.id}" onclick="selectRoom('${r.id}')" style="cursor:pointer;transition:all 0.18s">
+            <div class="list-item-top">
+              <div>
+                <div class="list-item-title">${icons[r.type] || '🏠'} ${r.name}</div>
+                <div class="list-item-sub">Kapacitet: ${r.capacity} ${r.capacity === 1 ? 'osoba' : 'osoba'}</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="tag ${r.type === 'meeting_room' ? 'blue' : 'orange'}">${r.type === 'meeting_room' ? 'Meeting Room' : 'Phone Booth'}</span>
+                <span class="room-select-badge" id="badge-${r.id}" style="display:none;background:var(--green);color:white;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px">✓ Izabrano</span>
+              </div>
+            </div>
+            ${r.amenities?.length ? `<div style="font-size:11px;color:#aaa">${r.amenities.join(' · ')}</div>` : ''}
+          </div>`).join('');
+        const opts = data.map(r =>
+          `<option value="${r.id}">${icons[r.type]} ${r.name} (kapacitet: ${r.capacity})</option>`
+        ).join('');
+        el('room-select').innerHTML = opts;
+        el('cal-room-select').innerHTML = opts;
+        el('rooms-list').style.display = 'block';
+      } else {
+        banner('rooms-result', '✕', 'Greška', 'Nije moguće učitati prostorije.', 'err');
+      }
+    } catch (e) { banner('rooms-result', '✕', 'Greška', e.message, 'err'); }
+  }
+
+  // --- Create Booking ---
+  async function createBooking() {
+    if (!token) { alert('Prvo se prijavi (Korak 2)!'); return; }
+    const roomId = el('room-select').value;
+    if (!roomId) { alert('Prvo učitaj prostorije (Korak 3)!'); return; }
+    try {
+      const res = await fetch(`${API}/api/bookings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({
+          roomId,
+          date: el('book-date').value,
+          startTime: el('book-start').value,
+          endTime: el('book-end').value
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        const d = el('book-result');
+        d.style.display = 'block';
+        d.innerHTML = `
+          <div class="resp-banner ok">
+            <div class="ri">✓</div>
+            <div style="flex:1">
+              <div class="rb-title">Rezervacija potvrđena!</div>
+              <div class="rb-sub" style="margin-top:6px">
+                <div class="info-row" style="padding:4px 0;border:none"><span class="info-label">Datum</span><span class="info-val">${data.date}</span></div>
+                <div class="info-row" style="padding:4px 0;border:none"><span class="info-label">Vreme</span><span class="info-val">${data.startTime} – ${data.endTime}</span></div>
+                <div class="info-row" style="padding:4px 0;border:none"><span class="info-label">Status</span><span class="tag green">${data.status}</span></div>
+              </div>
+            </div>
+          </div>`;
+      } else {
+        banner('book-result', '✕', 'Rezervacija neuspešna', data.message || 'Proverite unesene podatke.', 'err');
+      }
+    } catch (e) { banner('book-result', '✕', 'Greška', e.message, 'err'); }
+  }
+
+  // --- Get Bookings ---
+  async function getBookings() {
+    if (!token) { alert('Prvo se prijavi (Korak 2)!'); return; }
+    try {
+      const res = await fetch(`${API}/api/bookings`, { headers: { 'Authorization': `Bearer ${token}` } });
+      const data = await res.json();
+      const d = el('bookings-result');
+      d.style.display = 'block';
+      if (res.ok && Array.isArray(data) && data.length > 0) {
+        d.innerHTML = data.map(b => `
+          <div class="list-item">
+            <div class="list-item-top">
+              <div>
+                <div class="list-item-title">📅 ${b.date}</div>
+                <div class="list-item-sub">${b.startTime} – ${b.endTime}</div>
+              </div>
+              <span class="tag ${b.status === 'active' ? 'green' : 'orange'}">${b.status}</span>
+            </div>
+          </div>`).join('');
+        const active = data.filter(b => b.status === 'active');
+        if (active.length > 0) {
+          el('booking-select').innerHTML = active.map(b =>
+            `<option value="${b.id}">${b.date} | ${b.startTime}–${b.endTime}</option>`
+          ).join('');
+          el('cancel-section').style.display = 'block';
+        } else {
+          el('cancel-section').style.display = 'none';
+        }
+      } else if (res.ok) {
+        d.innerHTML = `<div class="empty-state">
+          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Nemate aktivnih rezervacija
+        </div>`;
+        el('cancel-section').style.display = 'none';
+      } else {
+        banner('bookings-result', '✕', 'Greška', data.message || 'Nije moguće učitati rezervacije.', 'err');
+      }
+    } catch (e) { banner('bookings-result', '✕', 'Greška', e.message, 'err'); }
+  }
+
+  // --- Cancel Booking ---
+  async function cancelBooking() {
+    if (!token) { alert('Prvo se prijavi (Korak 2)!'); return; }
+    const bookingId = el('booking-select').value;
+    if (!confirm('Sigurno želiš da otkažeš ovu rezervaciju?')) return;
+    try {
+      const res = await fetch(`${API}/api/bookings/${bookingId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (res.ok) {
+        banner('cancel-result', '✓', 'Rezervacija otkazana', 'Vaša rezervacija je uspešno otkazana.', 'ok');
+        setTimeout(() => getBookings(), 700);
+      } else {
+        banner('cancel-result', '✕', 'Greška', data.message || 'Otkazivanje neuspešno.', 'err');
+      }
+    } catch (e) { banner('cancel-result', '✕', 'Greška', e.message, 'err'); }
+  }
+
+  // --- Select Room from card ---
+  function selectRoom(roomId) {
+    // Deselektuj sve kartice
+    document.querySelectorAll('.room-card').forEach(c => {
+      c.classList.remove('selected');
+    });
+    document.querySelectorAll('.room-select-badge').forEach(b => {
+      b.style.display = 'none';
+    });
+
+    // Selektuj kliknutu
+    const card = el('room-card-' + roomId);
+    if (card) card.classList.add('selected');
+    const badge = el('badge-' + roomId);
+    if (badge) badge.style.display = 'inline-block';
+
+    // Postavi vrednost u oba selecta
+    el('room-select').value = roomId;
+    el('cal-room-select').value = roomId;
+  }
+
+  // --- Calendar ---
+  let calCurrentUserId = null;
+  const userNameCache = {};
+
+  async function fetchUserName(userId) {
+    if (userNameCache[userId]) return userNameCache[userId];
+    try {
+      const res = await fetch(`http://localhost:3001/users/${userId}`);
+      if (res.ok) {
+        const u = await res.json();
+        userNameCache[userId] = u.name || 'Korisnik';
+        return userNameCache[userId];
+      }
+    } catch {}
+    return 'Korisnik';
+  }
+
+  async function loadCalendar() {
+    if (!token) { alert('Prvo se prijavi (Korak 2)!'); return; }
+    const roomId = el('cal-room-select').value;
+    const date   = el('cal-date').value;
+    if (!roomId || roomId === '') { alert('Izaberi prostoriju!'); return; }
+    if (!date)   { alert('Izaberi datum!'); return; }
+
+    el('cal-loading').style.display = 'block';
+    el('cal-container').style.display = 'none';
+
+    try {
+      const res = await fetch(`${API}/api/bookings/room/${roomId}?date=${date}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const bookings = res.ok ? await res.json() : [];
+
+      // Dohvati imena korisnika za svaku rezervaciju
+      const namePromises = bookings.map(b => fetchUserName(b.userId).then(name => ({ ...b, userName: name })));
+      const bookingsWithNames = await Promise.all(namePromises);
+
+      // Izvuci trenutnog usera iz tokena
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        calCurrentUserId = payload.sub;
+      } catch {}
+
+      renderCalendar(bookingsWithNames, date);
+    } catch (e) {
+      el('cal-loading').style.display = 'none';
+      alert('Greška pri učitavanju rasporeda: ' + e.message);
+    }
+  }
+
+  function timeToMin(t) {
+    const [h, m] = t.split(':').map(Number);
+    return h * 60 + m;
+  }
+
+  function minToTime(m) {
+    const h = Math.floor(m / 60).toString().padStart(2, '0');
+    const min = (m % 60).toString().padStart(2, '0');
+    return `${h}:${min}`;
+  }
+
+  function renderCalendar(bookings, date) {
+    el('cal-loading').style.display = 'none';
+    el('cal-container').style.display = 'block';
+
+    // Generišemo slotove od 0:00 do 23:30 (48 slotova po 30 min)
+    const START_H = 0, END_H = 24;
+    const slots = [];
+    for (let m = START_H * 60; m < END_H * 60; m += 30) {
+      slots.push(m);
+    }
+
+    // Grupišemo po satu - prikazujemo 2 slota (XX:00 i XX:30) u redu
+    // Svaki red = 1 sat, 2 ćelije
+    const hours = [];
+    for (let h = START_H; h < END_H; h++) hours.push(h);
+
+    // Za svaki 30-min slot nađi da li je zauzet
+    function getBookingForSlot(slotStart) {
+      const slotEnd = slotStart + 30;
+      return bookings.find(b => {
+        const bStart = timeToMin(b.startTime);
+        const bEnd   = timeToMin(b.endTime);
+        return bStart < slotEnd && bEnd > slotStart;
+      }) || null;
+    }
+
+    let html = `<div class="cal-grid-inner">`;
+
+    // Header
+    html += `<div class="cal-header-row">
+      <div class="cal-time-col"></div>
+      <div class="cal-slot-header">:00</div>
+      <div class="cal-slot-header">:30</div>
+    </div>`;
+
+    for (const h of hours) {
+      const slot0 = h * 60;
+      const slot30 = h * 60 + 30;
+      const b0 = getBookingForSlot(slot0);
+      const b30 = getBookingForSlot(slot30);
+
+      html += `<div class="cal-row">
+        <div class="cal-time-label">${String(h).padStart(2,'0')}h</div>
+        ${renderCell(slot0, b0)}
+        ${renderCell(slot30, b30)}
+      </div>`;
+    }
+
+    html += `</div>`;
+    el('cal-grid').innerHTML = html;
+  }
+
+  function renderCell(slotMin, booking) {
+    const timeStr = minToTime(slotMin);
+    const endStr  = minToTime(slotMin + 30);
+
+    if (!booking) {
+      return `<div class="cal-cell free" onclick="selectSlot('${timeStr}','${endStr}')" title="Slobodno — klikni da rezervišeš">
+        <span style="font-size:10px;opacity:0.7">${timeStr}</span>
+      </div>`;
+    }
+
+    const isMine = booking.userId === calCurrentUserId;
+    const cls = isMine ? 'mine' : 'busy';
+    const label = isMine ? 'Vi' : (booking.userName || 'Zauzeto');
+    const icon = isMine ? '🔵' : '🔴';
+
+    return `<div class="cal-cell ${cls}" title="${timeStr}–${minToTime(timeToMin(booking.endTime))} · ${label}">
+      <span class="cell-name">${icon} ${label}</span>
+      <span class="cell-time">${timeStr}–${minToTime(timeToMin(booking.endTime))}</span>
+    </div>`;
+  }
+
+  function selectSlot(start, end) {
+    el('book-start').value = start;
+    el('book-end').value   = end;
+    // Sinhronizuj sobu i datum iz kalendara u formu za rezervaciju
+    const calRoom = el('cal-room-select').value;
+    const calDate = el('cal-date').value;
+    if (calRoom) el('room-select').value = calRoom;
+    if (calDate) el('book-date').value   = calDate;
+    // Scroll do forme
+    document.querySelector('[onclick="createBooking()"]').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Flash dugme
+    const btn = document.querySelector('[onclick="createBooking()"]');
+    btn.style.background = '#2a9d8f';
+    setTimeout(() => btn.style.background = '', 1200);
+  }
+
+  // --- Notifications ---
+  async function getNotifications() {
+    if (!token) { alert('Prvo se prijavi (Korak 2)!'); return; }
+    try {
+      const res = await fetch(`${API}/api/notifications`, { headers: { 'Authorization': `Bearer ${token}` } });
+      const data = await res.json();
+      const d = el('notif-result');
+      d.style.display = 'block';
+      if (res.ok && Array.isArray(data) && data.length > 0) {
+        const icons = { booking_created: '✅', booking_cancelled: '❌' };
+        d.innerHTML = data.map(n => `
+          <div class="list-item" style="${!n.isRead ? 'border-left:3px solid var(--orange);' : ''}">
+            <div class="list-item-top">
+              <div>
+                <div class="list-item-title">${icons[n.type] || '🔔'} ${n.type === 'booking_created' ? 'Rezervacija potvrđena' : 'Rezervacija otkazana'}</div>
+                <div class="list-item-sub">${n.message}</div>
+              </div>
+              ${!n.isRead ? '<span class="tag orange">novo</span>' : '<span class="tag" style="background:#f0f0f0;color:#aaa">pročitano</span>'}
+            </div>
+          </div>`).join('');
+      } else if (res.ok) {
+        d.innerHTML = `<div class="empty-state">
+          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          Nema obaveštenja
+        </div>`;
+      } else {
+        banner('notif-result', '✕', 'Greška', data.message || 'Nije moguće učitati obaveštenja.', 'err');
+      }
+    } catch (e) { banner('notif-result', '✕', 'Greška', e.message, 'err'); }
+  }
+</script>
+
+</body>
+</html>
