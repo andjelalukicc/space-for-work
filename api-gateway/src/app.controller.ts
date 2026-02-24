@@ -27,6 +27,7 @@
 
 import { Controller, All, Get, Req, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import * as http from 'http';
 // Swagger dekoratori za automatsko generisanje API dokumentacije.
 // @ApiTags - grupisanje endpointa po kategorijama u Swagger UI-ju.
 // @ApiOperation - opis sta odredjena ruta radi.
@@ -218,6 +219,43 @@ export class AppController {
       '/notifications',
       req.user?.id,
     );
+  }
+
+  // GET /api/notifications/stream - SSE proxy.
+  // Mora biti ISPRED wildcard rute da bi imao prioritet.
+  // Koristi Node.js http modul umesto axios jer SSE je streaming (ne buffer).
+  @ApiTags('Notifications')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'SSE stream notifikacija u realnom vremenu' })
+  @ApiResponse({ status: 200, description: 'text/event-stream' })
+  @ApiResponse({ status: 401, description: 'Neautorizovan pristup' })
+  @UseGuards(JwtAuthGuard)
+  @Get('api/notifications/stream')
+  sseStream(@Req() req, @Res() res) {
+    const userId = req.user?.id;
+    const notifUrl = this.serviceUrls['notifications'];
+    const parsed = new URL(`${notifUrl}/notifications/stream`);
+
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.setHeader('X-Accel-Buffering', 'no');
+    res.flushHeaders();
+
+    const options: http.RequestOptions = {
+      hostname: parsed.hostname,
+      port: Number(parsed.port) || 80,
+      path: parsed.pathname,
+      method: 'GET',
+      headers: { 'x-user-id': userId, Accept: 'text/event-stream' },
+    };
+
+    const proxyReq = http.request(options, (proxyRes) => {
+      proxyRes.pipe(res);
+    });
+    proxyReq.on('error', () => res.end());
+    req.on('close', () => proxyReq.destroy());
+    proxyReq.end();
   }
 
   // Prosledjuje zahteve za pojedinacnu notifikaciju (npr. /api/notifications/123/read).

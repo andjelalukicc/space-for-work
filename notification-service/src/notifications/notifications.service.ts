@@ -16,11 +16,18 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Notification } from './notification.entity';
+import { Subject, Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
 // @Injectable() - oznacava klasu kao NestJS provider koji se moze
 // injektovati u druge klase putem konstruktora (Dependency Injection).
 @Injectable()
 export class NotificationsService {
+  // Subject koji emituje svaku novu notifikaciju - koristi se za SSE stream.
+  // Svaki put kad se kreira notifikacija, ona se objavljuje ovde i
+  // svi aktivni SSE stream-ovi filtriraju po svom userId.
+  private notificationSubject = new Subject<Notification>();
+
   constructor(
     // @InjectRepository(Notification) - injektuje TypeORM repozitorijum
     // za Notification entitet. Repository pruza metode za CRUD operacije
@@ -28,6 +35,16 @@ export class NotificationsService {
     @InjectRepository(Notification)
     private notificationsRepository: Repository<Notification>,
   ) {}
+
+  // getStream() - vraca Observable<MessageEvent> filtriran po userId.
+  // Koristi se za SSE endpoint - klijent dobija real-time push notifikacije
+  // cim se kreira nova notifikacija za njega (via RabbitMQ event).
+  getStream(userId: string): Observable<MessageEvent> {
+    return this.notificationSubject.pipe(
+      filter((n) => n.userId === userId),
+      map((n) => ({ data: n }) as MessageEvent),
+    );
+  }
 
   // create() - kreira novu notifikaciju u bazi podataka.
   // Prima userId (kome je notifikacija), type (vrsta) i message (tekst).
@@ -44,7 +61,10 @@ export class NotificationsService {
       type,
       message,
     });
-    return this.notificationsRepository.save(notification);
+    const saved = await this.notificationsRepository.save(notification);
+    // Emituj novu notifikaciju na Subject - aktivni SSE klijenti je odmah dobijaju
+    this.notificationSubject.next(saved);
+    return saved;
   }
 
   // findByUser() - dohvata sve notifikacije za odredjenog korisnika.

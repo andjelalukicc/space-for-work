@@ -28,7 +28,10 @@ import {
   Param,
   Headers,
   UnauthorizedException,
+  Sse,
+  MessageEvent,
 } from '@nestjs/common';
+import { Observable } from 'rxjs';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { NotificationsService } from './notifications.service';
 
@@ -60,6 +63,18 @@ export class NotificationsController {
   async handleBookingCancelled(@Payload() data: any) {
     console.log('Received booking_cancelled event:', data);
     return this.notificationsService.handleBookingCancelled(data);
+  }
+
+  // GET /notifications/stream - SSE (Server-Sent Events) endpoint.
+  // Otvara trajnu HTTP konekciju i push-uje notifikacije klijentu u realnom vremenu
+  // cim stignu iz RabbitMQ-a (bez polling-a). Klijent se kaci jednom i prima sve.
+  // @Sse() dekorator automatski postavlja Content-Type: text/event-stream header.
+  @Sse('stream')
+  stream(@Headers('x-user-id') userId: string): Observable<MessageEvent> {
+    if (!userId) {
+      throw new UnauthorizedException('User ID is required');
+    }
+    return this.notificationsService.getStream(userId);
   }
 
   // GET /notifications - dohvata sve notifikacije za ulogovanog korisnika.
