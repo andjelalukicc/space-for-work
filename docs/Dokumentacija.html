@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coworking Booking System – Projektna dokumentacija</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&family=Carlito:wght@400;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Calibri', 'Carlito', 'Segoe UI', Arial, sans-serif;
+    font-size: 11.5pt;
+    color: #1a1a1a;
+    background: #d0d0d0;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    background: white;
+    margin: 18px auto;
+    padding: 25mm 25mm 20mm 30mm;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    position: relative;
+    page-break-after: always;
+  }
+
+  /* ── NASLOVNA STRANA ── */
+  .cover {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 247mm;
+  }
+  .cover-top { text-align: center; padding-top: 40mm; }
+  .cover-uni {
+    font-size: 13pt;
+    color: #555;
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+  }
+  .cover-fak {
+    font-size: 12pt;
+    color: #555;
+    margin-bottom: 40px;
+  }
+  .cover-title {
+    font-size: 28pt;
+    font-weight: 700;
+    color: #1a1a1a;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  .cover-subtitle {
+    font-size: 16pt;
+    color: #3aabab;
+    font-weight: 400;
+    margin-bottom: 50px;
+  }
+  .cover-predmet {
+    font-size: 12pt;
+    color: #444;
+    margin-bottom: 6px;
+  }
+  .cover-bottom {
+    border-top: 1.5px solid #3aabab;
+    padding-top: 14px;
+  }
+  .cover-info {
+    font-size: 11pt;
+    color: #333;
+    line-height: 1.8;
+  }
+  .cover-info b { color: #1a1a1a; }
+
+  /* ── SADRŽAJ ── */
+  .toc-title {
+    font-size: 18pt;
+    font-weight: 700;
+    color: #3aabab;
+    border-bottom: 2px solid #3aabab;
+    padding-bottom: 6px;
+    margin-bottom: 24px;
+  }
+  .toc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 5px;
+    font-size: 11pt;
+  }
+  .toc-item.l1 { font-weight: 700; margin-top: 10px; }
+  .toc-item.l2 { padding-left: 20px; color: #333; }
+  .toc-dots {
+    flex: 1;
+    border-bottom: 1.5px dotted #aaa;
+    margin: 0 6px 3px 6px;
+  }
+  .toc-num { font-size: 10.5pt; color: #555; white-space: nowrap; }
+
+  /* ── SEKCIJE ── */
+  h1.sec {
+    font-size: 17pt;
+    font-weight: 700;
+    color: #3aabab;
+    border-bottom: 2px solid #3aabab;
+    padding-bottom: 5px;
+    margin-bottom: 18px;
+    margin-top: 0;
+  }
+  h2.sec {
+    font-size: 13pt;
+    font-weight: 700;
+    color: #3aabab;
+    margin-top: 22px;
+    margin-bottom: 10px;
+  }
+  h3.sec {
+    font-size: 11.5pt;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-top: 16px;
+    margin-bottom: 8px;
+  }
+
+  p {
+    text-align: justify;
+    line-height: 1.6;
+    margin-bottom: 11px;
+  }
+
+  ul, ol {
+    margin: 8px 0 12px 22px;
+    line-height: 1.65;
+  }
+  li { margin-bottom: 4px; }
+
+  /* ── CODE BLOCK ── */
+  .code-wrap {
+    margin: 14px 0 6px 0;
+  }
+  pre {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 9pt;
+    padding: 14px 16px;
+    border-radius: 5px;
+    overflow-x: auto;
+    line-height: 1.5;
+    white-space: pre;
+  }
+  .kw  { color: #cba6f7; }
+  .str { color: #a6e3a1; }
+  .cm  { color: #6c7086; font-style: italic; }
+  .fn  { color: #89b4fa; }
+  .num { color: #fab387; }
+  .dec { color: #f38ba8; }
+  .cap { color: #f9e2af; }
+
+  .fig-caption {
+    text-align: center;
+    font-size: 10pt;
+    color: #555;
+    font-style: italic;
+    margin-bottom: 14px;
+    margin-top: 4px;
+  }
+
+  /* ── TABLE ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 16px 0;
+    font-size: 10.5pt;
+  }
+  th {
+    background: #3aabab;
+    color: white;
+    padding: 7px 10px;
+    text-align: left;
+    font-weight: 700;
+  }
+  td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  tr:nth-child(even) td { background: #f5fafa; }
+
+  /* ── ARCH BOX ── */
+  .arch-box {
+    background: #f5fafa;
+    border: 1px solid #c8e8e8;
+    border-left: 4px solid #3aabab;
+    border-radius: 4px;
+    padding: 14px 16px;
+    font-family: 'Consolas', monospace;
+    font-size: 9.5pt;
+    line-height: 1.6;
+    color: #1a1a1a;
+    margin: 12px 0 6px 0;
+    white-space: pre;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: white; }
+    .page {
+      margin: 0;
+      box-shadow: none;
+      padding: 20mm 20mm 18mm 25mm;
+    }
+  }
+
+  @page { size: A4; margin: 0; }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     STRANA 1 — NASLOVNA
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="cover">
+    <div class="cover-top">
+      <div class="cover-uni">Univerzitet u Novom Sadu</div>
+      <div class="cover-fak">Fakultet tehničkih nauka</div>
+      <div class="cover-title">Coworking Booking System</div>
+      <div class="cover-subtitle">Projektna dokumentacija</div>
+      <div class="cover-predmet">Predmet: Integracije — IROIT</div>
+    </div>
+    <div class="cover-bottom">
+      <div class="cover-info">
+        <b>Student:</b> Andjela Lukić<br>
+        <b>Broj indeksa:</b> IT62/2022<br>
+        <b>GitHub:</b> github.com/IROIT-2025/iroit-grupa-3-4-andjelalukicc<br>
+        <b>Akademska godina:</b> 2025/2026.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     STRANA 2 — SADRŽAJ
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="toc-title">Sadržaj</div>
+
+  <div class="toc-item l1"><span>1. Uvod</span><span class="toc-dots"></span><span class="toc-num">3</span></div>
+
+  <div class="toc-item l1"><span>2. Arhitektura implementiranog sistema</span><span class="toc-dots"></span><span class="toc-num">3</span></div>
+  <div class="toc-item l2"><span>2.1 Pregled sistema</span><span class="toc-dots"></span><span class="toc-num">3</span></div>
+  <div class="toc-item l2"><span>2.2 Uloge mikroservisa</span><span class="toc-dots"></span><span class="toc-num">4</span></div>
+
+  <div class="toc-item l1"><span>3. Tipovi komunikacije između servisa</span><span class="toc-dots"></span><span class="toc-num">5</span></div>
+  <div class="toc-item l2"><span>3.1 Sinhrona komunikacija — REST API</span><span class="toc-dots"></span><span class="toc-num">5</span></div>
+  <div class="toc-item l2"><span>3.2 Asinhrona komunikacija — RabbitMQ</span><span class="toc-dots"></span><span class="toc-num">5</span></div>
+  <div class="toc-item l2"><span>3.3 Reaktivna komunikacija — SSE</span><span class="toc-dots"></span><span class="toc-num">6</span></div>
+
+  <div class="toc-item l1"><span>4. Baza podataka</span><span class="toc-dots"></span><span class="toc-num">6</span></div>
+
+  <div class="toc-item l1"><span>5. Testiranje</span><span class="toc-dots"></span><span class="toc-num">7</span></div>
+  <div class="toc-item l2"><span>5.1 Unit testovi</span><span class="toc-dots"></span><span class="toc-num">7</span></div>
+  <div class="toc-item l2"><span>5.2 Integracioni testovi (E2E)</span><span class="toc-dots"></span><span class="toc-num">8</span></div>
+
+  <div class="toc-item l1"><span>6. Kontejnerizacija — Docker</span><span class="toc-dots"></span><span class="toc-num">8</span></div>
+  <div class="toc-item l2"><span>6.1 Dockerfile</span><span class="toc-dots"></span><span class="toc-num">8</span></div>
+  <div class="toc-item l2"><span>6.2 Docker Compose</span><span class="toc-dots"></span><span class="toc-num">9</span></div>
+
+  <div class="toc-item l1"><span>7. CI pipeline — GitHub Actions</span><span class="toc-dots"></span><span class="toc-num">10</span></div>
+
+  <div class="toc-item l1"><span>8. Statička analiza koda — ESLint</span><span class="toc-dots"></span><span class="toc-num">11</span></div>
+
+  <div class="toc-item l1"><span>9. CD pipeline i deployment</span><span class="toc-dots"></span><span class="toc-num">11</span></div>
+
+  <div class="toc-item l1"><span>10. Monitoring — Prometheus i Grafana</span><span class="toc-dots"></span><span class="toc-num">12</span></div>
+  <div class="toc-item l2"><span>10.1 Prometheus</span><span class="toc-dots"></span><span class="toc-num">12</span></div>
+  <div class="toc-item l2"><span>10.2 Grafana</span><span class="toc-dots"></span><span class="toc-num">13</span></div>
+
+  <div class="toc-item l1"><span>11. Zaključak</span><span class="toc-dots"></span><span class="toc-num">13</span></div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     STRANA 3 — UVOD + ARHITEKTURA
+════════════════════════════════════════════ -->
+<div class="page">
+
+  <h1 class="sec">1. Uvod</h1>
+  <p>Tema ovog projekta je izgradnja sistema za rezervaciju prostorija u coworking prostoru, realizovana kroz mikroservisnu arhitekturu. Cilj projekta bio je da se u praksi primene koncepti integracije sistema koji su obrađivani na predavanjima, uključujući različite tipove komunikacije između servisa, automatizaciju procesa razvoja i monitoring aplikacije.</p>
+  <p>Projekat je razvijen korišćenjem Node.js frejmvorka NestJS i pokreće se lokalno putem Docker Compose-a. Sistem se sastoji od pet nezavisnih mikroservisa koji međusobno komuniciraju putem REST API-ja, message broker-a RabbitMQ i reaktivnih stream-ova (SSE). Svaki servis ima jasno definisanu odgovornost i sopstvene podatke.</p>
+
+  <h1 class="sec">2. Arhitektura implementiranog sistema</h1>
+
+  <h2 class="sec">2.1 Pregled sistema</h2>
+  <p>Sistem je implementiran kao skup od pet nezavisnih mikroservisa. Klijent nikada ne komunicira direktno sa pojedinim servisima — sve zahteve prima API Gateway koji ih prosleđuje odgovarajućem servisu. Ovakav pristup omogućava da svaki servis može da se razvija, testira i skalira nezavisno od ostalih.</p>
+
+  <div class="arch-box">                        Klijent
+                           │
+                  ┌────────▼────────┐
+                  │   API Gateway   │  port 3000
+                  └────────┬────────┘
+                           │
+          ┌────────────────┼──────────────────┐
+          │                │                  │
+   ┌──────▼──────┐  ┌──────▼──────┐  ┌───────▼──────┐
+   │ User Service│  │ Room Service│  │Booking Service│
+   │   port 3001 │  │  port 3002  │  │   port 3003   │
+   └─────────────┘  └─────────────┘  └───────┬───────┘
+                                              │ RabbitMQ
+                                     ┌────────▼───────┐
+                                     │  Notification  │
+                                     │    Service     │
+                                     │   port 3004    │
+                                     └────────────────┘
+
+          PostgreSQL · RabbitMQ · Prometheus · Grafana</div>
+  <div class="fig-caption">Slika 1 — Dijagram arhitekture sistema</div>
+
+  <h2 class="sec">2.2 Uloge mikroservisa</h2>
+  <p><b>API Gateway (port 3000)</b> — jedina tačka ulaska u sistem. Prima sve zahteve od klijenta, proverava JWT token na zaštićenim rutama i prosleđuje zahtev odgovarajućem servisu. Gateway dodaje <code>x-user-id</code> header u interne zahteve, kako bi servisi znali koji korisnik je ulogovan bez ponovnog dekodiranja tokena.</p>
+  <p><b>User Service (port 3001)</b> — zadužen je za upravljanje korisnicima. Podržava registraciju, login i pregled profila. Lozinka se čuva u hashovanom obliku (bcrypt), a nakon uspešnog login-a klijentu se vraća JWT token koji važi 24 sata.</p>
+  <p><b>Room Service (port 3002)</b> — upravlja podacima o prostorijama. Pri prvom pokretanju automatski upisuje 8 prostorija u bazu: 2 meeting room-a i 6 phone booth-ova. Pored REST endpointa, implementira SSE stream koji klijentima šalje obaveštenja o promeni dostupnosti u realnom vremenu.</p>
+</div>
+
+<!-- ════════════════════════════════════════════
+     STRANA 4
+════════════════════════════════════════════ -->
+<div class="page">
+  <p><b>Booking Service (port 3003)</b> — najsloženiji deo sistema, sadrži svu poslovnu logiku vezanu za rezervacije. Pre kreiranja rezervacije sistem proverava: da li je prostorija slobodna u željenom terminu, da li korisnik već ima rezervaciju koja se preklapa i da li je dostignut dnevni limit od tri rezervacije. Tek ako su svi uslovi ispunjeni, rezervacija se kreira i šalje se event putem RabbitMQ-a.</p>
+  <p><b>Notification Service (port 3004)</b> — radi kao hibridna aplikacija, istovremeno prima HTTP zahteve i sluša poruke sa RabbitMQ reda. Kada Booking Service pošalje event <code>booking_created</code> ili <code>booking_cancelled</code>, ovaj servis kreira obaveštenje i čuva ga u bazi. Korisnik može da pročita svoja obaveštenja putem REST endpointa.</p>
+
+  <table>
+    <thead>
+      <tr><th>Servis</th><th>Port</th><th>Odgovornost</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>API Gateway</td><td>3000</td><td>Rutiranje, JWT autentifikacija, rate limiting</td></tr>
+      <tr><td>User Service</td><td>3001</td><td>Registracija, login, upravljanje korisnicima</td></tr>
+      <tr><td>Room Service</td><td>3002</td><td>Upravljanje prostorijama, SSE dostupnost</td></tr>
+      <tr><td>Booking Service</td><td>3003</td><td>Kreiranje i otkazivanje rezervacija</td></tr>
+      <tr><td>Notification Service</td><td>3004</td><td>Obaveštenja korisnika putem RabbitMQ</td></tr>
+      <tr><td>PostgreSQL</td><td>5432</td><td>Relaciona baza podataka</td></tr>
+      <tr><td>RabbitMQ</td><td>5672 / 15672</td><td>Message broker, management UI</td></tr>
+      <tr><td>Prometheus</td><td>9090</td><td>Prikupljanje metrika</td></tr>
+      <tr><td>Grafana</td><td>3100</td><td>Vizualizacija metrika i dashboardi</td></tr>
+    </tbody>
+  </table>
+  <div class="fig-caption">Tabela 1 — Pregled svih servisa sa portovima i ulogama</div>
+
+  <h1 class="sec">3. Tipovi komunikacije između servisa</h1>
+
+  <h2 class="sec">3.1 Sinhrona komunikacija — REST API</h2>
+  <p>REST API koristi se za komunikaciju između API Gateway-a i svih internih servisa, kao i između Booking Service-a i Room Service-a pri proveri dostupnosti prostorije. Radi se o sinhronoj komunikaciji — servis šalje zahtev i čeka odgovor pre nego što nastavi sa obradom. Ovaj tip komunikacije pogodan je za situacije u kojima je odgovor neophodan za dalju obradu zahteva, kao što je slučaj kod provere slobodnih termina pre kreiranja rezervacije.</p>
+
+  <h2 class="sec">3.2 Asinhrona komunikacija — RabbitMQ</h2>
+  <p>RabbitMQ message broker koristi se za komunikaciju između Booking Service-a i Notification Service-a. Nakon kreiranja ili otkazivanja rezervacije, Booking Service objavljuje event na RabbitMQ red, a Notification Service ga nezavisno preuzima i obrađuje.</p>
+</div>
+
+<!-- ════════════════════════════════════════════
+     STRANA 5
+════════════════════════════════════════════ -->
+<div class="page">
+  <p>Ova komunikacija je asinhrona — Booking Service ne čeka odgovor od Notification Service-a i ne mora da zna da on uopšte postoji. Ovakav pristup smanjuje međuzavisnost servisa i povećava otpornost sistema na greške: čak i ako Notification Service nije dostupan, rezervacija će biti uspešno kreirana, a obaveštenje će biti isporučeno čim servis ponovo postane aktivan.</p>
+
+  <div class="code-wrap">
+  <pre><span class="cm">// Booking Service — slanje eventa nakon uspešne rezervacije</span>
+<span class="kw">this</span>.<span class="fn">rabbitClient</span>.<span class="fn">emit</span>(<span class="str">'booking_created'</span>, {
+  userId:    booking.userId,
+  roomId:    booking.roomId,
+  date:      booking.date,
+  startTime: booking.startTime,
+  endTime:   booking.endTime,
+});
+
+<span class="cm">// Notification Service — prijem eventa</span>
+<span class="dec">@EventPattern</span>(<span class="str">'booking_created'</span>)
+<span class="kw">async</span> <span class="fn">handleBookingCreated</span>(data: BookingCreatedDto) {
+  <span class="kw">await</span> <span class="kw">this</span>.<span class="fn">notificationsService</span>.<span class="fn">create</span>(data);
+}</pre>
+  </div>
+  <div class="fig-caption">Isečak koda 1 — Asinhrona komunikacija putem RabbitMQ</div>
+
+  <h2 class="sec">3.3 Reaktivna komunikacija — SSE (Server-Sent Events)</h2>
+  <p>Server-Sent Events implementiran je u Room Service-u i omogućava klijentu da prima obaveštenja o promeni dostupnosti prostorija u realnom vremenu, bez potrebe da periodično šalje zahteve serveru. Klijent otvori jednu HTTP konekciju ka endpointu <code>/rooms/availability/stream</code> i server mu šalje podatke čim se stanje promeni. Ovaj pristup je efikasniji od klasičnog pollinga i čini sistem reaktivnim u smislu distribucije podataka u realnom vremenu.</p>
+
+  <h1 class="sec">4. Baza podataka</h1>
+  <p>Koristi se jedna instanca PostgreSQL baze podataka, ali svaki servis radi isključivo sa sopstvenim tabelama. User Service koristi tabelu <code>users</code>, Room Service tabelu <code>rooms</code>, Booking Service tabelu <code>bookings</code>, a Notification Service tabelu <code>notifications</code>. Na ovaj način je postignut logički princip izolacije podataka karakterističan za mikroservise, uz jednostavnost jedne infrastrukturne instance baze.</p>
+  <p>Mapiranje između TypeScript klasa i tabela u bazi odrađuje TypeORM biblioteka, koja automatski kreira tabele na osnovu definisanih entity klasa. Ovaj pristup se naziva code-first — schema baze se definiše u kodu, a ne ručno u SQL-u.</p>
+
+  <table>
+    <thead>
+      <tr><th>Tabela</th><th>Servis</th><th>Ključna polja</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>users</td><td>User Service</td><td>id, name, email, password, role</td></tr>
+      <tr><td>rooms</td><td>Room Service</td><td>id, name, type, capacity, amenities, status</td></tr>
+      <tr><td>bookings</td><td>Booking Service</td><td>id, userId, roomId, date, startTime, endTime, status</td></tr>
+      <tr><td>notifications</td><td>Notification Service</td><td>id, userId, message, isRead, createdAt</td></tr>
+    </tbody>
+  </table>
+  <div class="fig-caption">Tabela 2 — Pregled tabela u bazi podataka</div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     STRANA 6 — TESTIRANJE
+════════════════════════════════════════════ -->
+<div class="page">
+  <h1 class="sec">5. Testiranje</h1>
+
+  <h2 class="sec">5.1 Unit testovi</h2>
+  <p>Unit testovi napisani su za svih pet servisa korišćenjem Jest frejmvorka koji dolazi ugrađen u NestJS. Testovi pokrivaju poslovnu logiku u izolaciji — umesto pravih baza podataka i message broker-a, koriste se mock objekti koji simuliraju njihovo ponašanje. Na taj način testovi su brzi, pouzdani i ne zahtevaju pokrenute spoljne servise.</p>
+  <p>Posebna pažnja posvećena je testiranju rubnih slučajeva u Booking Service-u, koji sadrži najsloženiju poslovnu logiku u sistemu.</p>
+
+  <table>
+    <thead>
+      <tr><th>Servis</th><th>Broj testova</th><th>Šta se testira</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>User Service</td><td>7</td><td>Registracija, login, greška za dupli email, pretraga korisnika</td></tr>
+      <tr><td>Booking Service</td><td>14</td><td>Kreiranje, otkazivanje, preklapanje termina, dnevni limit, validacije</td></tr>
+      <tr><td>Room Service</td><td>8</td><td>Lista prostorija, filtriranje po tipu, seed logika, SSE stream</td></tr>
+      <tr><td>Notification Service</td><td>6</td><td>Kreiranje obaveštenja, obrada RabbitMQ eventa, čitanje</td></tr>
+      <tr><td>API Gateway</td><td>5</td><td>Health endpoint, proxy rutiranje</td></tr>
+      <tr><td><b>Ukupno</b></td><td><b>40</b></td><td>Svi testovi prolaze ✓</td></tr>
+    </tbody>
+  </table>
+  <div class="fig-caption">Tabela 3 — Pregled unit testova po servisima</div>
+
+  <h2 class="sec">5.2 Integracioni testovi (E2E)</h2>
+  <p>End-to-end testovi testiraju kompletne HTTP zahteve prema stvarnim endpointima sa pravom bazom podataka. Za razliku od unit testova koji testiraju logiku u izolaciji, E2E testovi pokreću ceo servis i proveravaju da sve komponente zajedno funkcionišu ispravno.</p>
+
+  <table>
+    <thead>
+      <tr><th>Servis</th><th>Broj testova</th><th>Šta se testira</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Booking Service</td><td>20</td><td>HTTP endpointi za kreiranje, pregled i otkazivanje rezervacija, RabbitMQ event verifikacija</td></tr>
+      <tr><td>User Service</td><td>14</td><td>Registracija, login, JWT validacija, zaštićeni profil endpoint</td></tr>
+      <tr><td><b>Ukupno</b></td><td><b>34</b></td><td>Svi testovi prolaze ✓</td></tr>
+    </tbody>
+  </table>
+  <div class="fig-caption">Tabela 4 — Pregled E2E testova po servisima</div>
+
+  <p>Ukupan broj testova u projektu iznosi <b>74</b> (40 unit + 34 E2E), svi prolaze.</p>
+</div>
+
+<!-- ════════════════════════════════════════════
+     STRANA 7 — DOCKER
+════════════════════════════════════════════ -->
+<div class="page">
+  <h1 class="sec">6. Kontejnerizacija — Docker</h1>
+
+  <h2 class="sec">6.1 Dockerfile</h2>
+  <p>Svaki mikroservis ima sopstveni <code>Dockerfile</code> koji koristi multi-stage build pristup. Ovaj pristup podrazumeva dve faze izgradnje slike: u prvoj fazi (builder) kompajlira se TypeScript kod u JavaScript, a u drugoj fazi (production) u finalnu sliku kopira se samo kompajlirani kod i produkcione zavisnosti. Razvojni alati i izvorni kod ne ulaze u finalnu sliku, što je čini manjom i bezbednijom.</p>
+
+  <div class="code-wrap">
+  <pre><span class="cm"># Faza 1: kompajliranje TypeScript koda</span>
+<span class="kw">FROM</span> node:<span class="num">22</span>-alpine <span class="kw">AS</span> builder
+<span class="kw">WORKDIR</span> /app
+<span class="kw">COPY</span> package*.json ./
+<span class="kw">RUN</span> npm install
+<span class="kw">COPY</span> . .
+<span class="kw">RUN</span> npm run build
+
+<span class="cm"># Faza 2: produkciona slika (bez razvojnih alata)</span>
+<span class="kw">FROM</span> node:<span class="num">22</span>-alpine <span class="kw">AS</span> production
+<span class="kw">WORKDIR</span> /app
+<span class="kw">COPY</span> --from=builder /app/dist ./dist
+<span class="kw">COPY</span> --from=builder /app/node_modules ./node_modules
+<span class="kw">CMD</span> [<span class="str">"node"</span>, <span class="str">"dist/main"</span>]</pre>
+  </div>
+  <div class="fig-caption">Isečak koda 2 — Multi-stage Dockerfile (primer za jedan servis)</div>
+
+  <h2 class="sec">6.2 Docker Compose</h2>
+  <p>Svi servisi definisani su i orkestrirani u jednom <code>docker-compose.yml</code> fajlu. Ukupno se pokreće devet kontejnera: pet NestJS mikroservisa, PostgreSQL, RabbitMQ, Prometheus i Grafana. Svi kontejneri nalaze se u zajedničkoj Docker mreži <code>coworking-network</code>, što im omogućava međusobnu komunikaciju putem naziva servisa umesto IP adresa.</p>
+  <p>Za PostgreSQL i RabbitMQ definisani su healthcheck-ovi, a NestJS servisi su konfigurisani da sačekaju da infrastrukturni servisi budu potpuno pokrenuti pre nego što sami krenu sa radom. Na taj način se sprečavaju greške koje bi nastale pri pokušaju konekcije na bazu koja još nije inicijalizovana.</p>
+
+  <div class="code-wrap">
+  <pre><span class="cap">services:</span>
+  <span class="fn">postgres</span>:
+    image: postgres:<span class="num">16</span>-alpine
+    healthcheck:
+      test: [<span class="str">"CMD-SHELL"</span>, <span class="str">"pg_isready -U postgres"</span>]
+
+  <span class="fn">booking-service</span>:
+    build: ./booking-service
+    depends_on:
+      postgres:
+        condition: <span class="str">service_healthy</span>
+      rabbitmq:
+        condition: <span class="str">service_healthy</span>
+    ports:
+      - <span class="str">"3003:3003"</span></pre>
+  </div>
+  <div class="fig-caption">Isečak koda 3 — Isečak iz docker-compose.yml sa healthcheck zavisnošću</div>
+
+  <p>Aplikacija se pokreće jednom komandom: <code>docker compose up -d</code>. Nakon pokretanja, svih devet kontejnera je u statusu <code>healthy</code>.</p>
+</div>
+
+<!-- ════════════════════════════════════════════
+     STRANA 8 — CI
+════════════════════════════════════════════ -->
+<div class="page">
+  <h1 class="sec">7. CI pipeline — GitHub Actions</h1>
+  <p>Svaki push na GitHub i svaki otvoreni Pull Request automatski pokreće CI (Continuous Integration) pipeline definisan u fajlu <code>.github/workflows/ci.yml</code>. Cilj CI pipeline-a je da se automatski proveri ispravnost koda pre nego što bude spojen u glavnu granu.</p>
+  <p>Pipeline koristi matrix strategiju, što znači da se isti skup koraka izvršava paralelno za svih pet servisa. Na taj način celokupni proces traje znatno kraće nego kada bi se servisi obrađivali jedan po jedan.</p>
+
+  <div class="code-wrap">
+  <pre><span class="cap">strategy:</span>
+  <span class="fn">matrix:</span>
+    service:
+      - api-gateway
+      - user-service
+      - room-service
+      - booking-service
+      - notification-service
+
+<span class="cap">steps:</span>
+  - <span class="fn">name</span>: <span class="str">Checkout koda</span>
+    uses: actions/checkout@v4
+
+  - <span class="fn">name</span>: <span class="str">Setup Node.js 22</span>
+    uses: actions/setup-node@v4
+
+  - <span class="fn">name</span>: <span class="str">Instalacija zavisnosti</span>
+    run: npm install
+
+  - <span class="fn">name</span>: <span class="str">ESLint — statička analiza koda</span>
+    run: npx eslint src/
+
+  - <span class="fn">name</span>: <span class="str">Build — kompilacija TypeScript-a</span>
+    run: npm run build
+
+  - <span class="fn">name</span>: <span class="str">Pokretanje unit testova</span>
+    run: npx jest --passWithNoTests
+
+  - <span class="fn">name</span>: <span class="str">Build Docker image</span>
+    run: docker build -t coworking-${{ matrix.service }} .</pre>
+  </div>
+  <div class="fig-caption">Isečak koda 4 — CI pipeline konfiguracija (GitHub Actions)</div>
+
+  <p>Ako bilo koji korak u pipeline-u ne prođe — bilo da se radi o ESLint grešci, neuspelom testu ili grešci pri build-u — ceo pipeline pada i Pull Request ne može biti spojen u main granu. Na taj način garantuje se da samo ispravan, testiran kod ulazi u produkciju.</p>
+
+  <h1 class="sec">8. Statička analiza koda — ESLint</h1>
+  <p>ESLint je konfigurisan za svih pet servisa korišćenjem flat config formata (<code>eslint.config.mjs</code>), koji je standard od ESLint v9. Integrisan je TypeScript ESLint plugin zajedno sa Prettier alatom za formatiranje koda.</p>
+  <p>Pravila su prilagođena specifičnostima projekta. U API Gateway-u su isključena <code>no-unsafe-*</code> pravila jer proxy pattern inherentno zahteva rad sa <code>any</code> tipovima pri prosleđivanju zahteva. Za sve ostale servise primenjena su standardna TypeScript ESLint pravila. Rezultat statičke analize: nula grešaka u svih pet servisa. ESLint se izvršava kao prvi korak u CI pipeline-u, pre build-a i testova.</p>
+</div>
+
+<!-- ════════════════════════════════════════════
+     STRANA 9 — CD + MONITORING
+════════════════════════════════════════════ -->
+<div class="page">
+  <h1 class="sec">9. CD pipeline i deployment</h1>
+  <p>CD (Continuous Delivery) pipeline definisan je u fajlu <code>.github/workflows/cd.yml</code> i pokreće se automatski kada se kod spoji u <code>main</code> granu, odnosno nakon merge-a Pull Request-a.</p>
+  <p>Pipeline se izvršava u tri uzastopna koraka. U prvom koraku ponovo se pokreću svi testovi za svih pet servisa — ovo je pre-deploy verifikacija koja osigurava da nijedan neispravni kod ne dođe u produkciju. U drugom koraku prave se Docker slike sa dva taga: <code>latest</code> koji uvek pokazuje na poslednju verziju i SHA hash trenutnog commit-a koji omogućava tačnu identifikaciju svake verzije. U trećem koraku vrši se verifikacija kompletnog Docker Compose stack-a pokretanjem svih devet kontejnera i proverom health endpointa API Gateway-a.</p>
+  <p>Aplikacija se deployi lokalno putem Docker Compose-a. API Gateway je dostupan na adresi <code>http://localhost:3000</code>, a Swagger dokumentacija na <code>http://localhost:3000/api</code>.</p>
+
+  <h1 class="sec">10. Monitoring — Prometheus i Grafana</h1>
+
+  <h2 class="sec">10.1 Prometheus</h2>
+  <p>Svaki mikroservis eksponuje <code>/metrics</code> endpoint koji Prometheus periodično čita svakih 15 sekundi. Metrike se prikupljaju korišćenjem <code>prom-client</code> biblioteke i uključuju broj HTTP zahteva, vreme obrade (latency) po endpointu, broj grešaka i broj aktivnih konekcija.</p>
+
+  <div class="code-wrap">
+  <pre><span class="cm"># Prometheus konfiguracija — scraping svakih 15 sekundi</span>
+<span class="cap">scrape_configs:</span>
+  - job_name: <span class="str">'api-gateway'</span>
+    scrape_interval: <span class="num">15</span>s
+    static_configs:
+      - targets: [<span class="str">'api-gateway:3000'</span>]
+
+  - job_name: <span class="str">'user-service'</span>
+    static_configs:
+      - targets: [<span class="str">'user-service:3001'</span>]
+
+  - job_name: <span class="str">'booking-service'</span>
+    static_configs:
+      - targets: [<span class="str">'booking-service:3003'</span>]</pre>
+  </div>
+  <div class="fig-caption">Isečak koda 5 — Prometheus konfiguracija za scraping mikroservisa</div>
+
+  <h2 class="sec">10.2 Grafana</h2>
+  <p>Grafana je konfigurisana sa automatskim provisioning-om — datasource i dashboard učitavaju se automatski pri pokretanju, bez ručne konfiguracije. Dashboard sadrži pet panela koji prikazuju:</p>
+  <ul>
+    <li><b>HTTP request rate</b> po servisu — prikazuje aktivnost svakog servisa u realnom vremenu</li>
+    <li><b>Latency percentili</b> p50, p95 i p99 — koliko dugo traje obrada zahteva</li>
+    <li><b>Error rate</b> za 4xx i 5xx odgovore — praćenje grešaka u sistemu</li>
+    <li><b>Aktivne konekcije</b> — broj aktivnih veza sa svakim servisom</li>
+    <li><b>Gauge prikaz</b> trenutnog request rate-a — brzi pregled opterećenja sistema</li>
+  </ul>
+  <p>Grafana je dostupna na <code>http://localhost:3100</code> sa podrazumevanim kredencijalima (admin/admin), a Prometheus na <code>http://localhost:9090</code>.</p>
+</div>
+
+<!-- ════════════════════════════════════════════
+     STRANA 10 — ZAKLJUČAK
+════════════════════════════════════════════ -->
+<div class="page">
+  <h1 class="sec">11. Zaključak</h1>
+  <p>U okviru ovog projekta implementiran je kompletan sistem za rezervaciju prostorija u coworking prostoru kao mikroservisna aplikacija. Sistem obuhvata pet NestJS mikroservisa koji međusobno komuniciraju putem tri različita tipa komunikacije: sinhroni REST API, asinhroni RabbitMQ i reaktivni SSE stream.</p>
+  <p>Projekat je u potpunosti pokriven automatskim testovima — ukupno 74 testa (40 unit i 34 E2E), svi prolaze. Celokupna infrastruktura je kontejnerizovana putem Docker Compose-a koji pokreće devet kontejnera. Automatizovani CI/CD pipeline putem GitHub Actions obezbeđuje da svaki Push i Pull Request prođe kroz statičku analizu koda, kompilaciju, testove i verifikaciju Docker build-a pre nego što bude spojen u glavnu granu.</p>
+  <p>Monitoring sistema implementiran je putem Prometheus i Grafana alata koji u realnom vremenu prikazuju metrike svakog servisa. Sve faze projekta su završene i aplikacija se uspešno pokreće lokalno.</p>
+
+  <br><br>
+  <table>
+    <thead>
+      <tr><th>Pull Request</th><th>Opis</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>PR #1</td><td>Initialize NestJS microservices architecture</td><td>✓ Merged</td></tr>
+      <tr><td>PR #2</td><td>Add health check endpoints to all microservices</td><td>✓ Merged</td></tr>
+      <tr><td>PR #3</td><td>Add Swagger/OpenAPI documentation</td><td>✓ Merged</td></tr>
+      <tr><td>PR #4</td><td>Add E2E integration tests — 34 testova</td><td>✓ Merged</td></tr>
+      <tr><td>PR #5</td><td>Add CORS support and request logging</td><td>✓ Merged</td></tr>
+      <tr><td>PR #6</td><td>Add global validation pipe and exception filter</td><td>✓ Merged</td></tr>
+    </tbody>
+  </table>
+  <div class="fig-caption">Tabela 5 — Istorija Pull Request-ova na GitHub repozitorijumu</div>
+
+  <br><br><br>
+  <div style="border-top: 1.5px solid #3aabab; padding-top: 14px; color: #555; font-size: 10.5pt; line-height: 1.8;">
+    <b>Student:</b> Andjela Lukić, IT62/2022<br>
+    <b>Predmet:</b> Integracije (IROIT), FTN Novi Sad, 2025/2026.<br>
+    <b>GitHub:</b> github.com/IROIT-2025/iroit-grupa-3-4-andjelalukicc
+  </div>
+</div>
+
+</body>
+</html>
