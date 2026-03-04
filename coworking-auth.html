@@ -708,9 +708,8 @@ async function submitLogin(e) {
       };
       saveAuth(token, user);
 
-      // show success state
-      document.getElementById('login-form').style.display = 'none';
-      document.getElementById('login-success').classList.add('show');
+      // redirect to booking page
+      window.location.href = 'coworking-test.html';
     } else {
       const msg = data.message || data.error || 'Prijava nije uspela. Proverite podatke.';
       showBanner('login-banner', 'error', `&#x274C; ${escHtml(msg)}`);
@@ -786,11 +785,7 @@ async function submitRegister(e) {
           const token = ld.token || ld.access_token || ld.accessToken || '';
           const user  = ld.user || { id: ld.id || ld.userId || '', name: ld.name || ld.username || '', email: ld.email || email, role: ld.role || 'user' };
           saveAuth(token, user);
-          document.getElementById('register-form').style.display = 'none';
-          const s = document.getElementById('login-success');
-          s.querySelector('.success-title').textContent = 'Dobrodošli!';
-          s.querySelector('.success-text').textContent = 'Nalog je kreiran i automatski ste prijavljeni. Možete zatvoriti ovu stranicu.';
-          s.classList.add('show');
+          window.location.href = 'coworking-test.html';
         } else {
           switchTab('login');
           document.getElementById('login-email').value = email;
