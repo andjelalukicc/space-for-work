@@ -4,7 +4,7 @@
 **Predmet:** Eksploatacija, održavanje i nadogradnja informacionih sistema — školska godina **2025/26**.  
 **Projektni zadatak (tekst predmeta):** *VEB PRODAVNICA* — razvoj veb prodavnice uz samostalan izbor teme i tehnologija uz konsultaciju sa predmetnim asistentima.  
 **Student:** Andjela Lukic — IT62/2022  
-**Repozitorijum:** `coworking-booking-system`  
+**Repozitorijum:** https://github.com/andjelalukicc/space-for-work  
 **Verzija dokumenta:** 1.1  
 
 ---

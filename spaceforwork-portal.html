@@ -2378,6 +2378,18 @@
   </style>
 </head>
 <body>
+  <script>
+    (function () {
+      var p = new URLSearchParams(location.search);
+      if (p.get("demo") === "1") window.__USE_BACKEND__ = false;
+      if (p.get("reset") === "1") {
+        try {
+          localStorage.removeItem("spaceforwork_portal_state_v3");
+          localStorage.removeItem("spaceforwork_jwt_v1");
+        } catch (e) {}
+      }
+    })();
+  </script>
   <!-- Portal: jedna prijava (modal), uloga iz servera. Ako vidis Korisnik/Admin demo, uradi hard refresh (Cmd+Shift+R). -->
   <div id="app" class="site-shell"></div>
 
@@ -6223,6 +6235,21 @@
 
     (async function portalBootstrap() {
       const params = new URLSearchParams(window.location.search);
+      const pageParam = params.get("page");
+      if (pageParam && publicNavItems.some((item) => item.id === pageParam)) {
+        state.publicPage = pageParam;
+        state.showPublic = true;
+        state.showAuthModal = false;
+      }
+      if (params.get("shot") === "admin") {
+        const admin = state.users.find((item) => item.role === "ADMIN");
+        if (admin) {
+          state.sessionUserId = admin.id;
+          state.view = "admin-overview";
+          state.showPublic = false;
+          state.showAuthModal = false;
+        }
+      }
       backendJwt = loadJwtFromStorage();
       if (USE_BACKEND && backendJwt) {
         try {

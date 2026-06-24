@@ -451,6 +451,17 @@ def add_technologies(doc):
         first_line=True,
     )
 
+    add_subtitle(doc, "2.6", "Izvorni kod i repozitorijum")
+    add_paragraph(
+        doc,
+        "Kompletan izvorni kod, Docker konfiguracija, portal, dijagrami i generator projektne "
+        "dokumentacije objavljeni su na GitHub repozitorijumu projekta. Repozitorijum služi kao "
+        "centralno mesto za predaju, pregled implementacije i pokretanje sistema u lokalnom okruženju.",
+        first_line=True,
+    )
+    repo_p = doc.add_paragraph()
+    add_hyperlink(repo_p, REPO_URL, REPO_URL)
+
 
 def add_uml(doc):
     add_section_title(doc, "3", "UML DIJAGRAMI")
@@ -659,6 +670,15 @@ def add_solution(doc):
         first_line=True,
     )
     add_image(doc, DIAGRAM_DIR / "04-architecture.png", 15.2, "Slika 3. Arhitektura aplikacije")
+    add_paragraph(
+        doc,
+        "Izvorni kod, uputstvo za pokretanje i aktuelna verzija portala dostupni su na GitHub "
+        "repozitorijumu projekta. Lokalni demo portal se pokreće preko HTTP servera i otvara se u "
+        "browseru na adresi koja je navedena na naslovnoj strani dokumentacije.",
+        first_line=True,
+    )
+    repo_link = doc.add_paragraph()
+    add_hyperlink(repo_link, "GitHub repozitorijum — space-for-work", REPO_URL)
 
     add_subtitle(doc, "5.2", "Korisnički deo aplikacije — coworking portal")
     add_paragraph(
@@ -711,6 +731,12 @@ def add_solution(doc):
         "coworking sistemu, a ne njegova centralna tačka.",
         first_line=True,
     )
+    add_image(
+        doc,
+        SCREENSHOT_DIR / "portal-booking.png",
+        15.5,
+        "Slika 7. Modul za rezervaciju sala i phone booth-ova",
+    )
     add_subtitle(doc, "5.4", "Administratorski panel")
     add_paragraph(
         doc,
@@ -723,7 +749,7 @@ def add_solution(doc):
         doc,
         SCREENSHOT_DIR / "portal-admin.png",
         15.5,
-        "Slika 7. Administratorska kontrolna tabla",
+        "Slika 8. Administratorska kontrolna tabla",
     )
     add_bullets(
         doc,
@@ -795,7 +821,7 @@ def add_solution(doc):
         "kada nije potrebno povezivati pravi Stripe nalog.",
         first_line=True,
     )
-    add_image(doc, DIAGRAM_DIR / "05-payment-extend.png", 14.2, "Slika 8. Tok plaćanja i webhook potvrde")
+    add_image(doc, DIAGRAM_DIR / "05-payment-extend.png", 14.2, "Slika 9. Tok plaćanja i webhook potvrde")
 
     add_subtitle(doc, "5.8", "Validacija i obrada grešaka")
     add_paragraph(

@@ -11,6 +11,13 @@ DOKUMENTACIJA ZA PREDAJU:
   docs/Space_For_Work_Projektna_Dokumentacija_2026.docx
   docs/rendered_documentation/Space_For_Work_Projektna_Dokumentacija_2026.pdf
 
+SCREENSHOT PORTALA (u dokumentaciji):
+  docs/assets/portal-home.png
+  docs/assets/portal-coworking.png
+  docs/assets/portal-membership.png
+  docs/assets/portal-booking.png
+  docs/assets/portal-admin.png
+
 POMOCNI DOKUMENTI ZA ODBRANU:
   docs/SOVA-ANALIZA-I-ZAHTEVI.md
   docs/PREGLED-SPECIFIKACIJE-I-IMPLEMENTACIJE.md

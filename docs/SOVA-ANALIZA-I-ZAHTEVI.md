@@ -3,7 +3,8 @@
 **Kurs:** Eksploatacija, odrzavanje i nadogradnja informacionih sistema 2025/26 IIS  
 **SOVA strana:** https://sova.uns.ac.rs/course/view.php?id=5077  
 **Rok za predaju projektne dokumentacije:** sreda, 24. jun 2026. u 23:59  
-**Projekat:** Space For Work coworking portal, booking sistem i prodaja usluga
+**Projekat:** Space For Work coworking portal, booking sistem i prodaja usluga  
+**GitHub:** https://github.com/andjelalukicc/space-for-work
 
 Ovaj dokument je radna beleška za projekat. Nije prepis materijala sa SOVA platforme, vec sazet pregled onoga sto je za nas projekat bitno: sta predmet trazi, koje teme iz predavanja treba pomenuti u dokumentaciji i kako se vezbe za Stripe/Webhooks preslikavaju na implementaciju.
 
