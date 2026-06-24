@@ -19,6 +19,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Room } from './room.entity';
 import { RoomsService } from './rooms.service';
 import { RoomsController } from './rooms.controller';
+import { AdminGuard } from '../common/admin.guard';
 
 @Module({
   // TypeOrmModule.forFeature([Room]) - registruje Room entitet u okviru ovog modula
@@ -31,7 +32,7 @@ import { RoomsController } from './rooms.controller';
 
   // Providers (servisi) koji sadrze poslovnu logiku - NestJS ih automatski instancira
   // i injektuje gde su potrebni putem Dependency Injection mehanizma
-  providers: [RoomsService],
+  providers: [RoomsService, AdminGuard],
 
   // Exports - izvozimo RoomsService kako bi ga drugi moduli mogli koristiti
   // Na primer, booking modul moze da koristi RoomsService da proveri da li prostorija postoji

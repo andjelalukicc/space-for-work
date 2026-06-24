@@ -16,6 +16,7 @@ import { User } from './user.entity';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { JwtStrategy } from '../auth/jwt.strategy';
+import { AdminGuard } from '../common/admin.guard';
 
 @Module({
   imports: [
@@ -32,7 +33,7 @@ import { JwtStrategy } from '../auth/jwt.strategy';
     }),
   ],
   controllers: [UsersController], // HTTP rute
-  providers: [UsersService, JwtStrategy], // Biznis logika + JWT strategija
+  providers: [UsersService, JwtStrategy, AdminGuard],
   exports: [UsersService, JwtModule], // Deli sa drugim modulima ako zatreba
 })
 export class UsersModule {}

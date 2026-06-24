@@ -1,3 +1,4 @@
+import { join } from 'path';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -17,9 +18,11 @@ import { HealthController } from './health.controller';
         port: configService.get<number>('DB_PORT', 5432),
         username: configService.get<string>('DB_USERNAME', 'postgres'),
         password: configService.get<string>('DB_PASSWORD', 'postgres'),
-        database: configService.get<string>('DB_NAME', 'coworking'),
+        database: configService.get<string>('DB_NAME', 'coworking_rooms'),
         entities: [Room],
-        synchronize: true,
+        synchronize: false,
+        migrationsRun: true,
+        migrations: [join(__dirname, 'migrations', '*.js')],
       }),
       inject: [ConfigService],
     }),

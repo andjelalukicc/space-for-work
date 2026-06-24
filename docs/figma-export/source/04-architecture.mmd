@@ -1,0 +1,37 @@
+flowchart LR
+  subgraph presentation["Prezentacioni sloj"]
+    Portal["Portal (HTML/JS)"]
+  end
+
+  subgraph gateway["API sloj"]
+    GW["API Gateway + JWT"]
+  end
+
+  subgraph domene["Domenski servisi"]
+    US["User"]
+    RS["Room"]
+    BS["Booking"]
+    CS["Commerce"]
+    NS["Notification"]
+  end
+
+  subgraph infra["Infrastruktura"]
+    DB[(PostgreSQL)]
+    MQ[RabbitMQ]
+    STR[Stripe]
+  end
+
+  Portal --> GW
+  GW --> US
+  GW --> RS
+  GW --> BS
+  GW --> CS
+  GW --> NS
+  BS --> MQ
+  NS --> MQ
+  US --> DB
+  RS --> DB
+  BS --> DB
+  CS --> DB
+  NS --> DB
+  CS --> STR

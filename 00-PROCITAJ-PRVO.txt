@@ -1,0 +1,27 @@
+Coworking Booking System — predaja paket
+Andjela Lukic — IT62/2022
+
+LOKACIJA AKTUELNOG PROJEKTA:
+/Users/andjelalukic/Desktop/faks/coworking-booking-system
+
+GIT REPOZITORIJUM:
+  https://github.com/andjelalukicc/space-for-work
+
+DOKUMENTACIJA ZA PREDAJU:
+  docs/Space_For_Work_Projektna_Dokumentacija_2026.docx
+  docs/rendered_documentation/Space_For_Work_Projektna_Dokumentacija_2026.pdf
+
+POMOCNI DOKUMENTI ZA ODBRANU:
+  docs/SOVA-ANALIZA-I-ZAHTEVI.md
+  docs/PREGLED-SPECIFIKACIJE-I-IMPLEMENTACIJE.md
+  docs/EONIS-Zadatak-V-Projektna-dokumentacija.md
+  docs/EONIS-Zadatak-I-UML.md
+  docs/figma-export/png/doc-usecase.png
+  docs/figma-export/png/doc-class.png
+
+NAPOMENA: node_modules nisu kopirani (ogroman folder). Pokretanje:
+  docker compose up --build -d
+Portal u browseru (obavezno http://, ne file://):
+  python3 -m http.server 8888
+  pa otvori: http://127.0.0.1:8888/spaceforwork-portal.html
+  (API mora raditi na http://localhost:3000)

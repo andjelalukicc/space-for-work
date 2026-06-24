@@ -12,10 +12,28 @@
  * - GET /rooms/type/:type   - Vraca prostorije odredjenog tipa (meeting_room ili phone_booth)
  * - GET /rooms/availability/stream - SSE endpoint za reaktivno pracenje promena dostupnosti
  * - GET /rooms/:id          - Vraca jednu prostoriju po ID-u
+ * - GET /rooms/admin/list   - Admin: sve prostorije (ukljucujuci neaktivne)
  */
 
-import { Controller, Get, Param, Sse } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Sse,
+  Query,
+  ValidationPipe,
+  UseGuards,
+} from '@nestjs/common';
 import { RoomsService } from './rooms.service';
+import { QueryRoomsDto } from './dto/query-rooms.dto';
+import { AdminQueryRoomsDto } from './dto/admin-query-rooms.dto';
+import { CreateRoomDto } from './dto/create-room.dto';
+import { UpdateRoomDto } from './dto/update-room.dto';
+import { AdminGuard } from '../common/admin.guard';
 // Observable i map iz RxJS biblioteke - potrebni za implementaciju SSE (Server-Sent Events)
 // Observable predstavlja tok podataka koji se emituje tokom vremena
 // map operator transformise svaki emitovani podatak u zeljeni format
@@ -37,7 +55,26 @@ export class RoomsController {
    * Odgovor je JSON niz Room objekata.
    */
   @Get()
-  async findAll() {
+  async findAll(
+    @Query(
+      new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        forbidNonWhitelisted: false,
+      }),
+    )
+    query: QueryRoomsDto,
+  ) {
+    const paginate =
+      query.page != null ||
+      query.limit != null ||
+      Boolean(query.search?.trim()) ||
+      Boolean(query.type?.trim()) ||
+      (query.sort != null && query.sort !== 'name') ||
+      query.order === 'DESC';
+    if (paginate) {
+      return this.roomsService.findPaginated(query);
+    }
     return this.roomsService.findAll();
   }
 
@@ -88,6 +125,47 @@ export class RoomsController {
           }) as MessageEvent,
       ),
     );
+  }
+
+  /** ADMIN — lista svih prostorija (paginacija, pretraga, filter aktivnosti). */
+  @Get('admin/list')
+  @UseGuards(AdminGuard)
+  async adminList(
+    @Query(
+      new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        forbidNonWhitelisted: false,
+      }),
+    )
+    query: AdminQueryRoomsDto,
+  ) {
+    return this.roomsService.adminFindPaginated(query);
+  }
+
+  /** ADMIN — Create (EONIS Zadatak III, CRUD nad tabelom prostorija). */
+  @Post()
+  @UseGuards(AdminGuard)
+  async create(@Body(ValidationPipe) dto: CreateRoomDto) {
+    return this.roomsService.createRoom(dto);
+  }
+
+  /** ADMIN — Update */
+  @Patch(':id')
+  @UseGuards(AdminGuard)
+  async update(
+    @Param('id') id: string,
+    @Body(ValidationPipe) dto: UpdateRoomDto,
+  ) {
+    return this.roomsService.updateRoom(id, dto);
+  }
+
+  /** ADMIN — Delete kao soft-deactivate (isActive = false). */
+  @Delete(':id')
+  @UseGuards(AdminGuard)
+  async remove(@Param('id') id: string) {
+    await this.roomsService.deactivateRoom(id);
+    return { success: true };
   }
 
   /**

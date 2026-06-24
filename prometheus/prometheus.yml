@@ -45,6 +45,15 @@ scrape_configs:
           service: "booking-service"
           environment: "production"
 
+  # Сервис за производе и поруџбине (Stripe)
+  - job_name: "commerce-service"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["commerce-service:3005"]
+        labels:
+          service: "commerce-service"
+          environment: "production"
+
   # Сервис за обавештења - слање нотификација корисницима
   - job_name: "notification-service"
     metrics_path: /metrics

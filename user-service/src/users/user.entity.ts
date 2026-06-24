@@ -31,6 +31,10 @@ export class User {
   @Column({ default: 'member' }) // Uloga korisnika, podrazumevano 'member'
   role: string;
 
+  /** Soft-deaktivacija naloga (admin CRUD); neaktivan korisnik se ne može prijaviti. */
+  @Column({ default: true })
+  isActive: boolean;
+
   @CreateDateColumn() // Automatski se popunjava kada se korisnik kreira
   createdAt: Date;
 

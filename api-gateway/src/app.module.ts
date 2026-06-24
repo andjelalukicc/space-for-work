@@ -11,7 +11,9 @@
 // ============================================================================
 
 import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { LoggingMiddleware } from './logging.middleware';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
@@ -26,6 +28,13 @@ import { MetricsController } from './metrics.controller';
     // isGlobal: true znaci da ne moramo ponovo importovati ConfigModule
     // u svakom modulu - dostupan je svuda automatski.
     ConfigModule.forRoot({ isGlobal: true }),
+
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60_000,
+        limit: 200,
+      },
+    ]),
 
     // PassportModule - NestJS wrapper oko Passport.js biblioteke za autentifikaciju.
     // Passport podrzava razlicite strategije (JWT, OAuth, Local, itd.).
@@ -44,7 +53,10 @@ import { MetricsController } from './metrics.controller';
   controllers: [AppController, MetricsController],
   // JwtStrategy - provider koji definise kako se JWT token dekodira i validira.
   // Passport automatski koristi ovu strategiju kada se primeni JwtAuthGuard.
-  providers: [JwtStrategy],
+  providers: [
+    JwtStrategy,
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
+  ],
 })
 export class AppModule implements NestModule {
   // configure() metoda registruje middleware za sve rute ('*').

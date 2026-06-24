@@ -14,7 +14,11 @@
  * Ovo je zahtev specifikacije projekta za reaktivnu komunikaciju.
  */
 
-import { Injectable, OnModuleInit, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  OnModuleInit,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Room } from './room.entity';
@@ -22,6 +26,10 @@ import { Room } from './room.entity';
 // Subject je istovremeno i Observable (moze se slusati) i Observer (moze emitovati vrednosti)
 // Koristimo ga za implementaciju SSE (Server-Sent Events) paterna
 import { Subject } from 'rxjs';
+import { QueryRoomsDto } from './dto/query-rooms.dto';
+import { AdminQueryRoomsDto } from './dto/admin-query-rooms.dto';
+import { CreateRoomDto } from './dto/create-room.dto';
+import { UpdateRoomDto } from './dto/update-room.dto';
 
 // @Injectable() - dekorator koji oznacava da NestJS moze upravljati zivotnim ciklusom ove klase
 // i injektovati je kao zavisnost (dependency injection) gde god je potrebna
@@ -145,6 +153,89 @@ export class RoomsService implements OnModuleInit {
   }
 
   /**
+   * Paginacija, sortiranje i pretraga prostorija (EONIS zahtev za frontend/API).
+   */
+  async findPaginated(query: QueryRoomsDto): Promise<{
+    data: Room[];
+    meta: { total: number; page: number; limit: number; totalPages: number };
+  }> {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 50;
+    const rawSort = query.sort ?? 'name';
+    const sortCol = ['name', 'capacity', 'createdAt'].includes(rawSort)
+      ? rawSort
+      : 'name';
+    const order = query.order === 'DESC' ? 'DESC' : 'ASC';
+    const qb = this.roomsRepository
+      .createQueryBuilder('r')
+      .where('r.isActive = :active', { active: true });
+    if (query.type?.trim()) {
+      qb.andWhere('r.type = :type', { type: query.type.trim() });
+    }
+    if (query.search?.trim()) {
+      qb.andWhere('(r.name ILIKE :s OR r.type ILIKE :s)', {
+        s: `%${query.search.trim()}%`,
+      });
+    }
+    qb.orderBy(`r.${sortCol}`, order);
+    qb.skip((page - 1) * limit).take(limit);
+    const [data, total] = await qb.getManyAndCount();
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit) || 1,
+      },
+    };
+  }
+
+  /**
+   * Admin lista svih prostorija (aktivnih i neaktivnih), sa paginacijom i filterom.
+   */
+  async adminFindPaginated(query: AdminQueryRoomsDto): Promise<{
+    data: Room[];
+    meta: { total: number; page: number; limit: number; totalPages: number };
+  }> {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 50;
+    const rawSort = query.sort ?? 'name';
+    const sortCol = ['name', 'capacity', 'createdAt'].includes(rawSort)
+      ? rawSort
+      : 'name';
+    const order = query.order === 'DESC' ? 'DESC' : 'ASC';
+    const filter = query.activeFilter ?? 'all';
+
+    const qb = this.roomsRepository.createQueryBuilder('r');
+    if (filter === 'active') {
+      qb.andWhere('r.isActive = :act', { act: true });
+    } else if (filter === 'inactive') {
+      qb.andWhere('r.isActive = :act', { act: false });
+    }
+    if (query.type?.trim()) {
+      qb.andWhere('r.type = :type', { type: query.type.trim() });
+    }
+    if (query.search?.trim()) {
+      qb.andWhere('(r.name ILIKE :s OR r.type ILIKE :s)', {
+        s: `%${query.search.trim()}%`,
+      });
+    }
+    qb.orderBy(`r.${sortCol}`, order);
+    qb.skip((page - 1) * limit).take(limit);
+    const [data, total] = await qb.getManyAndCount();
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit) || 1,
+      },
+    };
+  }
+
+  /**
    * Pronalazi jednu prostoriju po njenom UUID identifikatoru.
    * Ako prostorija sa datim ID-om ne postoji, baca NotFoundException (HTTP 404 greska).
    * Koristi se kada klijent trazi detalje o konkretnoj prostoriji.
@@ -187,5 +278,38 @@ export class RoomsService implements OnModuleInit {
    */
   getAvailabilityStream() {
     return this.availabilitySubject.asObservable();
+  }
+
+  async createRoom(dto: CreateRoomDto): Promise<Room> {
+    const entity = this.roomsRepository.create({
+      name: dto.name,
+      type: dto.type,
+      capacity: dto.capacity,
+      amenities: dto.amenities ?? [],
+      isActive: true,
+    });
+    const saved = await this.roomsRepository.save(entity);
+    this.emitAvailabilityChange(saved.id, 'room_created');
+    return saved;
+  }
+
+  async updateRoom(id: string, dto: UpdateRoomDto): Promise<Room> {
+    const room = await this.roomsRepository.findOne({ where: { id } });
+    if (!room) {
+      throw new NotFoundException('Room not found');
+    }
+    if (dto.name !== undefined) room.name = dto.name;
+    if (dto.type !== undefined) room.type = dto.type;
+    if (dto.capacity !== undefined) room.capacity = dto.capacity;
+    if (dto.amenities !== undefined) room.amenities = dto.amenities;
+    if (dto.isActive !== undefined) room.isActive = dto.isActive;
+    const saved = await this.roomsRepository.save(room);
+    this.emitAvailabilityChange(saved.id, 'room_updated');
+    return saved;
+  }
+
+  /** Soft delete u skladu sa poljem isActive (EONIS CRUD — „brisanje“ kao deaktivacija). */
+  async deactivateRoom(id: string): Promise<void> {
+    await this.updateRoom(id, { isActive: false });
   }
 }

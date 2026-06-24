@@ -25,7 +25,17 @@
 //        / Booking servisu (:3003) / Notification servisu (:3004)
 // ============================================================================
 
-import { Controller, All, Get, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  All,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as http from 'http';
 // Swagger dekoratori za automatsko generisanje API dokumentacije.
@@ -40,6 +50,7 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { SkipThrottle } from '@nestjs/throttler';
 import axios from 'axios';
 
 // @Controller() bez parametra - rute pocinju od korena (/).
@@ -65,6 +76,10 @@ export class AppController {
         'NOTIFICATION_SERVICE_URL',
         'http://localhost:3004',
       ),
+      commerce: configService.get(
+        'COMMERCE_SERVICE_URL',
+        'http://localhost:3005',
+      ),
     };
   }
 
@@ -76,6 +91,7 @@ export class AppController {
   @ApiOperation({ summary: 'Provera zdravlja API Gateway-a' })
   // @ApiResponse definise moguce odgovore sa status kodom i opisom.
   @ApiResponse({ status: 200, description: 'Gateway je aktivan i zdrav' })
+  @SkipThrottle()
   @Get('health')
   health() {
     return {
@@ -115,14 +131,88 @@ export class AppController {
     return this.proxyRequest(req, res, 'users', '/users/login');
   }
 
-  // Prosledjuje zahteve za listu soba ka Room servisu.
-  // Javna ruta - gosti mogu da pregledaju dostupne sobe bez logovanja.
+  @ApiTags('Users')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Admin: lista korisnika (paginacija, pretraga)' })
+  @UseGuards(JwtAuthGuard)
+  @Get('api/users/admin/list')
+  async proxyUsersAdminList(@Req() req, @Res() res) {
+    return this.proxyRequest(req, res, 'users', '/users/admin/list', req.user?.id);
+  }
+
+  @ApiTags('Users')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Admin: izmena korisnika' })
+  @UseGuards(JwtAuthGuard)
+  @Patch('api/users/admin/:id')
+  async proxyUsersAdminPatch(@Req() req, @Res() res) {
+    const path = req.url.replace('/api/users', '/users');
+    return this.proxyRequest(req, res, 'users', path, req.user?.id);
+  }
+
+  @ApiTags('Users')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Admin: deaktivacija korisnika (soft delete)' })
+  @UseGuards(JwtAuthGuard)
+  @Delete('api/users/admin/:id')
+  async proxyUsersAdminDelete(@Req() req, @Res() res) {
+    const path = req.url.replace('/api/users', '/users');
+    return this.proxyRequest(req, res, 'users', path, req.user?.id);
+  }
+
+  // GET lista soba — javno (bez JWT). POST/PATCH/DELETE zahtevaju JWT + admin ulogu na servisu.
   @ApiTags('Rooms')
   @ApiOperation({ summary: 'Pregled svih dostupnih soba' })
   @ApiResponse({ status: 200, description: 'Lista soba uspesno vracena' })
-  @All('api/rooms')
-  async proxyRooms(@Req() req, @Res() res) {
+  @Get('api/rooms')
+  async proxyRoomsGet(@Req() req, @Res() res) {
     return this.proxyRequest(req, res, 'rooms', '/rooms');
+  }
+
+  @ApiTags('Rooms')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Admin: kreiranje prostorije' })
+  @UseGuards(JwtAuthGuard)
+  @Post('api/rooms')
+  async proxyRoomsCreate(@Req() req, @Res() res) {
+    return this.proxyRequest(req, res, 'rooms', '/rooms', req.user?.id);
+  }
+
+  @ApiTags('Rooms')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Admin: izmena prostorije' })
+  @UseGuards(JwtAuthGuard)
+  @Patch('api/rooms/:id')
+  async proxyRoomsPatch(@Req() req, @Res() res) {
+    const path = req.url.replace('/api/rooms', '/rooms');
+    return this.proxyRequest(req, res, 'rooms', path, req.user?.id);
+  }
+
+  @ApiTags('Rooms')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Admin: deaktivacija prostorije (soft delete)' })
+  @UseGuards(JwtAuthGuard)
+  @Delete('api/rooms/:id')
+  async proxyRoomsDelete(@Req() req, @Res() res) {
+    const path = req.url.replace('/api/rooms', '/rooms');
+    return this.proxyRequest(req, res, 'rooms', path, req.user?.id);
+  }
+
+  @ApiTags('Rooms')
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Admin: lista svih prostorija (aktivne i neaktivne, paginacija)',
+  })
+  @UseGuards(JwtAuthGuard)
+  @Get('api/rooms/admin/list')
+  async proxyRoomsAdminList(@Req() req, @Res() res) {
+    return this.proxyRequest(
+      req,
+      res,
+      'rooms',
+      '/rooms/admin/list',
+      req.user?.id,
+    );
   }
 
   // Prosledjuje zahteve za pojedinacnu sobu ka Room servisu.
@@ -139,6 +229,74 @@ export class AppController {
   async proxyRoomsById(@Req() req, @Res() res) {
     const path = req.url.replace('/api/rooms', '/rooms');
     return this.proxyRequest(req, res, 'rooms', path);
+  }
+
+  // ==================== COMMERCE (javni GET proizvodi) ====================
+
+  @ApiTags('Commerce')
+  @ApiOperation({ summary: 'Lista proizvoda / paketa (paginacija i pretraga)' })
+  @ApiResponse({ status: 200, description: 'Lista proizvoda' })
+  @Get('api/commerce/products')
+  async proxyCommerceProducts(@Req() req, @Res() res) {
+    const path = req.url.replace('/api/commerce', '');
+    return this.proxyRequest(req, res, 'commerce', path);
+  }
+
+  @ApiTags('Commerce')
+  @ApiOperation({ summary: 'Detalji jednog proizvoda' })
+  @Get('api/commerce/products/:id')
+  async proxyCommerceProductById(@Req() req, @Res() res) {
+    const path = req.url.replace('/api/commerce', '');
+    return this.proxyRequest(req, res, 'commerce', path);
+  }
+
+  @ApiTags('Commerce')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Admin: kreiranje proizvoda' })
+  @UseGuards(JwtAuthGuard)
+  @Post('api/commerce/products')
+  async proxyCommerceProductsCreate(@Req() req, @Res() res) {
+    const path = req.url.replace('/api/commerce', '');
+    return this.proxyRequest(req, res, 'commerce', path, req.user?.id);
+  }
+
+  @ApiTags('Commerce')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Admin: izmena proizvoda' })
+  @UseGuards(JwtAuthGuard)
+  @Patch('api/commerce/products/:id')
+  async proxyCommerceProductsPatch(@Req() req, @Res() res) {
+    const path = req.url.replace('/api/commerce', '');
+    return this.proxyRequest(req, res, 'commerce', path, req.user?.id);
+  }
+
+  @ApiTags('Commerce')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Admin: brisanje (deaktivacija) proizvoda' })
+  @UseGuards(JwtAuthGuard)
+  @Delete('api/commerce/products/:id')
+  async proxyCommerceProductsDelete(@Req() req, @Res() res) {
+    const path = req.url.replace('/api/commerce', '');
+    return this.proxyRequest(req, res, 'commerce', path, req.user?.id);
+  }
+
+  @ApiTags('Commerce')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Porudžbine i Stripe checkout' })
+  @UseGuards(JwtAuthGuard)
+  @All('api/commerce/orders')
+  async proxyCommerceOrders(@Req() req, @Res() res) {
+    const path = req.url.replace('/api/commerce', '');
+    return this.proxyRequest(req, res, 'commerce', path, req.user?.id);
+  }
+
+  @ApiTags('Commerce')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @All('api/commerce/orders/*path')
+  async proxyCommerceOrdersNested(@Req() req, @Res() res) {
+    const path = req.url.replace('/api/commerce', '');
+    return this.proxyRequest(req, res, 'commerce', path, req.user?.id);
   }
 
   // ==================== ZASTICENE RUTE (potrebna autentifikacija) ====================
@@ -161,6 +319,17 @@ export class AppController {
   @All('api/users/profile')
   async proxyProfile(@Req() req, @Res() res) {
     return this.proxyRequest(req, res, 'users', '/users/profile');
+  }
+
+  // Javni endpoint za kalendar zauzetosti (bez JWT) — mora biti pre zasticenih /api/bookings ruta.
+  @ApiTags('Bookings')
+  @ApiOperation({
+    summary: 'Zauzetost sobe po datumu (javno, za javnu rezervacionu stranu)',
+  })
+  @Get('api/bookings/room/:roomId')
+  async proxyBookingRoomAvailability(@Req() req, @Res() res) {
+    const path = req.url.replace('/api/bookings', '/bookings');
+    return this.proxyRequest(req, res, 'bookings', path);
   }
 
   // Prosledjuje zahteve za rezervacije ka Booking servisu.
@@ -310,6 +479,10 @@ export class AppController {
     // API Gateway-u i citaju x-user-id header.
     if (userId) {
       headers['x-user-id'] = userId;
+    }
+
+    if (req.user?.role) {
+      headers['x-user-role'] = req.user.role;
     }
 
     // Prosledjujemo i Authorization header (JWT token) ako postoji.

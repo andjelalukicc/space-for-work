@@ -1,0 +1,68 @@
+flowchart TB
+  subgraph BP1["BP1 — Identitet i pristup"]
+    UC01[[UC-REG Registracija]]
+    UC02[[UC-AUTH Prijava]]
+    UC03[[UC-LOG Odjava]]
+  end
+
+  subgraph BP2["BP2 — Katalog"]
+    UC04[[UC-KAT-P Prostorije i dostupnost]]
+    UC05[[UC-KAT-PKG Paketi i cenovnik]]
+  end
+
+  subgraph BP3["BP3 — Rezervacije"]
+    UC06[[UC-BRK Kreiranje rezervacije]]
+    UC07[[UC-BRO Otkazivanje rezervacije]]
+    UC08[[UC-NOT Slanje obaveštenja o rezervaciji]]
+  end
+
+  subgraph BP4["BP4 — Porudžbina i plaćanje (veb prodavnica)"]
+    UCPOR[[UC-POR Kreiranje porudžbine]]
+    UCPAY[[UC-PAY Hostovano plaćanje Stripe]]
+    UCPAYDEMO[[UC-PAY-DEMO Demo potvrda plaćanja]]
+    UCMIP[[UC-MIP Moje porudžbine]]
+    UCWH[[UC-WH Webhook potvrda plaćanja]]
+  end
+
+  subgraph BP5["BP5 — Administracija"]
+    UC14[[UC-ADM-KOR Pregled / status korisnika u portalu]]
+    UC15[[UC-ADM-BRK Pregled rezervacija]]
+    UC16[[UC-ADM-PR CRUD proizvoda]]
+    UC17[[UC-ADM-TXN Pregled transakcija]]
+  end
+
+  Gost((Gost))
+  Clan((Član))
+  Admin((Administrator))
+  Stripe((Stripe))
+
+  Gost --> UC01
+  Gost --> UC02
+  Gost --> UC04
+  Gost --> UC05
+
+  Clan --> UC02
+  Clan --> UC03
+  Clan --> UC04
+  Clan --> UC05
+  Clan --> UC06
+  Clan --> UC07
+  Clan --> UCPOR
+  Clan --> UCPAY
+  Clan --> UCPAYDEMO
+  Clan --> UCMIP
+
+  Admin --> UC02
+  Admin --> UC03
+  Admin --> UC14
+  Admin --> UC15
+  Admin --> UC16
+  Admin --> UC17
+
+  UC06 -.-> UC08
+  UC07 -.-> UC08
+  UCPOR -.-> UC05
+  UCPAY -.-> Stripe
+  UCWH <-- Stripe
+
+  UCPOR --> UCPAY

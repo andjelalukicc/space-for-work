@@ -13,10 +13,13 @@ import {
   Controller,
   Post,
   Get,
+  Patch,
+  Delete,
   Body,
   UseGuards,
   Request,
   Param,
+  Query,
   ValidationPipe,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -25,6 +28,9 @@ import { UsersService } from './users.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { AdminGuard } from '../common/admin.guard';
+import { AdminQueryUsersDto } from './dto/admin-query-users.dto';
+import { AdminUpdateUserDto } from './dto/admin-update-user.dto';
 
 @Controller('users') // Sve rute u ovom kontroleru pocinju sa /users
 export class UsersController {
@@ -59,15 +65,23 @@ export class UsersController {
    * 3. Token istice za 24h (podeseno u users.module.ts)
    */
   @Post('login')
-  async login(@Body(ValidationPipe) loginDto: LoginDto) {
+  async login(
+    @Body(
+      new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        forbidNonWhitelisted: false,
+      }),
+    )
+    loginDto: LoginDto,
+  ) {
     const user = await this.usersService.validateUser(
       loginDto.email,
       loginDto.password,
     );
 
     if (!user) {
-      throw new UnauthorizedException('Invalid email or password');
-      // Vraca HTTP 401 - pogresni podaci za login
+      throw new UnauthorizedException('Neispravan email ili lozinka');
     }
 
     // Kreiraj JWT payload - ovo se pakuje u token
@@ -94,6 +108,40 @@ export class UsersController {
   @Get('profile')
   async getProfile(@Request() req) {
     return this.usersService.findById(req.user.id);
+  }
+
+  /** ADMIN — lista korisnika (paginacija, pretraga po imenu/emailu/ulozi). */
+  @UseGuards(AdminGuard)
+  @Get('admin/list')
+  async adminList(
+    @Query(
+      new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        forbidNonWhitelisted: false,
+      }),
+    )
+    query: AdminQueryUsersDto,
+  ) {
+    return this.usersService.adminFindPaginated(query);
+  }
+
+  /** ADMIN — izmena naloga (ime, uloga, aktivnost). */
+  @UseGuards(AdminGuard)
+  @Patch('admin/:id')
+  async adminPatch(
+    @Param('id') id: string,
+    @Body(ValidationPipe) dto: AdminUpdateUserDto,
+  ) {
+    return this.usersService.adminUpdateUser(id, dto);
+  }
+
+  /** ADMIN — „brisanje“ kao deaktivacija naloga. */
+  @UseGuards(AdminGuard)
+  @Delete('admin/:id')
+  async adminDelete(@Param('id') id: string) {
+    await this.usersService.adminDeactivate(id);
+    return { success: true };
   }
 
   /**

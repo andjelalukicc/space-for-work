@@ -30,7 +30,7 @@ Sistem omogucava clanovima coworking prostora da rezervisu prostorije za sastank
 
 ## Arhitektura
 
-Aplikacija koristi **mikroservisnu arhitekturu** sa 5 nezavisnih servisa:
+Aplikacija koristi **mikroservisnu arhitekturu** sa 6 nezavisnih servisa (plus API Gateway):
 
 ```
                     ┌─────────────────┐
@@ -38,12 +38,12 @@ Aplikacija koristi **mikroservisnu arhitekturu** sa 5 nezavisnih servisa:
                     │    (NestJS)     │
                     └────────┬────────┘
                              │
-            ┌────────────────┼────────────────┐
-            │                │                │
-   ┌────────▼──────┐ ┌──────▼───────┐ ┌──────▼───────┐
-   │  User Service │ │ Room Service │ │Booking Service│
-   │   port 3001   │ │  port 3002   │ │  port 3003    │
-   └───────────────┘ └──────────────┘ └───────┬───────┘
+            ┌────────────────┼────────────────────────────┐
+            │                │                            │
+   ┌────────▼──────┐ ┌──────▼───────┐ ┌──────▼───────┐ ┌──▼──────────────┐
+   │  User Service │ │ Room Service │ │Booking Service│ │Commerce Service│
+   │   port 3001   │ │  port 3002   │ │  port 3003    │ │   port 3005    │
+   └───────────────┘ └──────────────┘ └───────┬───────┘ └────────────────┘
                                               │
                                         [RabbitMQ]
                                               │
@@ -66,6 +66,7 @@ Aplikacija koristi **mikroservisnu arhitekturu** sa 5 nezavisnih servisa:
 | **Room Service** | 3002 | Upravljanje prostorijama, SSE stream dostupnosti |
 | **Booking Service** | 3003 | Kreiranje/otkazivanje rezervacija, biznis validacija |
 | **Notification Service** | 3004 | Obavestenja o rezervacijama (RabbitMQ consumer) |
+| **Commerce Service** | 3005 | Proizvodi/paketi, porudzbine, Stripe Checkout i webhook |
 
 ### Tipovi komunikacije izmedju servisa
 
@@ -102,11 +103,8 @@ Aplikacija koristi **mikroservisnu arhitekturu** sa 5 nezavisnih servisa:
 ### Pokretanje sa Docker Compose (preporuceno)
 ```bash
 # Kloniraj repozitorijum
-git clone https://github.com/IROIT-2025/iroit-grupa-3-4-andjelalukicc.git
-cd iroit-grupa-3-4-andjelalukicc
-
-# Prebaci se na feature branch
-git checkout feature/initial-project-setup
+git clone https://github.com/andjelalukicc/space-for-work.git
+cd space-for-work
 
 # Pokreni sve servise (prvi put traje ~2-3 min)
 docker compose up --build -d
@@ -143,22 +141,65 @@ Svi zahtevi idu preko API Gateway-a na `http://localhost:3000`.
 ```
 POST /api/users/register     - Registracija novog korisnika
 POST /api/users/login        - Login (vraca JWT token)
-GET  /api/rooms              - Lista svih prostorija
+GET  /api/rooms              - Lista prostorija (bez query = ceo niz; sa ?page&limit&search = paginacija)
 GET  /api/rooms/:id          - Detalji prostorije
 GET  /api/rooms/type/:type   - Prostorije po tipu (meeting_room, phone_booth)
+GET  /api/bookings/room/:roomId?date=YYYY-MM-DD - Zauzetost sobe (javno)
+GET  /api/commerce/products  - Lista paketa (paginacija)
+GET  /api/commerce/products/:id - Detalji paketa
 GET  /health                 - Health check
 ```
 
 ### Zasticeni endpointi (zahtevaju JWT token)
 ```
 GET    /api/users/profile         - Profil ulogovanog korisnika
+GET    /api/users/admin/list      - Admin: lista korisnika (?page&limit&search) (JWT admin)
+PATCH  /api/users/admin/:id       - Admin: izmena korisnika (ime, uloga, isActive) (JWT admin)
+DELETE /api/users/admin/:id       - Admin: deaktivacija naloga (JWT admin)
 POST   /api/bookings              - Nova rezervacija
 GET    /api/bookings              - Moje rezervacije
 GET    /api/bookings/:id          - Detalji rezervacije
 DELETE /api/bookings/:id          - Otkazivanje rezervacije
 GET    /api/notifications         - Moja obavestenja
 PATCH  /api/notifications/:id/read - Oznaci obavestenje kao procitano
+POST   /api/commerce/orders/checkout                  - Stripe Checkout (JWT)
+GET    /api/commerce/orders/my                         - Moje porudzbine (JWT)
+POST   /api/commerce/orders/demo-pay                   - Demo placanje bez Stripe kljuca (JWT)
+GET    /api/commerce/orders/admin/transactions        - Admin pregled transakcija (JWT admin)
+PATCH  /api/commerce/products/:id                     - Admin: izmena paketa (JWT admin)
+DELETE /api/commerce/products/:id                     - Admin: deaktivacija paketa (JWT admin)
+POST   /api/commerce/products                           - Admin: novi paket (JWT admin)
+GET    /api/rooms/admin/list                            - Admin: sve prostorije u bazi (?page&limit&search&type&activeFilter=all|active|inactive&sort&order) (JWT admin)
+POST   /api/rooms                                       - Admin: nova prostorija (JWT admin)
+PATCH  /api/rooms/:id                                   - Admin: izmena prostorije (JWT admin)
+DELETE /api/rooms/:id                                   - Admin: soft-delete prostorije (JWT admin)
 ```
+
+### Stripe (EONIS)
+
+1. U Stripe Dashboard kreiraj **Restricted key** sa pravima za Checkout i Webhook.
+2. U `.env` ili pri `docker compose up` postavi:
+   - `STRIPE_SECRET_KEY` — secret key za `commerce-service`
+   - `STRIPE_WEBHOOK_SECRET` — signing secret za webhook endpoint
+   - `FRONTEND_BASE_URL` — baza na kojoj hostujes `spaceforwork-portal.html` (podrazumevano `http://127.0.0.1:5500`)
+3. Webhook URL na commerce servisu: `http://localhost:3005/webhooks/stripe` (lokalno najlakse preko [Stripe CLI](https://stripe.com/docs/stripe-cli): `stripe listen --forward-to localhost:3005/webhooks/stripe`).
+4. Ako kljucevi nisu postavljeni, portal i dalje radi u **demo rezimu**: checkout kreira porudzbinu, a placanje se potvrdjuje testnim modalom (`demo-pay`).
+
+### Demo nalozi (seed u bazi)
+
+| Email | Lozinka | Uloga |
+|-------|---------|-------|
+| admin@spaceforwork.rs | admin123 | admin |
+| korisnik@spaceforwork.rs | korisnik123 | clan (member) |
+
+Nalog `admin@spaceforwork.rs` kreira se pri prvom startu **user-service** (vidi `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` u okruženju). Ako si ranije obrisao bazu, ponovo pokreni kontejnere da se seed izvrši.
+
+### Kako se ulogovati kao administrator (portal)
+
+1. Pokreni ceo sistem: iz korena repozitorijuma `docker compose up --build` (ili lokalno sve servise + Gateway na portu **3000**).
+2. Otvori `spaceforwork-portal.html` u pregledaču (npr. Live Server ili `file://` — u tom slučaju proveri CORS i `window.__API_BASE__` ako nije podrazumevani `http://localhost:3000/api`).
+3. Na stranici za prijavu klikni **Admin demo** ili **Otvori admin dashboard**, ili ručno unesi email **admin@spaceforwork.rs** i lozinku **admin123**.
+4. Posle uspešnog logina otvara se administratorski panel. Tabovi **Nalozi (REST)** i **Sobe (REST)** zovu zaštićene admin rute preko JWT-a (Gateway prosleđuje `x-user-id` i `x-user-role`).
 
 ### Primer koristenja (Postman ili curl)
 
@@ -321,12 +362,17 @@ coworking-booking-system/
 
 ---
 
-## Git Workflow
+## Dokumentacija (EONIS)
 
-- **Branching:** Feature branch (`feature/initial-project-setup`)
-- **PR:** Pull Request #1 ka main grani
-- **CI:** Automatski testovi na svaki push
-- **CD:** Deploy verifikacija na merge u main
+- **`docs/EONIS-Zadatak-I-UML.md`** — dijagrami slučajeva upotrebe i klasa sa opisima.  
+- **`docs/EONIS-Zadatak-V-Projektna-dokumentacija.md`** — projektna dokumentacija za odbranu (šest poglavlja iz projektne specifikacije).  
+- **`docs/PREGLED-SPECIFIKACIJE-I-IMPLEMENTACIJE.md`** — detaljno: šta PDF traži, gde je u kodu, baza, plaćanje, CRUD.
+
+---
+
+## Repozitorijum
+
+**GitHub:** https://github.com/andjelalukicc/space-for-work
 
 ## Autor
 Andjela Lukic - IT62/2022

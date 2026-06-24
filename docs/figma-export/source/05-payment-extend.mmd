@@ -1,0 +1,24 @@
+flowchart TB
+  subgraph sistem["Granica sistema Coworking / Commerce"]
+    POR["UC-POR Kreiranje porudzbine<br/>status: pending<br/>EP-Placanje"]
+    PAY["UC-PAY Stripe Checkout"]
+    DEMO["UC-PAY-DEMO Demo potvrda placanja"]
+    WH["UC-WH Obrada webhook-a<br/>(checkout.session.completed)"]
+    PAID["Stanje porudžbine: paid<br/>smanjenje zaliha"]
+  end
+
+  Clan((Član))
+
+  Clan --> POR
+  Clan --> PAY
+  Clan --> DEMO
+
+  PAY -.->|"extend ako je Stripe konfigurisan"| POR
+  DEMO -.->|"extend ako nema Stripe kljuca"| POR
+
+  PAY --> Stripe((Stripe))
+  Stripe --> WH
+  WH --> PAID
+  DEMO --> PAID
+
+  PAY -.->|"async potvrda"| WH

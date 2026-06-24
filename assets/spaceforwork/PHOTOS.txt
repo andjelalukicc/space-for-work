@@ -1,0 +1,6 @@
+Dodaj ovde slike koje koristi portal (relativne putanje u spaceforwork-portal.html):
+
+  chill-room.jpg   — prva slika u hero rotaciji i u galeriji („Chill zona”).
+  Ostale: meeting-room.jpeg, coworking-open-space.jpeg, itd. (vidi ASSETS u HTML-u).
+
+Ako chill-room.jpg nedostaje, pregledac prikazuje praznu ili broken sliku dok ne dodas fajl.

@@ -1,0 +1,30 @@
+usecaseDiagram
+  actor Gost
+  actor Clan as "Član (CUSTOMER)"
+  actor Administrator as "Administrator (ADMIN)"
+  actor Stripe as "Stripe"
+
+  Gost --> (Registracija)
+  Gost --> (Prijava)
+  Gost --> (Pregled prostorija)
+  Gost --> (Pregled paketa)
+
+  Clan --> (Prijava)
+  Clan --> (Odjava)
+  Clan --> (Pregled prostorija)
+  Clan --> (Pregled paketa)
+  Clan --> (Rezervacija - kreiranje)
+  Clan --> (Rezervacija - otkazivanje)
+  Clan --> (Kreiranje porudžbine)
+  Clan --> (Stripe placanje)
+  Clan --> (Demo placanje)
+  Clan --> (Moje porudžbine)
+
+  Administrator --> (Prijava)
+  Administrator --> (Odjava)
+  Administrator --> (Admin - korisnici)
+  Administrator --> (Admin - rezervacije)
+  Administrator --> (Admin - CRUD proizvod)
+  Administrator --> (Admin - transakcije)
+
+  Stripe --> (Webhook obrada)

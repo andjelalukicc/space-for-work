@@ -1,0 +1,48 @@
+flowchart TB
+  Gost((Gost))
+  Clan((Clan CUSTOMER))
+  Administrator((Administrator ADMIN))
+  Stripe((Stripe))
+
+  uc_reg((Registracija))
+  uc_auth((Prijava))
+  uc_out((Odjava))
+  uc_rooms((Pregled prostorija))
+  uc_pkg((Pregled paketa))
+  uc_brk((Rezervacija kreiranje))
+  uc_bro((Rezervacija otkazivanje))
+  uc_por((Kreiranje porudzbine))
+  uc_pay_s((Placanje Stripe))
+  uc_pay_d((Placanje demo))
+  uc_orders((Moje porudzbine))
+  uc_wh((Webhook obrada))
+  uc_adm_u((Admin korisnici))
+  uc_adm_b((Admin rezervacije))
+  uc_adm_p((Admin CRUD proizvod))
+  uc_adm_t((Admin transakcije))
+
+  Gost --> uc_reg
+  Gost --> uc_auth
+  Gost --> uc_rooms
+  Gost --> uc_pkg
+
+  Clan --> uc_auth
+  Clan --> uc_out
+  Clan --> uc_rooms
+  Clan --> uc_pkg
+  Clan --> uc_brk
+  Clan --> uc_bro
+  Clan --> uc_por
+  Clan --> uc_pay_s
+  Clan --> uc_pay_d
+  Clan --> uc_orders
+
+  Administrator --> uc_auth
+  Administrator --> uc_out
+  Administrator --> uc_adm_u
+  Administrator --> uc_adm_b
+  Administrator --> uc_adm_p
+  Administrator --> uc_adm_t
+
+  Stripe --> uc_pay_s
+  Stripe --> uc_wh

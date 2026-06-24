@@ -32,6 +32,7 @@ jobs:
           - user-service
           - room-service
           - booking-service
+          - commerce-service
           - notification-service
 
     steps:
@@ -66,6 +67,7 @@ jobs:
           - user-service
           - room-service
           - booking-service
+          - commerce-service
           - notification-service
 
     steps:

@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './http-exception.filter';
 
@@ -9,6 +10,13 @@ async function bootstrap() {
   // Logger ispisuje poruke u konzolu sa vremenskim pecatom i nivoom (LOG, ERROR, WARN).
   const app = await NestFactory.create(AppModule);
   const logger = new Logger('APIGateway');
+
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+      contentSecurityPolicy: false,
+    }),
+  );
 
   // ============================================
   // CORS - Cross-Origin Resource Sharing

@@ -1,0 +1,108 @@
+classDiagram
+  direction TB
+
+  class Korisnik {
+    +UUID id
+    +String imePrezime
+    +String email
+    +String hashLozinke
+    +UlogaKorisnika uloga
+    +DateTime kreiran
+    +DateTime azuriran
+    +registrujSe()
+    +prijaviSe()
+    +promeniProfil()
+  }
+
+  class Prostorija {
+    +UUID id
+    +String naziv
+    +TipProstorije tip
+    +int kapacitet
+    +List~String~ pogodnosti
+    +boolean aktivna
+    +listaZaPrikaz()
+    +proveriDostupnostZaDatum()
+  }
+
+  class Rezervacija {
+    +UUID id
+    +Date datum
+    +Time pocetak
+    +Time kraj
+    +StatusRezervacije status
+    +DateTime kreirano
+    +kreiraj()
+    +otkazi()
+    +preklapaSeSa()
+  }
+
+  class Proizvod {
+    +UUID id
+    +String slug
+    +String naziv
+    +String kategorija
+    +Decimal cena
+    +String jedinicaProdaje
+    +int kolicinaNaStanju
+    +boolean aktivan
+    +boolean istaknut
+    +String kratakOpis
+    +List~String~ oznake
+    +rezervisiZaNarudzbu(kolicina)
+    +smanjiStanje(kolicina)
+  }
+
+  class Porudzbina {
+    +UUID id
+    +StatusPorudzbine status
+    +Decimal ukupanIznos
+    +String valuta
+    +DateTime kreirano
+    +kreiraIzStavki()
+    +oznaciPlacena()
+    +otkazi()
+  }
+
+  class StavkaPorudzbine {
+    +UUID id
+    +int kolicina
+    +Decimal jedinicnaCena
+    +Decimal iznosStavke
+    +String nazivSnimak
+    +UUID produktReferenca
+    +izracunajIznos()
+  }
+
+  class PlatnaEvidencija {
+    +UUID id
+    +String stripeSessionId
+    +String stripePaymentIntentId
+    +String poslednjeCetiri
+    +DateTime vremePlacanja
+    +String kanal
+    +popuniIzStripeSesije()
+  }
+
+  class Obavestenje {
+    +UUID id
+    +UUID korisnikId
+    +String tip
+    +String poruka
+    +boolean procitano
+    +DateTime kreirano
+    +oznaciProcitano()
+  }
+
+  Korisnik "1" --> "*" Rezervacija : kreira
+  Prostorija "1" --> "*" Rezervacija : zakazujeSe
+
+  Korisnik "1" --> "*" Porudzbina : narucuje
+  Porudzbina "1" --> "1..*" StavkaPorudzbine : agregira
+  Proizvod "1" --> "*" StavkaPorudzbine : stavkaZa
+
+  Porudzbina "1" --> "0..1" PlatnaEvidencija : imaEvidenciju
+  Korisnik "1" --> "*" Obavestenje : prima
+
+  note for StavkaPorudzbine "Asocijativna klasa izmedju Porudzbine i Proizvoda (kolicina, cena snimak)."
+  note for PlatnaEvidencija "Moze biti embedovano u Porudzbini u implementaciji; ovde izdvojeno radi UC-ADM-TXN."

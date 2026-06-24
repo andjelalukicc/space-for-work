@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EONIS — dijagrami za Figmu</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 24px; background: #fafafa; }
+    section { margin-bottom: 48px; page-break-after: always; }
+    h2 { font-size: 18px; margin-bottom: 12px; color: #222; }
+    .mermaid { background: #fff; padding: 16px; border-radius: 8px; border: 1px solid #e5e5e5; }
+  </style>
+</head>
+<body>
+  <h1>EONIS Zadatak I — dijagrami (pregled)</h1>
+
+  <section id="d01">
+    <h2>Slika 1 — BP pregled (flowchart iz dokumenta)</h2>
+    <pre class="mermaid">
+flowchart TB
+  subgraph BP1["BP1 — Identitet i pristup"]
+    UC01[[UC-REG Registracija]]
+    UC02[[UC-AUTH Prijava]]
+    UC03[[UC-LOG Odjava]]
+  end
+
+  subgraph BP2["BP2 — Katalog"]
+    UC04[[UC-KAT-P Prostorije i dostupnost]]
+    UC05[[UC-KAT-PKG Paketi i cenovnik]]
+  end
+
+  subgraph BP3["BP3 — Rezervacije"]
+    UC06[[UC-BRK Kreiranje rezervacije]]
+    UC07[[UC-BRO Otkazivanje rezervacije]]
+    UC08[[UC-NOT Slanje obaveštenja o rezervaciji]]
+  end
+
+  subgraph BP4["BP4 — Porudžbina i plaćanje"]
+    UCPOR[[UC-POR Kreiranje porudžbine]]
+    UCPAY[[UC-PAY Hostovano plaćanje Stripe]]
+    UCPAYDEMO[[UC-PAY-DEMO Demo potvrda plaćanja]]
+    UCMIP[[UC-MIP Moje porudžbine]]
+    UCWH[[UC-WH Webhook potvrda plaćanja]]
+  end
+
+  subgraph BP5["BP5 — Administracija"]
+    UC14[[UC-ADM-KOR Pregled / status korisnika u portalu]]
+    UC15[[UC-ADM-BRK Pregled rezervacija]]
+    UC16[[UC-ADM-PR CRUD proizvoda]]
+    UC17[[UC-ADM-TXN Pregled transakcija]]
+  end
+
+  Gost((Gost))
+  Clan((Član))
+  Admin((Administrator))
+  Stripe((Stripe))
+
+  Gost --> UC01
+  Gost --> UC02
+  Gost --> UC04
+  Gost --> UC05
+
+  Clan --> UC02
+  Clan --> UC03
+  Clan --> UC04
+  Clan --> UC05
+  Clan --> UC06
+  Clan --> UC07
+  Clan --> UCPOR
+  Clan --> UCPAY
+  Clan --> UCPAYDEMO
+  Clan --> UCMIP
+
+  Admin --> UC02
+  Admin --> UC03
+  Admin --> UC14
+  Admin --> UC15
+  Admin --> UC16
+  Admin --> UC17
+
+  UC06 -.-> UC08
+  UC07 -.-> UC08
+  UCPOR -.-> UC05
+  UCPAY -.-> Stripe
+  UCWH <-- Stripe
+
+  UCPOR --> UCPAY
+  UCPOR --> UCPAYDEMO
+    </pre>
+  </section>
+
+  <section id="d02">
+    <h2>Slika 2 — Use case pregled (flowchart elipse — ekvivalent usecaseDiagram iz dokumenta)</h2>
+    <pre class="mermaid">
+flowchart TB
+  Gost((Gost))
+  Clan((Clan CUSTOMER))
+  Administrator((Administrator ADMIN))
+  Stripe((Stripe))
+
+  uc_reg((Registracija))
+  uc_auth((Prijava))
+  uc_out((Odjava))
+  uc_rooms((Pregled prostorija))
+  uc_pkg((Pregled paketa))
+  uc_brk((Rezervacija kreiranje))
+  uc_bro((Rezervacija otkazivanje))
+  uc_por((Kreiranje porudzbine))
+  uc_pay_s((Placanje Stripe))
+  uc_pay_d((Placanje demo))
+  uc_orders((Moje porudžbine))
+  uc_wh((Webhook obrada))
+  uc_adm_u((Admin korisnici))
+  uc_adm_b((Admin rezervacije))
+  uc_adm_p((Admin CRUD proizvod))
+  uc_adm_t((Admin transakcije))
+
+  Gost --> uc_reg
+  Gost --> uc_auth
+  Gost --> uc_rooms
+  Gost --> uc_pkg
+
+  Clan --> uc_auth
+  Clan --> uc_out
+  Clan --> uc_rooms
+  Clan --> uc_pkg
+  Clan --> uc_brk
+  Clan --> uc_bro
+  Clan --> uc_por
+  Clan --> uc_pay_s
+  Clan --> uc_pay_d
+  Clan --> uc_orders
+
+  Administrator --> uc_auth
+  Administrator --> uc_out
+  Administrator --> uc_adm_u
+  Administrator --> uc_adm_b
+  Administrator --> uc_adm_p
+  Administrator --> uc_adm_t
+
+  Stripe --> uc_pay_s
+  Stripe --> uc_wh
+    </pre>
+  </section>
+
+  <section id="d03">
+    <h2>Slika 3 — Dijagram klasa</h2>
+    <pre class="mermaid">
+classDiagram
+  direction TB
+
+  class Korisnik {
+    +UUID id
+    +String imePrezime
+    +String email
+    +String hashLozinke
+    +UlogaKorisnika uloga
+    +DateTime kreiran
+    +DateTime azuriran
+    +registrujSe()
+    +prijaviSe()
+    +promeniProfil()
+  }
+
+  class Prostorija {
+    +UUID id
+    +String naziv
+    +TipProstorije tip
+    +int kapacitet
+    +List~String~ pogodnosti
+    +boolean aktivna
+    +listaZaPrikaz()
+    +proveriDostupnostZaDatum()
+  }
+
+  class Rezervacija {
+    +UUID id
+    +Date datum
+    +Time pocetak
+    +Time kraj
+    +StatusRezervacije status
+    +DateTime kreirano
+    +kreiraj()
+    +otkazi()
+    +preklapaSeSa()
+  }
+
+  class Proizvod {
+    +UUID id
+    +String slug
+    +String naziv
+    +String kategorija
+    +Decimal cena
+    +String jedinicaProdaje
+    +int kolicinaNaStanju
+    +boolean aktivan
+    +boolean istaknut
+    +String kratakOpis
+    +List~String~ oznake
+    +rezervisiZaNarudzbu(kolicina)
+    +smanjiStanje(kolicina)
+  }
+
+  class Porudzbina {
+    +UUID id
+    +StatusPorudzbine status
+    +Decimal ukupanIznos
+    +String valuta
+    +DateTime kreirano
+    +kreiraIzStavki()
+    +oznaciPlacena()
+    +otkazi()
+  }
+
+  class StavkaPorudzbine {
+    +UUID id
+    +int kolicina
+    +Decimal jedinicnaCena
+    +Decimal iznosStavke
+    +String nazivSnimak
+    +UUID produktReferenca
+    +izracunajIznos()
+  }
+
+  class PlatnaEvidencija {
+    +UUID id
+    +String stripeSessionId
+    +String stripePaymentIntentId
+    +String poslednjeCetiri
+    +DateTime vremePlacanja
+    +String kanal
+    +popuniIzStripeSesije()
+  }
+
+  class Obavestenje {
+    +UUID id
+    +UUID korisnikId
+    +String tip
+    +String poruka
+    +boolean procitano
+    +DateTime kreirano
+    +oznaciProcitano()
+  }
+
+  Korisnik "1" --> "*" Rezervacija : kreira
+  Prostorija "1" --> "*" Rezervacija : zakazujeSe
+
+  Korisnik "1" --> "*" Porudzbina : narucuje
+  Porudzbina "1" --> "1..*" StavkaPorudzbine : agregira
+  Proizvod "1" --> "*" StavkaPorudzbine : stavkaZa
+
+  Porudzbina "1" --> "0..1" PlatnaEvidencija : imaEvidenciju
+  Korisnik "1" --> "*" Obavestenje : prima
+
+  note for StavkaPorudzbine "Asocijativna klasa izmedju Porudzbine i Proizvoda."
+  note for PlatnaEvidencija "Izdvojeno radi UC-ADM-TXN."
+    </pre>
+  </section>
+
+  <section id="d04">
+    <h2>Slika 4 — Mikroservisi i infrastruktura</h2>
+    <pre class="mermaid">
+flowchart LR
+  subgraph presentation["Prezentacioni sloj"]
+    Portal["Portal (HTML/JS)"]
+  end
+
+  subgraph gateway["API sloj"]
+    GW["API Gateway + JWT"]
+  end
+
+  subgraph domene["Domenski servisi"]
+    US["User"]
+    RS["Room"]
+    BS["Booking"]
+    CS["Commerce"]
+    NS["Notification"]
+  end
+
+  subgraph infra["Infrastruktura"]
+    DB[(PostgreSQL)]
+    MQ[RabbitMQ]
+    STR[Stripe]
+  end
+
+  Portal --> GW
+  GW --> US
+  GW --> RS
+  GW --> BS
+  GW --> CS
+  GW --> NS
+  BS --> MQ
+  NS --> MQ
+  US --> DB
+  RS --> DB
+  BS --> DB
+  CS --> DB
+  NS --> DB
+  CS --> STR
+    </pre>
+  </section>
+
+  <section id="d05">
+    <h2>Slika 5 — Extend plaćanje (Stripe vs demo)</h2>
+    <pre class="mermaid">
+flowchart TB
+  subgraph sistem["Granica sistema Coworking / Commerce"]
+    POR["UC-POR Kreiranje porudzbine<br/>status: pending<br/>EP-Placanje"]
+    PAY["UC-PAY Stripe Checkout"]
+    DEMO["UC-PAY-DEMO Demo potvrda placanja"]
+    WH["UC-WH Obrada webhook-a<br/>(checkout.session.completed)"]
+    PAID["Stanje porudžbine: paid<br/>smanjenje zaliha"]
+  end
+
+  Clan((Član))
+
+  Clan --> POR
+  Clan --> PAY
+  Clan --> DEMO
+
+  PAY -.->|"extend ako je Stripe konfigurisan"| POR
+  DEMO -.->|"extend ako nema Stripe kljuca"| POR
+
+  PAY --> Stripe((Stripe))
+  Stripe --> WH
+  WH --> PAID
+  DEMO --> PAID
+
+  PAY -.->|"async potvrda"| WH
+    </pre>
+  </section>
+
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: "neutral",
+      securityLevel: "loose",
+      flowchart: { htmlLabels: true },
+    });
+  </script>
+</body>
+</html>
