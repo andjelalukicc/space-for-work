@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Space For Work | Coworking Space Novi Sad</title>
-  <meta name="description" content="Rezervisite coworking prostor u Novom Sadu: radna mesta, meeting room, event space, private office i Virtual Office adresa uz online portal za clanove." />
+  <meta name="description" content="Space For Work — coworking u centru Novog Sada. Radna mesta, sale, event prostor, private office i Virtual Office. Fleksibilni paketi i online portal za članove." />
   <meta name="keywords" content="coworking Novi Sad, coworking space Novi Sad, meeting room Novi Sad, event space Novi Sad, private office Novi Sad, virtual office Novi Sad" />
   <meta property="og:title" content="Space For Work | Coworking Space Novi Sad" />
   <meta property="og:description" content="Coworking space Novi Sad za fleksibilan rad, sastanke, evente, privatne kancelarije i poslovnu adresu." />
@@ -20,6 +20,7 @@
       --blue-dark: #144a66;
       --orange: #ff9a42;
       --orange-dark: #de7b21;
+      --orange-soft: #fff4eb;
       --green: #0f9f72;
       --green-soft: #eaf8f1;
       --red: #d64141;
@@ -120,6 +121,41 @@
       background: rgba(255, 255, 255, 0.98);
       border-bottom-color: rgba(23, 24, 39, 0.12);
       box-shadow: 0 12px 34px rgba(23, 24, 39, 0.12);
+    }
+    .demo-banner {
+      background: linear-gradient(90deg, var(--ink) 0%, #2a2d45 100%);
+      color: rgba(255, 255, 255, 0.92);
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      padding: 9px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .auth-demo-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      background: var(--orange-soft);
+      border: 1px solid rgba(255, 154, 66, 0.28);
+      font-size: 12px;
+      color: var(--ink-soft);
+    }
+    .auth-demo-strip .ghost-btn {
+      min-height: 34px;
+      padding: 0 12px;
+      font-size: 12px;
+    }
+    .section-head p {
+      max-width: 58ch;
+      color: var(--muted);
+    }
+    .hero-copy {
+      max-width: 46ch;
     }
     .scroll-progress {
       position: absolute;
@@ -2405,7 +2441,7 @@
     };
     const LOGO_URL = "https://spaceforwork.rs/wp-content/uploads/2023/05/office-blue-logo-png-1024x451.png";
     const ASSETS = {
-      chillRoom: "assets/spaceforwork/chill-room.jpg",
+      chillRoom: "assets/spaceforwork/event-space-lounge.jpeg",
       meetingRoom: "assets/spaceforwork/meeting-room.jpeg",
       eventWorkshop: "assets/spaceforwork/event-space-workshop.jpeg",
       coworking: "assets/spaceforwork/coworking-open-space.jpeg",
@@ -2420,10 +2456,10 @@
       ASSETS.eventLounge
     ];
     const publicNavItems = [
-      { id: "home", label: "Pocetna" },
+      { id: "home", label: "Početna" },
       { id: "about", label: "O nama" },
       { id: "coworking", label: "Coworking" },
-      { id: "membership", label: "Membership" },
+      { id: "membership", label: "Paketi" },
       { id: "virtual-office", label: "Virtual Office" },
       { id: "private-office", label: "Private Office" },
       { id: "booking", label: "Rezervacija" },
@@ -2431,77 +2467,77 @@
     ];
     const sitePages = {
       about: {
-        eyebrow: "Office Coworking Novi Sad",
-        title: "Radis mirnije, upoznajes bolje ljude i sve ti je na jednoj adresi",
-        intro: "Space For Work je coworking u centru Novog Sada sa 900+ kvadrata, 99 radnih mesta i 12 kancelarija za frilensere, remote radnike, startape i male timove kojima treba radni sto, sala za sastanke, event prostor, privatnija kancelarija ili poslovna adresa.",
+        eyebrow: "Space For Work · Novi Sad",
+        title: "Coworking prostor za ljude koji rade ozbiljno, ali fleksibilno",
+        intro: "900+ m² u centru grada, 99 radnih mesta i kompletna infrastruktura za frilensere, remote timove i startape — bez zakupa, bez komplikacija i bez gubljenja vremena na logistiku.",
         image: ASSETS.coworking
       },
       coworking: {
-        eyebrow: "Coworking Space Novi Sad",
-        title: "Coworking za jedan radni dan, mesecnu rutinu ili stalno mesto",
-        intro: "Prostor ima 900+ kvadrata, 99 radnih mesta, 12 kancelarija, stabilan internet, 6 phone booth-ova i 2 sale za sastanke. Dodjes kada ti treba fokus, poziv, klijent ili radna atmosfera van kuce.",
+        eyebrow: "Coworking · Novi Sad",
+        title: "Radni dan koji ima strukturu — bez kancelarijskog tereta",
+        intro: "Dođi kad ti treba fokus, poziv ili promena okruženja. Open space, phone booth-ovi i sale za sastanke spremni su za tvoj tempo rada.",
         image: ASSETS.coworking
       },
       membership: {
-        eyebrow: "Coworking Membership",
-        title: "Paketi su slozeni po nacinu na koji stvarno radis",
-        intro: "Daily Pass je za jedan dan, 10 Days za fleksibilne dolaske, Hot Desk za mesecni ritam, Dedicated Desk za licni sto, a meeting room, event space i Virtual Office pokrivaju sastanke, dogadjaje i poslovnu adresu.",
+        eyebrow: "Paketi i članstvo",
+        title: "Jasna ponuda za svaki način rada",
+        intro: "Od jednog dana do stalnog mesta — svaki paket ima jasnu cenu, period i koristi. Bez sitnih slova, bez nejasnih uslova.",
         image: ASSETS.meetingRoom
       },
       "virtual-office": {
-        eyebrow: "Virtual Office Novi Sad",
-        title: "Poslovna adresa u Novom Sadu bez zakupa kancelarije",
-        intro: "Virtual Office ukljucuje adresu za PR ili DOO, prijem poste, osnovnu administrativnu podrsku i jasan pregled statusa zahteva. Minimum trajanja paketa je 3 meseca.",
+        eyebrow: "Virtual Office · Novi Sad",
+        title: "Poslovna adresa koja radi za tebe, ne protiv tebe",
+        intro: "Adresa u centru grada, prijem pošte i administrativna podrška — bez zakupa kancelarije i bez skrivenih troškova. Minimum 3 meseca.",
         image: ASSETS.privateOffice
       },
       "private-office": {
-        eyebrow: "Private Office Novi Sad",
-        title: "Privatna kancelarija za tim koji zeli mir i gotovu infrastrukturu",
-        intro: "Private Office je za tim od 5 do 10 ljudi kome treba privatniji prostor, 24/7 pristup, internet, office host podrska, ciscenje, printer/skener i sale za sastanke u istom prostoru.",
+        eyebrow: "Private Office · Novi Sad",
+        title: "Privatna kancelarija sa svim što tim već koristi",
+        intro: "Za timove od 5 do 10 ljudi koji žele mir, 24/7 pristup i gotovu infrastrukturu — internet, oprema, čišćenje i sale u istom prostoru.",
         image: ASSETS.privateOffice
       },
       booking: {
-        eyebrow: "Booking sistem",
-        title: "Rezervisi salu, booth ili event prostor bez cekanja na odgovor",
-        intro: "Izaberi resurs, datum i slot — kalendar pokazuje zauzetost, rezervacija ide u sistem.",
+        eyebrow: "Rezervacija prostora",
+        title: "Sala, booth ili event prostor — u par klikova",
+        intro: "Izaberi resurs, datum i termin. Kalendar prikazuje zauzetost u realnom vremenu, a rezervacija odmah ulazi u sistem.",
         image: ASSETS.meetingRoom
       },
       contact: {
-        eyebrow: "Contact Space For Work",
-        title: "Reci nam sta ti treba, predlozicemo najprakticnije resenje",
-        intro: "Pisi za obilazak, coworking paket, salu za sastanke, event prostor, privatnu kancelariju ili Virtual Office adresu u Novom Sadu. Dobices konkretan predlog sledeceg koraka.",
+        eyebrow: "Kontakt",
+        title: "Reci nam šta planiraš — predložićemo najbolji sledeći korak",
+        intro: "Obilazak, coworking paket, sala, event, private office ili Virtual Office — odgovaramo konkretno, bez generičkih ponuda.",
         image: ASSETS.eventLounge
       }
     };
     const galleryItems = [
       {
         title: "Chill zona",
-        detail: "Opusti se izmedju poziva i deadline-a — lounge, boje, zajednica.",
+        detail: "Prostor za pauzu između poziva i fokus blokova — opuštena atmosfera koja pomaže da se vratiš u ritam.",
         src: ASSETS.chillRoom
       },
       {
         title: "Meeting Room",
-        detail: "Sala za sastanke u Novom Sadu za 8-20 osoba, sa velikim stolom, TV ekranom i belom tablom.",
+        detail: "Sale za 8–20 osoba sa TV ekranom i belom tablom — spremne za klijente, prezentacije i timske odluke.",
         src: ASSETS.meetingRoom
       },
       {
         title: "Event Space",
-        detail: "Event prostor za radionice, predavanja, edukacije i timske sesije, sa setup-om koji se prilagodjava formatu.",
+        detail: "Fleksibilan prostor za radionice, edukacije i meetupe — setup se prilagođava tvom formatu.",
         src: ASSETS.eventWorkshop
       },
       {
         title: "Coworking Open Space",
-        detail: "Open-space zona sa 99 radnih mesta, monitorima, stabilnim internetom i dnevnom coworking energijom.",
+        detail: "99 radnih mesta, prirodno svetlo i stabilan internet — radna energija bez kancelarijske uštogljivosti.",
         src: ASSETS.coworking
       },
       {
         title: "Private Office",
-        detail: "Privatniji radni prostor za timove od 5 do 10 ljudi kojima treba mir, oprema i stalna baza.",
+        detail: "Privatniji prostor za timove kojima treba mir, kontinuitet i profesionalan utisak na klijente.",
         src: ASSETS.privateOffice
       },
       {
-        title: "Event & Workshop Setup",
-        detail: "Neformalniji setup za community programe, networking, kreativne radionice i manje dogadjaje.",
+        title: "Event & Workshop",
+        detail: "Neformalniji setup za community programe, networking i kreativne radionice.",
         src: ASSETS.eventLounge
       }
     ];
@@ -2566,7 +2602,7 @@
           price: 10,
           unit: "dan",
           featured: false,
-          short: "Jedan radni dan u open-space zoni, idealan kada ti treba fokus, internet, poziv ili promena okruzenja.",
+          short: "Jedan radni dan u open-space zoni — fokus, stabilan internet i profesionalno okruženje bez obaveze.",
           tags: ["1 dan", "open space", "print/scan"]
         },
         {
@@ -2576,7 +2612,7 @@
           price: 80,
           unit: "30 dana",
           featured: false,
-          short: "10 dolazaka u 30 dana za sve koji ne dolaze svakog dana, ali zele profesionalnu radnu bazu.",
+          short: "Deset dolazaka u 30 dana — za one koji rade fleksibilno, ali žele stalnu radnu bazu.",
           tags: ["10 dolazaka", "30 dana", "fleksibilno"]
         },
         {
@@ -2586,8 +2622,8 @@
           price: 120,
           unit: "mesec",
           featured: true,
-          short: "Mesecni fleksibilni sto za stabilnu rutinu, 24/7 pristup, community i povremene sastanke.",
-          tags: ["24/7", "meeting room", "community"]
+          short: "Mesečni fleksibilni sto, 24/7 pristup i zajednica koja podržava tvoj radni ritam.",
+          tags: ["24/7", "meeting room", "zajednica"]
         },
         {
           id: "dedicated-desk",
@@ -2596,8 +2632,8 @@
           price: 150,
           unit: "mesec",
           featured: false,
-          short: "Licni sto, locker i 24/7 pristup za profesionalce koji zele svoje mesto svaki put kada dodju.",
-          tags: ["licni sto", "locker", "24/7"]
+          short: "Lični sto, locker i 24/7 pristup — tvoje mesto, svaki put kad dođeš.",
+          tags: ["lični sto", "locker", "24/7"]
         },
         {
           id: "meeting-room",
@@ -2606,8 +2642,8 @@
           price: 10,
           unit: "sat",
           featured: false,
-          short: "Sala za sastanke po satu ili danu, sa TV ekranom i belom tablom za klijente, timove i radionice.",
-          tags: ["10 eur/h", "80 eur/dan", "TV + tabla"]
+          short: "Sala za sastanke po satu ili danu — TV, bela tabla i profesionalan utisak na klijente.",
+          tags: ["10 €/h", "80 €/dan", "TV + tabla"]
         },
         {
           id: "event-space",
@@ -2616,7 +2652,7 @@
           price: 100,
           unit: "1 dan",
           featured: false,
-          short: "Vikend prostor za radionice, edukacije, meetupe i networking dogadjaje do 100 ljudi.",
+          short: "Vikend prostor za radionice, edukacije i meetupe — do 100 učesnika, fleksibilan setup.",
           tags: ["vikend", "100 ljudi", "setup"]
         },
         {
@@ -2626,8 +2662,8 @@
           price: 30,
           unit: "mesec",
           featured: true,
-          short: "Poslovna adresa za preduzetnike, prijem poste, osnovna APR podrska i minimum 3 meseca.",
-          tags: ["min. 3 meseca", "posta", "APR"]
+          short: "Poslovna adresa, prijem pošte i osnovna administrativna podrška za preduzetnike.",
+          tags: ["min. 3 meseca", "pošta", "APR"]
         },
         {
           id: "virtual-office-doo",
@@ -2636,8 +2672,8 @@
           price: 45,
           unit: "mesec",
           featured: false,
-          short: "Virtual Office za DOO korisnike kojima treba adresa, ugovor, prijem poste i uredan admin tok.",
-          tags: ["min. 3 meseca", "ugovor", "posta"]
+          short: "Adresa, ugovor i prijem pošte za DOO — uredan administrativni tok bez zakupa prostora.",
+          tags: ["min. 3 meseca", "ugovor", "pošta"]
         }
       ],
       resources: [
@@ -3251,6 +3287,19 @@
       return state.officeData || IMPORTED_OFFICE_DATA;
     }
 
+    function shouldShowDemoBanner() {
+      if (typeof window === "undefined") return false;
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("demo") === "1") return true;
+      const host = window.location.hostname;
+      return host === "localhost" || host === "127.0.0.1";
+    }
+
+    function renderDemoBanner() {
+      if (!shouldShowDemoBanner()) return "";
+      return `<div class="demo-banner">Diplomski prototip informacionog sistema — podaci su testni. Za odbranu koristi demo naloge u prijavi.</div>`;
+    }
+
     function renderTopbar(active) {
       const user = currentUser();
       const navItems = user
@@ -3314,20 +3363,21 @@
       const page = state.publicPage || "home";
       if (page !== "home") return renderSitePage(page);
       return `
+        ${renderDemoBanner()}
         ${renderTopbar(page)}
         <main>
           <section class="hero place-hero" id="home">
             <div class="hero-media">
               <div class="place-hero-inner">
                 <div class="hero-content">
-                  <h1>Radni dan koji ne mrziš da raniš.</h1>
-                  <p class="hero-copy">Kafa, mir kad ti treba fokus, ekipa kad ti treba energija — i adresa koja izgleda ozbiljno kad treba klijentu.</p>
+                  <h1>Prostor u kome rad ima svoj ritam.</h1>
+                  <p class="hero-copy">Coworking u centru Novog Sada — fokus kad ti treba mir, sala kad stigne klijent, adresa kad firma zasluži ozbiljan utisak.</p>
                   <div class="button-row">
                     <button class="primary-btn" type="button" onclick="openAuthModal('login')">Prijavi se</button>
-                    <button class="ghost-btn" type="button" onclick="navigate('contact')">Posalji upit</button>
-                    <button class="ghost-btn" type="button" onclick="scrollToPricing()">Paketi</button>
+                    <button class="ghost-btn" type="button" onclick="navigate('contact')">Pošalji upit</button>
+                    <button class="ghost-btn" type="button" onclick="scrollToPricing()">Pogledaj pakete</button>
                   </div>
-                  <button class="hero-scroll-cue" type="button" onclick="scrollToHomeStats()">Skroluj</button>
+                  <button class="hero-scroll-cue" type="button" onclick="scrollToHomeStats()">Saznaj više</button>
                 </div>
                 </div>
             </div>
@@ -3363,11 +3413,11 @@
       return `
         <section class="home-statement reveal">
           <div>
-            <span class="eyebrow">Tvoj ritam</span>
-            <h2>Jedna baza: rad, sastanak, dogadjaj, adresa.</h2>
+            <span class="eyebrow">Jedna adresa</span>
+            <h2>Sve što ti treba za rad — bez obilaska po gradu.</h2>
           </div>
           <div>
-            <p>Fokus u open space-u, poziv u booth-u, klijent u sali, tim u Private Office-u, firma na Virtual Office adresi — sve usluge na jednom mestu, bez okretanja po gradu.</p>
+            <p>Open space za fokus, booth za pozive, sala za klijente, private office za tim, Virtual Office za firmu. Biraj uslugu po potrebi, ne po lokaciji.</p>
             <div class="button-row">
               <button class="secondary-btn" type="button" onclick="navigate('about')">Ko smo mi</button>
               <button class="ghost-btn" type="button" onclick="navigate('membership')">Paketi</button>
@@ -3382,30 +3432,30 @@
         <section class="section reveal">
           <div class="section-head">
             <div>
-              <span class="eyebrow">Sta nudimo</span>
-              <h2>Od dnevnog stola do adrese firme</h2>
-              <p>Coworking paketi, sale, event zona, private office i Virtual Office — sve na jednoj adresi u centru grada.</p>
+              <span class="eyebrow">Ponuda</span>
+              <h2>Od jednog radnog dana do adrese firme</h2>
+              <p>Coworking paketi, sale, event zona, private office i Virtual Office — sve na jednoj adresi u centru Novog Sada.</p>
             </div>
           </div>
           <div class="solutions-grid">
             <article class="solution-card featured">
               <img src="${ASSETS.privateOffice}" alt="Private Office Novi Sad za timove" />
               <span class="eyebrow">Privatna kancelarija</span>
-              <h3>Vasa baza za tim od 5 do 10 ljudi.</h3>
-              <p>Za timove kojima treba mir, 24/7 pristup, oprema, logistika i meeting room-ovi bez zakupa cele kancelarije.</p>
-              <button class="primary-btn" type="button" onclick="navigate('private-office')">Saznaj vise</button>
+              <h3>Vaša baza za tim od 5 do 10 ljudi.</h3>
+              <p>Mir, 24/7 pristup, oprema i sale — bez zakupa cele kancelarije i bez skrivene logistike.</p>
+              <button class="primary-btn" type="button" onclick="navigate('private-office')">Saznaj više</button>
             </article>
             <div class="solution-card-list">
               <article class="solution-card" onclick="navigate('coworking')">
-                <div><span class="eyebrow">Coworking</span><h3>Radni sto kada ti treba fokus.</h3><p>Daily Pass, 10 Days, Monthly Hot Desk i Dedicated Desk za razlicite ritmove rada.</p></div>
+                <div><span class="eyebrow">Coworking</span><h3>Radni sto kad ti treba struktura.</h3><p>Daily Pass, 10 Days, Hot Desk i Dedicated Desk — za svaki tempo rada.</p></div>
                 <span class="solution-arrow">&rarr;</span>
               </article>
               <article class="solution-card" onclick="navigate('membership')">
-                <div><span class="eyebrow">Meeting & Event</span><h3>Sale i event prostor za ljude koje okupljas.</h3><p>Meeting room od 10 eur/h i event space za radionice, edukacije i networking.</p></div>
+                <div><span class="eyebrow">Sale i eventi</span><h3>Prostor za ljude koje okupljaš.</h3><p>Meeting room od 10 €/h i event space za radionice, edukacije i networking.</p></div>
                 <span class="solution-arrow">&rarr;</span>
               </article>
               <article class="solution-card" onclick="navigate('virtual-office')">
-                <div><span class="eyebrow">Virtual Office</span><h3>Poslovna adresa bez zakupa kancelarije.</h3><p>PR paket od 30 eur/mesec i DOO paket od 45 eur/mesec, minimum 3 meseca.</p></div>
+                <div><span class="eyebrow">Virtual Office</span><h3>Adresa bez zakupa kancelarije.</h3><p>PR od 30 €/mesec, DOO od 45 €/mesec — minimum 3 meseca.</p></div>
                 <span class="solution-arrow">&rarr;</span>
               </article>
             </div>
@@ -3419,14 +3469,14 @@
         <section class="home-tour-band reveal">
           <div class="home-tour-inner">
             <div>
-              <span class="eyebrow">Uzivo</span>
-              <h2>Zanima te prostor? Dodji da ga vidis.</h2>
-              <p>Prosetas open space, sale i zonu za dogadjaje — lakse odlucis kad vidi stvarni setup.</p>
+              <span class="eyebrow">Uživo</span>
+              <h2>Vidi prostor pre nego što odlučiš.</h2>
+              <p>Kratki obilazak i jasan razgovor o tome šta ti zaista treba — bez pritiska i bez generičkih ponuda.</p>
             </div>
             <div class="tour-card">
               <strong>Besplatan obilazak</strong>
-              <span>Napisi sta te zanima (coworking, sala, event, private ili VO) i dogovaramo termin.</span>
-              <button class="primary-btn" type="button" onclick="navigate('contact')">Zakazi</button>
+              <span>Napiši šta te zanima — coworking, sala, event, private office ili VO — i dogovaramo termin.</span>
+              <button class="primary-btn" type="button" onclick="navigate('contact')">Zakaži obilazak</button>
             </div>
           </div>
         </section>
@@ -3454,9 +3504,9 @@
         <section class="portal-entry reveal" id="login">
           <div class="portal-entry-inner single-col">
             <div class="portal-entry-copy">
-              <span class="eyebrow">Clanstvo i rezervacije</span>
-              <h2>Dodji na kafu, obidji prostor i izaberi paket koji ti stvarno odgovara.</h2>
-              <p>Prijava je gore desno ili ovde — paketi, termini i porudzbine na jednom mestu.</p>
+              <span class="eyebrow">Online portal</span>
+              <h2>Paketi, rezervacije i porudžbine — na jednom mestu.</h2>
+              <p>Prijavi se i upravljaj članstvom, terminima i kupovinom bez poziva i čekanja na odgovor.</p>
               <div class="button-row">
                 <button class="primary-btn" type="button" onclick="openAuthModal('login')">Prijavi se</button>
                 <button class="ghost-btn" type="button" onclick="openAuthModal('register')">Napravi nalog</button>
@@ -3475,11 +3525,17 @@
             <button class="auth-modal-close" type="button" onclick="closeAuthModal()" aria-label="Zatvori">&times;</button>
             <div class="auth-panel">
               <h2 id="auth-modal-title">${isLogin ? "Prijava" : "Registracija"}</h2>
-              <p>${isLogin ? "Unesi email i lozinku naloga koji ti je dodeljen." : "Nalog za kupovinu paketa i rezervacije."}</p>
+              <p>${isLogin ? "Unesi email i lozinku svog naloga." : "Kreiraj nalog za kupovinu paketa i rezervacije prostora."}</p>
               <div class="segmented">
                 <button type="button" class="${isLogin ? "active" : ""}" onclick="setAuthMode('login')">Prijava</button>
                 <button type="button" class="${!isLogin ? "active" : ""}" onclick="setAuthMode('register')">Registracija</button>
               </div>
+              ${isLogin ? `
+              <div class="auth-demo-strip">
+                <span>Demo za odbranu:</span>
+                <button class="ghost-btn" type="button" onclick="quickLogin('admin@spaceforwork.rs','admin123')">Admin</button>
+                <button class="ghost-btn" type="button" onclick="quickLogin('korisnik@spaceforwork.rs','korisnik123')">Član</button>
+              </div>` : ""}
               <div class="alert" id="auth-alert"></div>
               ${isLogin ? renderLoginForm() : renderRegisterForm()}
             </div>
@@ -3497,7 +3553,7 @@
           </div>
           <div class="field">
             <label for="login-password">Lozinka</label>
-            <input id="login-password" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" required placeholder="Unesi lozinku" />
+            <input id="login-password" type="password" autocomplete="current-password" autocapitalize="off" spellcheck="false" required placeholder="Unesi lozinku" />
           </div>
           <button class="primary-btn" type="submit">Prijavi se</button>
         </form>
@@ -3521,7 +3577,7 @@
           </div>
           <div class="field">
             <label for="reg-password">Lozinka</label>
-            <input id="reg-password" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" minlength="6" required placeholder="Minimum 6 karaktera" />
+            <input id="reg-password" type="password" autocomplete="new-password" autocapitalize="off" spellcheck="false" minlength="6" required placeholder="Minimum 6 karaktera" />
           </div>
           <button class="primary-btn" type="submit">Kreiraj nalog</button>
         </form>
@@ -3533,9 +3589,9 @@
         <section class="section reveal" id="pricing">
           <div class="section-head">
             <div>
-              <span class="eyebrow">Paketi i rezervacije</span>
-              <h2>Odaberi uslugu prema tome koliko radis i sta ti treba</h2>
-              <p>U katalogu su coworking paketi, meeting room, event space i Virtual Office. Svaka usluga ima cenu, jedinicu naplate i pravila, pa korisnik odmah zna sta kupuje ili rezervise.</p>
+              <span class="eyebrow">Paketi</span>
+              <h2>Transparentna ponuda — znaš šta dobijaš pre nego što kupiš</h2>
+              <p>Coworking, sale, event prostor i Virtual Office u jednom katalogu. Svaka stavka ima cenu, period i jasne koristi.</p>
             </div>
             <div class="pricing-actions" aria-label="Kontrole za pakete">
               <button class="carousel-btn" type="button" onclick="movePackages(-1)" aria-label="Prethodni paketi">&larr;</button>
@@ -3556,9 +3612,9 @@
         <section class="section reveal">
           <div class="section-head">
             <div>
-              <span class="eyebrow">Rad, sastanci i dogadjaji</span>
-              <h2>Izaberi prostor prema poslu koji danas treba da zavrsis</h2>
-              <p>Za fokus rad tu je open space. Za klijente i timske odluke tu su meeting room-ovi. Za edukacije, meetupe i radionice tu je event prostor sa fleksibilnim setup-om.</p>
+              <span class="eyebrow">Prostori</span>
+              <h2>Izaberi prostor prema poslu koji danas radiš</h2>
+              <p>Open space za fokus, sale za klijente, event zona za edukacije i meetupe — sve na istoj adresi.</p>
             </div>
           </div>
           <div class="space-showcase">
@@ -3566,8 +3622,8 @@
               <img src="${ASSETS.coworking}" alt="Coworking space Novi Sad open space zona" />
               <div class="space-card-copy">
                 <span class="tag">Coworking Novi Sad</span>
-                <h3>Open space za dane kada hoces da zavrsis posao.</h3>
-                <p>99 radnih mesta, prirodno svetlo, monitori, stabilan internet i ljudi oko tebe koji takodje rade, grade i razmenjuju ideje.</p>
+                <h3>Open space za dane kada želiš da završiš posao.</h3>
+                <p>99 radnih mesta, prirodno svetlo, stabilan internet i radna atmosfera bez kancelarijske uštogljivosti.</p>
               </div>
             </article>
             <div class="space-showcase-side">
@@ -3617,8 +3673,8 @@
           <div class="section-head">
             <div>
               <span class="eyebrow">Fotografije prostora</span>
-              <h2>Pogledaj prostor pre nego sto rezervises termin ili obilazak</h2>
-              <p>Galerija prikazuje meeting room, event space, coworking open space i private office, kako bi odluka bila brza, jasna i bez neprijatnih iznenadjenja.</p>
+              <h2>Pogledaj prostor pre odluke</h2>
+              <p>Meeting room, event space, open space i private office — da odluka bude informisana, ne nagađana.</p>
             </div>
           </div>
           <div class="gallery-wrap">
@@ -3645,6 +3701,7 @@
     function renderSitePage(pageId) {
       const page = sitePages[pageId] || sitePages.about;
       return `
+        ${renderDemoBanner()}
         ${renderTopbar(pageId)}
         <main class="site-page">
           <section class="site-hero" style="--site-image:url('${page.image}')">
@@ -3683,8 +3740,8 @@
           <div class="section-head">
             <div>
               <span class="eyebrow">Rezervacija prostora</span>
-              <h2>Izaberi termin kao u pravom booking sistemu</h2>
-              <p>Kalendar i zauzetost rade preko API-ja; rezervacija ide direktno u sistem.</p>
+              <h2>Rezerviši termin u nekoliko koraka</h2>
+              <p>Izaberi resurs i vreme — kalendar prikazuje slobodne termine. Za live rezervaciju prijavi se demo nalogom.</p>
             </div>
           </div>
           <div class="public-booking-layout">
@@ -3761,16 +3818,16 @@
           <div class="content-grid">
             <div class="copy-block">
               <span class="eyebrow">O nama</span>
-              <h2>Prostor u kom lakse udjes u radni ritam.</h2>
-              <p>Space For Work okuplja ljude kojima treba vise od kucnog stola: mir za fokus, stabilan internet, prostor za pozive, sala za klijente i zajednica koja radni dan cini zivljim.</p>
-              <p>Na istoj adresi su coworking, meeting room, event space, private office i Virtual Office. Zato korisnik ne mora da trazi pet razlicitih resenja, vec bira paket ili salje jedan jasan upit.</p>
+              <h2>Prostor u kome lakše ulaziš u radni ritam.</h2>
+              <p>Space For Work okuplja ljude kojima treba više od kućnog stola: mir za fokus, infrastruktura za pozive, sala za klijente i zajednica koja radni dan čini produktivnijim.</p>
+              <p>Na istoj adresi su coworking, meeting room, event space, private office i Virtual Office — jedan upit, više rešenja.</p>
             </div>
             <img class="page-photo" src="${ASSETS.eventLounge}" alt="Space For Work event i community zona" />
           </div>
           <div class="feature-grid">
-            <article class="feature-tile"><span class="tile-kicker">Productivity</span><h3>Manje organizacije, vise rada</h3><p>Sto, internet, printer/skener, sale i mirnije zone su spremni, pa vreme ide na posao umesto na logistiku.</p></article>
-            <article class="feature-tile"><span class="tile-kicker">Community</span><h3>Ljudi zbog kojih se vracas</h3><p>Networking, edukacije, eventi i svakodnevni razgovori prave prostor u kom se lakse dolazi do ideja i kontakata.</p></article>
-            <article class="feature-tile"><span class="tile-kicker">All-in</span><h3>Jedna adresa za vise potreba</h3><p>Sto, sala, event, VO adresa i posta — bez skakanja po gradu.</p></article>
+            <article class="feature-tile"><span class="tile-kicker">Produktivnost</span><h3>Manje logistike, više rada</h3><p>Sto, internet, printer i sale su spremni — tvoje vreme ide na posao, ne na organizaciju.</p></article>
+            <article class="feature-tile"><span class="tile-kicker">Zajednica</span><h3>Ljudi zbog kojih se vraćaš</h3><p>Networking, edukacije i svakodnevni kontakti koji otvaraju nove prilike.</p></article>
+            <article class="feature-tile"><span class="tile-kicker">Sve na jednom mestu</span><h3>Jedna adresa, više usluga</h3><p>Sto, sala, event, VO adresa i pošta — bez skakanja po gradu.</p></article>
           </div>
         </section>
       `;
@@ -3782,16 +3839,16 @@
           <div class="content-grid">
             <div class="copy-block">
               <span class="eyebrow">Coworking</span>
-              <h2>Coworking u Novom Sadu kada ti treba bolji radni dan.</h2>
-              <p>Umesto rada od kuce, buke iz kafica ili improvizovanih sastanaka, dobijas open-space mesto, phone booth za pozive, meeting room za klijente i ljude koji rade oko tebe.</p>
-              <p>Za povremene dolaske biras Daily Pass ili 10 Days. Za redovan ritam biras Monthly Hot Desk. Za stalno mesto biras Dedicated Desk sa lockerom i 24/7 pristupom.</p>
+              <h2>Coworking kada ti treba bolji radni dan.</h2>
+              <p>Umesto rada od kuće ili buke iz kafića — open space, phone booth za pozive i sala za klijente, sve na jednoj adresi.</p>
+              <p>Za povremene dolaske: Daily Pass ili 10 Days. Za redovan ritam: Monthly Hot Desk. Za stalno mesto: Dedicated Desk sa lockerom i 24/7 pristupom.</p>
             </div>
             <img class="page-photo" src="${ASSETS.coworking}" alt="Coworking open space Novi Sad sa radnim stolovima" />
           </div>
           <div class="feature-grid">
-            <article class="feature-tile"><span class="tile-kicker">Work</span><h3>99 radnih mesta</h3><p>Za dnevni dolazak, 10-day paket, mesecno clanstvo ili stalniji radni ritam.</p></article>
-            <article class="feature-tile"><span class="tile-kicker">Call</span><h3>6 phone booth-ova</h3><p>Za online sastanke, poverljive pozive i trenutke kada ti treba tisina bez izlaska iz prostora.</p></article>
-            <article class="feature-tile"><span class="tile-kicker">Meet</span><h3>2 sale za sastanke</h3><p>Termin biras u kalendaru na sajtu.</p></article>
+            <article class="feature-tile"><span class="tile-kicker">Rad</span><h3>99 radnih mesta</h3><p>Za dnevni dolazak, fleksibilne pakete ili mesečno članstvo.</p></article>
+            <article class="feature-tile"><span class="tile-kicker">Pozivi</span><h3>6 phone booth-ova</h3><p>Za online sastanke i poverljive razgovore — bez izlaska iz prostora.</p></article>
+            <article class="feature-tile"><span class="tile-kicker">Sastanci</span><h3>2 sale</h3><p>Termin rezervišeš direktno u portalu.</p></article>
           </div>
         </section>
       `;
@@ -3803,8 +3860,8 @@
           <div class="section-head">
             <div>
               <span class="eyebrow">Membership</span>
-              <h2>Svi paketi na jednom mestu, bez nejasnih sitnih slova</h2>
-              <p>Daily Pass, 10 Days, Monthly Hot Desk, Dedicated Desk, Meeting Room, Event Space i Virtual Office prikazani su kao jasan katalog: sta dobijas, koliko kosta, na koji period vazi i sta je sledeci korak.</p>
+              <h2>Svi paketi na jednom mestu</h2>
+              <p>Šta dobijaš, koliko košta i na koji period važi — bez sitnih slova i bez iznenađenja na kasu.</p>
             </div>
           </div>
           <div class="pricing-carousel">
@@ -3821,15 +3878,15 @@
         <section class="section reveal">
           <div class="content-grid">
             <div class="copy-block">
-              <span class="eyebrow">Virtual Address</span>
-              <h2>Virtual Office u Novom Sadu za firmu koja zeli ozbiljnu adresu.</h2>
-              <p>Virtual Office je za PR i DOO korisnike kojima treba poslovna adresa, prijem poste, print/scan dokumentacije i osnovna administrativna podrska, bez zakupa cele kancelarije.</p>
-              <p>PR paket je 30 eur/mesec, DOO paket 45 eur/mesec, a minimalno trajanje je 3 meseca. Kroz portal se salje zahtev, prati status i kreira porudzbina.</p>
+              <span class="eyebrow">Virtual Office</span>
+              <h2>Poslovna adresa za firmu koja želi ozbiljan utisak.</h2>
+              <p>Adresa u centru grada, prijem pošte i administrativna podrška — bez zakupa kancelarije i bez skrivenih troškova.</p>
+              <p>PR paket 30 €/mesec, DOO paket 45 €/mesec, minimum 3 meseca. Zahtev i status pratiš kroz portal.</p>
               <div class="button-row"><button class="primary-btn" type="button" onclick="focusLogin()">Otvori Virtual Office zahtev</button></div>
             </div>
             <div class="feature-grid" style="grid-template-columns:1fr;">
-              <article class="feature-tile"><span class="tile-kicker">30 €</span><h3>PR paket</h3><p>Poslovna adresa, prijem poste i osnovna podrska za preduzetnike.</p></article>
-              <article class="feature-tile"><span class="tile-kicker">45 €</span><h3>DOO paket</h3><p>Adresa, ugovor i prijem poste za DOO korisnike, uz minimum od 3 meseca.</p></article>
+              <article class="feature-tile"><span class="tile-kicker">30 €</span><h3>PR paket</h3><p>Poslovna adresa, prijem pošte i osnovna podrška za preduzetnike.</p></article>
+              <article class="feature-tile"><span class="tile-kicker">45 €</span><h3>DOO paket</h3><p>Adresa, ugovor i prijem pošte — minimum 3 meseca.</p></article>
             </div>
           </div>
         </section>
@@ -3841,17 +3898,17 @@
         <section class="section reveal">
           <div class="content-grid">
             <div class="copy-block">
-              <span class="eyebrow">Serviced offices</span>
-              <h2>Private Office za tim koji zeli svoju bazu bez dodatne logistike.</h2>
-              <p>Privatna kancelarija kombinuje mir sopstvenog prostora sa pogodnostima coworking-a: meeting room-ovi, phone booth-ovi, internet, office host podrska, ciscenje, printeri i skeneri.</p>
-              <p>Najbolje odgovara timovima od 5 do 10 ljudi koji zele privatnost, kontinuitet i 24/7 pristup, ali ne zele da sami organizuju opremu, odrzavanje i prijem gostiju.</p>
+              <span class="eyebrow">Private Office</span>
+              <h2>Privatna kancelarija bez dodatne logistike.</h2>
+              <p>Mir sopstvenog prostora uz pogodnosti coworking-a: sale, booth-ovi, internet, host podrška, čišćenje i oprema.</p>
+              <p>Za timove od 5 do 10 ljudi koji žele privatnost, kontinuitet i 24/7 pristup — bez samostalne organizacije prostora.</p>
             </div>
             <img class="page-photo" src="${ASSETS.privateOffice}" alt="Private office Novi Sad za timski rad" />
           </div>
           <div class="feature-grid">
-            <article class="feature-tile"><span class="tile-kicker">Team</span><h3>Za 5-10 ljudi</h3><p>Dovoljno privatno za timski fokus, a dovoljno povezano da koristite sve prednosti coworking prostora.</p></article>
-            <article class="feature-tile"><span class="tile-kicker">Ops</span><h3>Oprema i odrzavanje ukljuceni</h3><p>Internet, host, ciscenje, printeri, skeneri i dnevna logistika ostaju na strani prostora.</p></article>
-            <article class="feature-tile"><span class="tile-kicker">Access</span><h3>24/7 pristup</h3><p>Tim moze da radi u svom ritmu, uz pristup sale za sastanke i zajednickim zonama.</p></article>
+            <article class="feature-tile"><span class="tile-kicker">Tim</span><h3>Za 5–10 ljudi</h3><p>Dovoljno privatno za fokus, dovoljno povezano sa coworking zajednicom.</p></article>
+            <article class="feature-tile"><span class="tile-kicker">Infrastruktura</span><h3>Sve uključeno</h3><p>Internet, host, čišćenje, printeri i dnevna logistika — na našoj strani.</p></article>
+            <article class="feature-tile"><span class="tile-kicker">Pristup</span><h3>24/7</h3><p>Rad u svom ritmu, uz sale i zajedničke zone kad ti zatrebaju.</p></article>
           </div>
         </section>
       `;
@@ -3861,8 +3918,8 @@
       return `
         <section class="section reveal">
           <div class="contact-cards">
-            <div class="contact-card"><strong>Zakazi obilazak</strong><a href="tel:+381629612798">+381 62 961 2798</a></div>
-            <div class="contact-card"><strong>Posalji upit</strong><a href="mailto:office@spaceforwork.rs">office@spaceforwork.rs</a></div>
+            <div class="contact-card"><strong>Zakaži obilazak</strong><a href="tel:+381629612798">+381 62 961 2798</a></div>
+            <div class="contact-card"><strong>Pošalji upit</strong><a href="mailto:office@spaceforwork.rs">office@spaceforwork.rs</a></div>
             <div class="contact-card"><strong>Lokacija</strong><span>Gajeva 1-3, 1. sprat, 21000 Novi Sad</span></div>
           </div>
           <div class="content-grid contact-layout">
@@ -5006,8 +5063,8 @@
                 <span class="stripe-badge">Stripe test mode</span>
                 <button class="checkout-close" type="button" aria-label="Zatvori placanje" onclick="closeCheckout()">&times;</button>
               </div>
-              <h2 class="checkout-title">${disabled ? "Placanje je vec potvrdjeno" : "Test placanje bez stvarne naplate"}</h2>
-              <p class="checkout-subtitle">Ovaj ekran simulira Stripe Checkout tok za diplomski projekat. Koristi test karticu, ne skida novac i ne trazi povezivanje tvoje realne kartice.</p>
+              <h2 class="checkout-title">${disabled ? "Plaćanje je potvrđeno" : "Sigurno test plaćanje"}</h2>
+              <p class="checkout-subtitle">Stripe test režim — koristi test karticu 4242 4242 4242 4242. Nema stvarne naplate.</p>
               <div class="card-preview" aria-hidden="true">
                 <span>Test card</span>
                 <strong>4242 4242 4242 4242</strong>
@@ -5052,7 +5109,7 @@
                 <div><span>Status</span><strong>${escapeHtml(statusLabel(order.status))}</strong></div>
               </div>
               <div class="test-card-note">
-                Ovo je najjednostavniji Stripe model za projekat: u test modu cuvamo session, payment reference, status i poslednje 4 cifre test kartice. Kada budemo spremni za backend, ovaj ekran se menja Stripe hosted Checkout-om.
+                Test mod omogućava demonstraciju online plaćanja bez Stripe naloga. U produkciji korisnik se preusmerava na Stripe Checkout stranicu.
               </div>
             </aside>
           </div>
@@ -5065,16 +5122,16 @@
         <footer class="footer">
           <div class="footer-cta">
             <div>
-              <span class="eyebrow">Obilazak prostora</span>
-              <h2>Dodji na kafu, obidji prostor i izaberi paket koji ti stvarno odgovara.</h2>
-              <p>Coworking, sala, event ili private office — posalji upit i dogovaramo sledeci korak.</p>
+              <span class="eyebrow">Spreman za sledeći korak?</span>
+              <h2>Javi nam šta planiraš — predložićemo najbolju opciju.</h2>
+              <p>Coworking, sala, event, private office ili Virtual Office — odgovaramo konkretno i brzo.</p>
             </div>
-            <button class="primary-btn" type="button" onclick="navigate('contact')">Zakazi obilazak</button>
+            <button class="primary-btn" type="button" onclick="navigate('contact')">Kontaktiraj nas</button>
           </div>
           <div class="footer-main">
             <div class="footer-brand">
               <img src="${LOGO_URL}" alt="Space For Work logo" />
-              <p>Space For Work je coworking u Novom Sadu sa 900+ kvadrata, 99 radnih mesta, 12 kancelarija, phone booth-ovima, meeting room-ovima, event prostorom, private office ponudom i Virtual Office adresom.</p>
+              <p>Coworking u centru Novog Sada — 900+ m², 99 radnih mesta, sale, event prostor, private office i Virtual Office adresa.</p>
               <div class="social-row">
                 <a class="social-link" href="https://www.facebook.com/officespaceforwork/" target="_blank" rel="noreferrer">Facebook</a>
                 <a class="social-link" href="https://www.instagram.com/office_coworking/" target="_blank" rel="noreferrer">Instagram @office_coworking</a>
@@ -5083,11 +5140,11 @@
             <div class="footer-column">
               <h3>Brzi linkovi</h3>
               <ul class="footer-links">
-                <li><a href="https://spaceforwork.rs/" target="_blank" rel="noreferrer">Home</a></li>
-                <li><a href="https://spaceforwork.rs/coworking/" target="_blank" rel="noreferrer">Coworking</a></li>
-                <li><a href="https://spaceforwork.rs/coworking-space-membership/" target="_blank" rel="noreferrer">Membership</a></li>
-                <li><a href="https://spaceforwork.rs/private-office-novi-sad/" target="_blank" rel="noreferrer">Private Office</a></li>
-                <li><a href="https://spaceforwork.rs/virtual-office/" target="_blank" rel="noreferrer">Virtual Office</a></li>
+                <li><button class="link-btn" type="button" onclick="navigate('home')">Početna</button></li>
+                <li><button class="link-btn" type="button" onclick="navigate('coworking')">Coworking</button></li>
+                <li><button class="link-btn" type="button" onclick="navigate('membership')">Paketi</button></li>
+                <li><button class="link-btn" type="button" onclick="navigate('private-office')">Private Office</button></li>
+                <li><button class="link-btn" type="button" onclick="navigate('virtual-office')">Virtual Office</button></li>
               </ul>
             </div>
             <div class="footer-column">

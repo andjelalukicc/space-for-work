@@ -1,9 +1,10 @@
-# Coworking Booking System
+# Space For Work — Informacioni sistem za coworking prostor
 
-Mikroservisna aplikacija za rezervaciju meeting room-ova i phone booth-ova u coworking prostoru.
+Mikroservisna web aplikacija za upravljanje coworking prostorom: prodaja paketa, članstvo, Virtual Office, rezervacije sala i administratorski panel.
 
-**Predmet:** Integracije (IROIT) - DevOps projekat
-**Student:** Andjela Lukic - IT62/2022
+**Predmet:** Eksploatacija, održavanje i nadogradnja informacionih sistema (EONIS)  
+**Student:** Andjela Lukic — IT62/2022  
+**GitHub:** https://github.com/andjelalukicc/space-for-work
 
 ---
 
