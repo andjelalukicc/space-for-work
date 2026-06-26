@@ -3073,7 +3073,7 @@
 
     async function adminApiDeactivateUser(userId) {
       if (!USE_BACKEND || !backendJwt) return;
-      if (!confirm("Deaktivirati nalog preko API-ja (DELETE /users/admin/:id)?")) return;
+      if (!confirm("Deaktivirati nalog korisnika?")) return;
       try {
         await apiFetch(`/users/admin/${encodeURIComponent(userId)}`, {
           method: "DELETE",
@@ -3297,7 +3297,7 @@
 
     function renderDemoBanner() {
       if (!shouldShowDemoBanner()) return "";
-      return `<div class="demo-banner">Diplomski prototip informacionog sistema — podaci su testni. Za odbranu koristi demo naloge u prijavi.</div>`;
+      return `<div class="demo-banner">Test režim portala — podaci su demonstracioni. Za odbranu koristi demo naloge u prijavi.</div>`;
     }
 
     function renderTopbar(active) {
@@ -3310,7 +3310,7 @@
           ]
         : [
             ...publicNavItems,
-            { id: "pricing", label: "Paketi" },
+            { id: "pricing", label: "Cenovnik" },
             { id: "login", label: "Prijava" }
           ];
 
@@ -4628,8 +4628,8 @@
         <section class="table-panel">
           <div class="table-toolbar">
             <div>
-              <h2>Korisnici preko REST API-ja</h2>
-              <p style="margin:0;color:var(--muted);">GET /api/users/admin/list, PATCH i DELETE /api/users/admin/:id — podaci iz user-service baze (JWT admin).</p>
+              <h2>Upravljanje korisnicima</h2>
+              <p style="margin:0;color:var(--muted);">Pregled, pretraga i izmena naloga iz user-service baze. Dostupno samo administratoru.</p>
             </div>
             <div class="field" style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:flex-end;">
               <div>
@@ -4673,8 +4673,8 @@
         <section class="table-panel">
           <div class="table-toolbar">
             <div>
-              <h2>Prostorije preko REST API-ja</h2>
-              <p style="margin:0;color:var(--muted);">GET <code>/api/rooms/admin/list</code> (sve sobe u bazi), POST/PATCH/DELETE <code>/api/rooms</code>. Javni katalog i dalje koristi samo aktivne sobe.</p>
+              <h2>Upravljanje prostorijama</h2>
+              <p style="margin:0;color:var(--muted);">Dodavanje, izmena i deaktivacija sala i booth-ova. Javni katalog prikazuje samo aktivne prostorije.</p>
             </div>
             <div class="field" style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:flex-end;">
               <div>
@@ -4834,7 +4834,7 @@
             <div class="table-toolbar">
               <div>
                 <h2>Baza novih registracija</h2>
-                <p style="margin:0;color:var(--muted);">Demo prikaz iz Excel baze. Licni podaci su anonimizovani, ali su polja i segmentacija zadrzani.</p>
+                <p style="margin:0;color:var(--muted);">Uvezena baza članova (Office Members) — prikaz segmentacije i kanala dolaska.</p>
               </div>
             </div>
             <div class="data-table-wrap">
@@ -4856,9 +4856,9 @@
           </section>
           <aside class="panel">
             <h2>Uvezeni workbook</h2>
-            <p>${escapeHtml(data.source || "Office Members.xlsx")} je povezan kao pocetna CRM baza za diplomski prototip.</p>
+            <p>${escapeHtml(data.source || "Office Members.xlsx")} je povezan kao početna baza članova u sistemu.</p>
             <div class="split-list" style="margin-top:14px;">
-              <div class="list-item"><div><strong>Privatnost</strong><span>${escapeHtml(data.privacy || "Demo prikaz koristi anonimizovane zapise.")}</span></div><span class="tag">demo</span></div>
+              <div class="list-item"><div><strong>Privatnost</strong><span>${escapeHtml(data.privacy || "Prikaz koristi anonimizovane zapise.")}</span></div><span class="tag">uvoz</span></div>
               <div class="list-item"><div><strong>Listovi</strong><span>${escapeHtml((summary.sheets || []).slice(0, 5).join(", "))}</span></div><span class="tag">${(summary.sheets || []).length}</span></div>
               <div class="list-item"><div><strong>Coworking sheet</strong><span>${summary.coworkingRows || 0} redova za operativni pregled</span></div><span class="tag">source</span></div>
             </div>
